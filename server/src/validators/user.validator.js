@@ -91,4 +91,6 @@ const changePasswordValidator = function () {
       .withMessage("new password must be atleast 8 character long"),
   ];
 };
+
+
 export { registerLoginVerifcation, loginVerification, updateInfo,changePasswordValidator };

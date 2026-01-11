@@ -4,12 +4,17 @@ import {
   deleteFromCloudinary,
   uploadToCloudnary,
 } from "../utils/cloudinary.js";
-import { emailVerificationEmail, sendMail } from "../utils/mail.js";
+import {
+  emailVerificationEmail,
+  sendMail,
+  resetPasswordEmail,
+} from "../utils/mail.js";
 import { asyncHandler } from "../utils/aysncHandler.js";
 import { User } from "../models/user.model.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { validate } from "../middlewares/validate.middleware.js";
+import bcrypt from "bcryptjs";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -344,30 +349,96 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(202, user, "The profile information is updated"));
 });
 
-const changePassword = asyncHandler( async (req,res,next)=>{
-  const {oldPassword,newPassword} = req.body;
+const changePassword = asyncHandler(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
 
   const user = await User.findById(req.user._id);
 
-  if(!user){
-    throw new ApiError(500,[],"Somthing went wrong");
+  if (!user) {
+    throw new ApiError(500, [], "Somthing went wrong");
   }
 
-  const isPasswordCorrect = user.isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
-  if(!isPasswordCorrect){
-    throw new ApiError(401,[],"password is invalid");
+  if (!isPasswordCorrect) {
+    throw new ApiError(401, [], "password is invalid");
   }
 
   user.password = newPassword;
-  await user.save({validateBeforeSave:false});
+  await user.save({ validateBeforeSave: false });
 
-  res.status(201).json(new ApiResponse(201,[],"password is changed successfully"));
-
-
-
+  res
+    .status(201)
+    .json(new ApiResponse(201, [], "password is changed successfully"));
 });
 
+const forgetPassword = asyncHandler(async (req, res, next) => {
+  const { username, email } = req.body;
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (!user) {
+    throw new ApiError(404, [], "Email or username does not exits");
+  }
+  try {
+    const { unHashedToken, hashedToken, tokenExpiry } =
+      user.generateTempararyTokens();
+    const emailToSend = {
+      email: user.email,
+      subject: "Verify your email",
+      mailContent: resetPasswordEmail(
+        `${process.env.forgetpassword}/${unHashedToken}`,
+      ),
+    };
+    await sendMail(emailToSend);
+    user.forgetPasswordToken = hashedToken;
+    user.forgetPasswordExpiry = tokenExpiry;
+    await user.save({ validateBeforeSave: false });
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          201,
+          "",
+          "password reset link has been sent to your email",
+        ),
+      );
+  } catch (error) {
+    throw new ApiError(500, error, "something went wrong");
+  }
+});
+
+const resetPassword = asyncHandler(async (req, res, next) => {
+  const { newPassword } = req.body;
+  if (!newPassword) {
+    throw new ApiError(400, "", "password is required");
+  }
+  const { token } = req.params;
+
+  if (!token) {
+    throw new ApiError(402, "", "unautherized access to this route");
+  }
+  try {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await User.findOne({
+      forgetPasswordToken: hashedToken,
+      forgetPasswordExpiry: { $gt: Date.now() },
+    });
+    if (!user) {
+      throw new ApiError(401, "", "email link is invalid or expired");
+    }
+    user.password = newPassword;
+    user.forgetPasswordToken = undefined;
+    user.forgetPasswordExpiry = undefined;
+    await user.save({ validateBeforeSave: false });
+    res
+      .status(200)
+      .json(new ApiResponse(200, "", "reset of the email is successfull"));
+  } catch (error) {
+    throw error;
+  }
+});
 
 export {
   registerUser,
@@ -378,5 +449,7 @@ export {
   logOut,
   changeAvatar,
   updateUserProfile,
-  changePassword
+  changePassword,
+  forgetPassword,
+  resetPassword,
 };

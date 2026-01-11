@@ -10,6 +10,8 @@ import {
   changeAvatar,
   updateUserProfile,
   changePassword,
+  forgetPassword,
+  resetPassword,
 } from "../controllers/auth.controller.js";
 import {
   registerLoginVerifcation,
@@ -29,12 +31,15 @@ router
     validate,
     registerUser,
   );
-
 router.route("/verify-email-address/:token/").get(verifyEmailAdress);
 router.route("/login").post(loginVerification(), validate, loginUser);
+router.route("/forget-password").post(forgetPassword);
+router.route("/reset-password/:token/").post(resetPassword);
+
 
 //secure routes
 router.route("/refreshTokens").get(refreshTokens);
+
 router
   .route("/resendEmailVerification")
   .get(verifyJWT, resendEmailVerification);

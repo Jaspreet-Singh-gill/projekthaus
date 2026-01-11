@@ -70,12 +70,18 @@ const user = Schema(
     refreshToken: {
       type: String,
     },
-    emailVerificationToken:{
-      type:String
+    emailVerificationToken: {
+      type: String,
     },
-    emailVerificationTokenExpiry:{
-      type:String
-    }
+    emailVerificationTokenExpiry: {
+      type: String,
+    },
+    forgetPasswordToken: {
+      type: String,
+    },
+    forgetPasswordExpiry: {
+      type: String,
+    },
   },
   {
     timestamps: true,
