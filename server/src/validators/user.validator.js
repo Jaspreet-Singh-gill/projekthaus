@@ -76,4 +76,19 @@ const updateInfo = function () {
     body("age").optional(),
   ];
 };
-export { registerLoginVerifcation, loginVerification ,updateInfo};
+
+const changePasswordValidator = function () {
+  return [
+    body("oldPassword")
+      .trim()
+      .notEmpty()
+      .withMessage("old password is required to register"),
+    body("newPassword")
+      .trim()
+      .notEmpty()
+      .withMessage(" new password is required to register")
+      .isLength({ min: 8 })
+      .withMessage("new password must be atleast 8 character long"),
+  ];
+};
+export { registerLoginVerifcation, loginVerification, updateInfo,changePasswordValidator };

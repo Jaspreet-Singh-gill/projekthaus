@@ -344,6 +344,31 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(202, user, "The profile information is updated"));
 });
 
+const changePassword = asyncHandler( async (req,res,next)=>{
+  const {oldPassword,newPassword} = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if(!user){
+    throw new ApiError(500,[],"Somthing went wrong");
+  }
+
+  const isPasswordCorrect = user.isPasswordCorrect(oldPassword);
+
+  if(!isPasswordCorrect){
+    throw new ApiError(401,[],"password is invalid");
+  }
+
+  user.password = newPassword;
+  await user.save({validateBeforeSave:false});
+
+  res.status(201).json(new ApiResponse(201,[],"password is changed successfully"));
+
+
+
+});
+
+
 export {
   registerUser,
   verifyEmailAdress,
@@ -353,4 +378,5 @@ export {
   logOut,
   changeAvatar,
   updateUserProfile,
+  changePassword
 };

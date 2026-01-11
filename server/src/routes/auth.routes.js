@@ -9,11 +9,13 @@ import {
   logOut,
   changeAvatar,
   updateUserProfile,
+  changePassword,
 } from "../controllers/auth.controller.js";
 import {
   registerLoginVerifcation,
   loginVerification,
   updateInfo,
+  changePasswordValidator,
 } from "../validators/user.validator.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
@@ -44,5 +46,9 @@ router
 router
   .route("/update-info")
   .put(verifyJWT, updateInfo(), validate, updateUserProfile);
+
+router
+  .route("/change-password")
+  .post(verifyJWT, changePasswordValidator(), validate, changePassword);
 
 export default router;
