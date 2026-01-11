@@ -280,11 +280,77 @@ const logOut = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, "", "logout is successfull"));
 });
 
+const changeAvatar = asyncHandler(async (req, res, next) => {
+  //get the image path on server
+  const filePath = req.file?.path;
+  const response = await uploadToCloudnary(filePath);
+  if (!response) {
+    throw new ApiError(400, [], "Upload of avatar to cloud failed");
+  }
+
+  try {
+    await deleteFromCloudinary(req.user.avatar.publicId);
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: {
+          avatar: {
+            url: response.url,
+            publicId: response.public_id,
+          },
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, "", "The avatar is change successFulyy"));
+  } catch (error) {
+    deleteFromCloudinary(response.public_id);
+    throw error;
+  }
+});
+
+const updateUserProfile = asyncHandler(async (req, res, next) => {
+  //frontend is made such that even if user change one thing
+  //it will send all the data field wheater the information is change or not to make things simple
+  const { username, name, gender, phonenumber, organization, address, age } =
+    req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        name,
+        gender,
+        phonenumber,
+        organization,
+        address,
+        age,
+      },
+    },
+    {
+      new: true,
+    },
+  ).select(
+    "-password -refreshToken -emailVerificationToken -emailVerificationTokenExpiry",
+  );
+
+  res
+    .status(202)
+    .json(new ApiResponse(202, user, "The profile information is updated"));
+});
+
 export {
   registerUser,
   verifyEmailAdress,
   loginUser,
   refreshTokens,
   resendEmailVerification,
-  logOut
+  logOut,
+  changeAvatar,
+  updateUserProfile,
 };

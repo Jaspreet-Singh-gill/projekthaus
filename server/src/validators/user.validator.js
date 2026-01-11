@@ -27,6 +27,15 @@ const registerLoginVerifcation = function () {
       .toLowerCase()
       .notEmpty()
       .withMessage("name is required"),
+    body("gender")
+      .trim()
+      .toLowerCase()
+      .notEmpty()
+      .withMessage("gender is required"),
+    body("phoneNUmber").trim().optional(),
+    body("address").trim().toLowerCase().optional(),
+    body("organisation").trim().toLowerCase().optional(),
+    body("age").optional(),
   ];
 };
 
@@ -48,4 +57,23 @@ const loginVerification = function () {
       .withMessage("password must be atleast 8 character long"),
   ];
 };
-export { registerLoginVerifcation, loginVerification };
+
+const updateInfo = function () {
+  return [
+    body("name")
+      .trim()
+      .toLowerCase()
+      .notEmpty()
+      .withMessage("name is required"),
+    body("gender")
+      .trim()
+      .toLowerCase()
+      .notEmpty()
+      .withMessage("gender is required"),
+    body("phonenumber").trim().optional(),
+    body("address").trim().toLowerCase().optional(),
+    body("organization").trim().toLowerCase().optional(),
+    body("age").optional(),
+  ];
+};
+export { registerLoginVerifcation, loginVerification ,updateInfo};

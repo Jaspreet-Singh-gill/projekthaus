@@ -6,11 +6,14 @@ import {
   loginUser,
   refreshTokens,
   resendEmailVerification,
-  logOut
+  logOut,
+  changeAvatar,
+  updateUserProfile,
 } from "../controllers/auth.controller.js";
 import {
   registerLoginVerifcation,
   loginVerification,
+  updateInfo,
 } from "../validators/user.validator.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
@@ -33,6 +36,13 @@ router.route("/refreshTokens").get(refreshTokens);
 router
   .route("/resendEmailVerification")
   .get(verifyJWT, resendEmailVerification);
-router.route("/logout").get(verifyJWT,logOut);
+router.route("/logout").get(verifyJWT, logOut);
+router
+  .route("/change-avatar")
+  .post(upload.single("avatar"), verifyJWT, changeAvatar);
+
+router
+  .route("/update-info")
+  .put(verifyJWT, updateInfo(), validate, updateUserProfile);
 
 export default router;
