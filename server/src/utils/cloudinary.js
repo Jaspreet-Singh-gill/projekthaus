@@ -1,6 +1,9 @@
 import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
 import { error } from "console";
 import fs from "fs";
+
+dotenv.config();
 
 //configuring the cloudinart
 
@@ -25,8 +28,8 @@ const uploadToCloudnary = async function (
     });
 
     fs.unlinkSync(filepath);
-
     return uploadResult;
+
   } catch (error) {
     fs.unlinkSync(filepath);
     console.log("An error has occured while uploading to the cloud ", error);

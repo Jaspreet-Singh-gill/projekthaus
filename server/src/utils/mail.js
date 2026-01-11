@@ -32,7 +32,7 @@ const mailGenerator = new Mailgen({
   theme: "default",
   product: {
     name: "projekthaus",
-    // link: "https://mailgen.js/",
+    link: "https://mailgen.js/",
   },
 });
 

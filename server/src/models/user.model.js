@@ -70,6 +70,12 @@ const user = Schema(
     refreshToken: {
       type: String,
     },
+    emailVerificationToken:{
+      type:String
+    },
+    emailVerificationTokenExpiry:{
+      type:String
+    }
   },
   {
     timestamps: true,
@@ -77,17 +83,18 @@ const user = Schema(
 );
 
 //pre hooks before save to hash the password if it is modiefied
-user.pre("save", async function () {
+user.pre("save", async function (next) {
   if (!this.isModified("password")) return;
-  user.password = await bcrypt.hash(this.password, 10);
+
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 //a method on user model to check the password
-user.modules.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(password, this.password);
+user.methods.isPasswordCorrect = async function (passwordText) {
+  return await bcrypt.compare(passwordText, this.password);
 };
 
-user.modules.generateAccessToken = function () {
+user.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -101,7 +108,7 @@ user.modules.generateAccessToken = function () {
   );
 };
 
-user.modules.generateRefreshToken = function () {
+user.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -115,7 +122,7 @@ user.modules.generateRefreshToken = function () {
   );
 };
 
-user.modules.generateTempararyTokens = function () {
+user.methods.generateTempararyTokens = function () {
   const unHashedToken = crypto.randomBytes(20).toString("hex");
   const hashedToken = crypto
     .createHash("sha256")
@@ -127,4 +134,4 @@ user.modules.generateTempararyTokens = function () {
   return { unHashedToken, hashedToken, tokenExpiry };
 };
 
-export const User = mongoose.Model("User", user);
+export const User = mongoose.model("User", user);
