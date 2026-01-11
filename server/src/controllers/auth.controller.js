@@ -9,6 +9,7 @@ import { asyncHandler } from "../utils/aysncHandler.js";
 import { User } from "../models/user.model.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import { validate } from "../middlewares/validate.middleware.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -233,7 +234,7 @@ const resendEmailVerification = asyncHandler(async (req, res, next) => {
 
   try {
     const emailToSend = {
-      email:user.email,
+      email: user.email,
       subject: "Verify your email",
       mailContent: emailVerificationEmail(
         `${process.env.emailVerificationAddress}/${unHashedToken}`,
@@ -253,6 +254,31 @@ const resendEmailVerification = asyncHandler(async (req, res, next) => {
   }
 });
 
+const logOut = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: "",
+      },
+    },
+    {
+      new: true,
+    },
+  );
+  //already verified by the middleware
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, "", "logout is successfull"));
+});
 
 export {
   registerUser,
@@ -260,4 +286,5 @@ export {
   loginUser,
   refreshTokens,
   resendEmailVerification,
+  logOut
 };

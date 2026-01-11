@@ -6,6 +6,7 @@ import {
   loginUser,
   refreshTokens,
   resendEmailVerification,
+  logOut
 } from "../controllers/auth.controller.js";
 import {
   registerLoginVerifcation,
@@ -32,5 +33,6 @@ router.route("/refreshTokens").get(refreshTokens);
 router
   .route("/resendEmailVerification")
   .get(verifyJWT, resendEmailVerification);
+router.route("/logout").get(verifyJWT,logOut);
 
 export default router;
