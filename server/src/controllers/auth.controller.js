@@ -4,6 +4,7 @@ import { deleteFromCloudinary, uploadToCloudnary } from "../utils/cloudinary.js"
 import { emailVerificationEmail, sendMail } from "../utils/mail.js";
 import { asyncHandler } from "../utils/aysncHandler.js";
 import { User } from "../models/user.model.js";
+import crypto from "crypto";
 
 const registerUser = asyncHandler(async (req, res, next) => {
   const {
@@ -91,4 +92,31 @@ const registerUser = asyncHandler(async (req, res, next) => {
   };
 });
 
-export { registerUser };
+
+const verifyEmailAdress = asyncHandler(async (req,res,next)=>{
+  const unHashedToken = req.params.token;
+  if(!unHashedToken)
+  {
+    throw new ApiError(400,[],"Token is not pressent in the url");
+  }
+  const hashedToken = crypto.createHash("sha256")
+                            .update(unHashedToken)
+                            .digest("hex");
+
+  const user = await User.findOne({
+    emailVerificationToken:hashedToken,
+    emailVerificationTokenExpiry: {$gt :Date.now()}
+
+  });
+
+  if(!user){
+    throw new ApiError(401,[],"The token is expired or invalid");
+  }
+
+  user.isEmailVerified = true;
+  user.save({validateBeforeSave:false});
+
+  res.status(200).json(new ApiResponse(200,{verified :user.isEmailVerified},"the mail is verified successfully"))
+});
+
+export { registerUser,verifyEmailAdress};
