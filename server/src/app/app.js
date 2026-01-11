@@ -1,6 +1,7 @@
 import express from "express";
 import healthRoute from "../routes/healthcheck.route.js";
 import authRoute from "../routes/auth.routes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -11,6 +12,10 @@ app.use(express.urlencoded({ limit: "16kb" }));
 
 //make the content of this folder static
 app.use(express.static("public"));
+
+//middleware to access and send cookies
+
+app.use(cookieParser());
 
 app.use("/api/v1/healthcheck", healthRoute);
 app.use("/api/v1/auth", authRoute);

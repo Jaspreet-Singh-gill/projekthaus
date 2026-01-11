@@ -20,16 +20,32 @@ const registerLoginVerifcation = function () {
       .trim()
       .notEmpty()
       .withMessage("Password is required to register")
-      .isLength({ min: 8})
+      .isLength({ min: 8 })
       .withMessage("username must be atleast 4 character long"),
     body("name")
-        .trim()
-        .toLowerCase()
-        .notEmpty()
-        .withMessage("name is required")
-    
-
+      .trim()
+      .toLowerCase()
+      .notEmpty()
+      .withMessage("name is required"),
   ];
 };
 
-export { registerLoginVerifcation };
+const loginVerification = function () {
+  return [
+    body("email")
+      .trim()
+      .notEmpty()
+      .withMessage("Email is required")
+      .toLowerCase()
+      .isEmail()
+      .withMessage("Email is not valid"),
+    ,
+    body("password")
+      .trim()
+      .notEmpty()
+      .withMessage("Password is required to register")
+      .isLength({ min: 8 })
+      .withMessage("password must be atleast 8 character long"),
+  ];
+};
+export { registerLoginVerifcation, loginVerification };
