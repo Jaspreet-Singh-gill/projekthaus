@@ -1,6 +1,7 @@
 import express from "express";
 import healthRoute from "../routes/healthcheck.route.js";
 import authRoute from "../routes/auth.routes.js";
+import projectRoute from "../routes/project.routes.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -19,4 +20,5 @@ app.use(cookieParser());
 
 app.use("/api/v1/healthcheck", healthRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/project", projectRoute);
 export default app;
