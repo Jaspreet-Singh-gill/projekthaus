@@ -1,0 +1,34 @@
+import mongoose from "mongoose";
+import { Project } from "../models/project.model.js";
+import { ApiResponse } from "../utils/api-response.js";
+import { ApiError } from "../utils/apiErrorResponse.js";
+import { asyncHandler } from "../utils/aysncHandler.js";
+
+const verifyAdmin = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params; //get the projectId from the url
+  const  user = req.user; //get the verified user from the verifyJWT middleware there it is already being checked
+
+  if (!projectId) {
+    throw new ApiError(400, "", "project id is required to access the project");
+  }
+
+  const project = await Project.aggregate([
+    //pipline first
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(projectId),
+        admins: new mongoose.Types.ObjectId(user._id),
+      },
+    },
+  ]);
+
+  if (!project || project.length == 0) {
+    throw new ApiError(403, [], "you are not autherized to update the project");
+  }
+
+  req.project = project[0];
+
+  next();
+});
+
+export { verifyAdmin };
