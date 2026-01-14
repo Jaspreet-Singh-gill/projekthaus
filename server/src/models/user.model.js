@@ -82,6 +82,12 @@ const user = Schema(
     forgetPasswordExpiry: {
       type: String,
     },
+    addMemberToken: {
+      type: String,
+    },
+    addMemberTokenExpiry: {
+      type: String,
+    },
   },
   {
     timestamps: true,

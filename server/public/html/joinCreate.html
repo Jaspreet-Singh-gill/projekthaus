@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | ProjektHaus</title>
+    <style>
+        :root {
+            --primary: #4F46E5; /* Indigo */
+            --primary-hover: #4338CA;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #D1D5DB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: var(--primary);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #E0E7FF;
+            font-size: 0.9rem;
+        }
+
+        form {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-top: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* Asterisk for required fields */
+        label.required::after {
+            content: " *";
+            color: #EF4444;
+        }
+
+        input, select, textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .phone-group {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #FAFAFA;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        button.submit-btn {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        button.submit-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Join ProjektHaus</h1>
+        <p>Create your account to start managing projects</p>
+    </div>
+
+    <form action= "{{ACTION_LINK}}" method="POST" enctype="multipart/form-data">
+
+        <h3 class="section-title">Personal Information</h3>
+        
+        <div class="form-group">
+            <label for="name" class="required">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Jaspreet Singh" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" placeholder="20" min="10">
+            </div>
+            
+            <div class="form-group">
+                <label for="gender" class="required">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+
+        <h3 class="section-title">Account Details</h3>
+
+        <div class="form-group">
+            <label for="username" class="required">Username</label>
+            <input type="text" id="username" name="username" placeholder="jaspreet_cse" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="required">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="example@email.com" value = "{{EMAIL}}"  readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="required">Password</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+        </div>
+
+        <h3 class="section-title">Contact & Organization</h3>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <div class="phone-group">
+                <input type="text" name="countryCode" placeholder="+91" value="+91">
+                <input type="tel" name="number" placeholder="9876543210">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="organization">Organization / College</label>
+            <input type="text" id="organization" name="organization" placeholder="Amritsar Group of Colleges">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="2" placeholder="Enter your full address"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="avatar">Profile Picture</label>
+            <input type="file" id="avatar" name="avatar" class="file-upload" accept="image/*">
+        </div>
+
+        <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+</div>
+
+</body>
+</html>

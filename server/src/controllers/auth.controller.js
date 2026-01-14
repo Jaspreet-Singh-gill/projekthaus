@@ -52,11 +52,10 @@ const registerUser = asyncHandler(async (req, res, next) => {
       "User with this username or email already exists",
     );
   }
+
+  let response = undefined;
   const filePath = req.file?.path;
-  const response = await uploadToCloudnary(filePath);
-  if (!response) {
-    throw new ApiError(400, [], "Upload of avatar to cloud failed");
-  }
+  if (filePath) response = await uploadToCloudnary(filePath);
   //console.log(response.public_id);
   const object = {
     username,
@@ -68,8 +67,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
     organization,
     phoneNumber,
     avatar: {
-      url: response.url,
-      publicId: response.public_id,
+      url: response?.url,
+      publicId: response?.public_id,
     },
   };
 
@@ -100,7 +99,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
       throw new ApiError(401, [], "your registeration failed");
     }
 
-    return res
+    req.user = createdUser;
+
+    res
       .status(201)
       .json(
         new ApiResponse(
@@ -294,7 +295,8 @@ const changeAvatar = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    await deleteFromCloudinary(req.user.avatar.publicId);
+    if (req.user.avatar)
+      await deleteFromCloudinary(req.user.avatar.publicId);
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {

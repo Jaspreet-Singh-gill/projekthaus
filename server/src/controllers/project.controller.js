@@ -2,6 +2,12 @@ import { Project } from "../models/project.model.js";
 import { asyncHandler } from "../utils/aysncHandler.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/apiErrorResponse.js";
+import mongoose from "mongoose";
+import { addMemberEmail, sendMail } from "../utils/mail.js";
+import { User } from "../models/user.model.js";
+import crypto from "crypto";
+import fs from "fs/promises";
+import { uploadToCloudnary } from "../utils/cloudinary.js";
 
 const creatProject = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
@@ -48,7 +54,6 @@ const updateProject = asyncHandler(async (req, res, next) => {
       "The name of the project is required for updation of it",
     );
   }
-  console.log(project);
 
   const projectToUpdate = await Project.findByIdAndUpdate(
     project._id,
@@ -77,4 +82,236 @@ const updateProject = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(201, sendProject, "project is updated successfully"));
 });
 
-export { creatProject, updateProject };
+//can be accessed by
+const getTheProject = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params;
+
+  if (!projectId) {
+    throw new ApiError(400, "", "projectid to access the project info");
+  }
+  const project = await Project.findById(projectId).select(
+    "projectName projectDescription _id",
+  );
+  if (!project) {
+    throw new ApiError(404, "", "The porject with given id does not exists");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, project, "the project is fetched successfully"));
+});
+
+const listAllTheProject = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+
+  const projects = await Project.aggregate([
+    {
+      $match: {
+        $or: [
+          { member: new mongoose.Types.ObjectId(user._id) },
+          { admins: new mongoose.Types.ObjectId(user._id) },
+          { projectManagers: new mongoose.Types.ObjectId(user._id) },
+        ],
+      },
+    },
+    {
+      $project: {
+        projectName: 1,
+      },
+    },
+  ]);
+
+  if (!projects) {
+    throw new ApiError(401, "", "something went wrong");
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        projects,
+        "the list of projects in which user is fetched successfully",
+      ),
+    );
+});
+
+//add member routes
+
+const addMember = asyncHandler(async (req, res, next) => {
+  const project = req.project;
+  const { memberEmail } = req.body;
+
+  const user = await User.findOne({
+    email: memberEmail,
+  });
+
+  try {
+    let url;
+    if (!user) {
+      url = `${process.env.projectDomain}/${project._id}/${memberEmail}/htmlForm/`;
+    } else {
+      const { unHashedToken, hashedToken, tokenExpiry } =
+        user.generateTempararyTokens();
+      user.addMemberToken = hashedToken;
+      user.addMemberTokenExpiry = tokenExpiry;
+      await user.save({ validateBeforeSave: false });
+      url = `${process.env.projectDomain}/${project._id}/join-the-project/${unHashedToken}`;
+    }
+
+    //send mail
+    const object = {
+      email: memberEmail,
+      subject: "join the project",
+      mailContent: addMemberEmail(project.projectName, url),
+    };
+
+    await sendMail(object);
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          " ",
+          "email had been successfully send to the member",
+        ),
+      );
+  } catch (error) {
+    throw new ApiError(500, error, "Something went wrong");
+  }
+});
+
+const htmlForm = asyncHandler(async (req, res, next) => {
+  const { projectId, email } = req.params;
+  if (!projectId) {
+    throw new ApiError(400, "", "projectId is required");
+  }
+  const link = `${process.env.projectDomain}/${projectId}/join-project`;
+  let htmlContent = await fs.readFile("./public/html/joinCreate.html", "utf-8");
+  htmlContent = htmlContent.replace("{{ACTION_LINK}}", link);
+  htmlContent = htmlContent.replace("{{EMAIL}}", email);
+
+  res.status(200).send(htmlContent);
+});
+
+const userInaddMember = asyncHandler(async (req, res, next) => {
+  const { projectId, token } = req.params;
+  if (!projectId || !token) {
+    throw new ApiError(400, "", "projectId and token both are required");
+  }
+  try {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await User.findOne({
+      addMemberToken: hashedToken,
+      // addMemberTokenExpiry: { $gt: Date.now() },
+    });
+    if (!user) {
+      throw "User is not found";
+    }
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        $addToSet: {
+          members: user._id,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+    user.addMemberToken = undefined;
+    user.addMemberTokenExpiry = undefined;
+    await user.save({ validateBeforeSave: false });
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          "",
+          "congratulation you successFully joined the project",
+        ),
+      );
+  } catch (error) {
+    throw new ApiError(500, error, "something went wrong");
+  }
+});
+
+const userNotInaddMember = asyncHandler(async (req, res, next) => {
+  const {
+    username,
+    email,
+    password,
+    name,
+    age,
+    gender,
+    organization,
+    phoneNumber,
+  } = req.body;
+  const duplicateUser = await User.findOne({
+    $or: [{ email }, { username }],
+  });
+  if (duplicateUser) {
+    throw new ApiError(
+      409,
+      [],
+      "User with this username or email already exists",
+    );
+  }
+
+  let response = undefined;
+  const filePath = req.file?.path;
+  if (filePath) response = await uploadToCloudnary(filePath);
+  //console.log(response.public_id);
+  const object = {
+    username,
+    email,
+    password,
+    name,
+    age,
+    gender,
+    organization,
+    phoneNumber,
+    isEmailVerified: true,
+    avatar: {
+      url: response?.url,
+      publicId: response?.public_id,
+    },
+  };
+
+  // const user = req.user;
+  const { projectId } = req.params;
+  if (!projectId) {
+    throw new ApiError(400, "", "projectId is required");
+  }
+  try {
+    const user = await User.create(object);
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        $addToSet: {
+          members: user._id,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+    res
+      .status(201)
+      .json(new ApiResponse(201, "", "successflly joined the project"));
+  } catch (error) {
+    throw new ApiError(500, error, "something went wrong");
+  }
+});
+
+export {
+  creatProject,
+  updateProject,
+  getTheProject,
+  listAllTheProject,
+  userInaddMember,
+  addMember,
+  userNotInaddMember,
+  htmlForm,
+};
