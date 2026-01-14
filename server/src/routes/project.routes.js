@@ -8,6 +8,7 @@ import {
   userInaddMember,
   userNotInaddMember,
   htmlForm,
+  getTheMembers,
 } from "../controllers/project.controller.js";
 import { registerUser } from "../controllers/auth.controller.js";
 import verfiyJWT from "../middlewares/auth.middleware.js";
@@ -38,6 +39,7 @@ router
     validate,
     userNotInaddMember,
   );
+router.route("/:projectId/peoples").get(verfiyJWT,getTheMembers);
 
 router.route("/:projectId/add-member").post(verfiyJWT, verifyAdmin, addMember);
 export default router;

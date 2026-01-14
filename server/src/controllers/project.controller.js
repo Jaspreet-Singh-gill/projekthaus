@@ -237,6 +237,8 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+
 const userNotInaddMember = asyncHandler(async (req, res, next) => {
   const {
     username,
@@ -305,6 +307,21 @@ const userNotInaddMember = asyncHandler(async (req, res, next) => {
   }
 });
 
+const getTheMembers = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params;
+  if (!projectId) {
+    throw new ApiError(400, "", "the project id is required");
+  }
+
+  const project = await Project.findById(projectId)
+    .populate("admins", "name email _id") //takes the user id from the array and then overides the user id with the content
+    .populate("projectManagers", "name email _id")
+    .populate("members", "name email _id");
+  res
+    .status(200)
+    .json(new ApiResponse(200, project, "Data fetched successfuly"));
+});
+
 export {
   creatProject,
   updateProject,
@@ -314,4 +331,5 @@ export {
   addMember,
   userNotInaddMember,
   htmlForm,
+  getTheMembers,
 };
