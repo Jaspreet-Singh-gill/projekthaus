@@ -237,8 +237,6 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
   }
 });
 
-
-
 const userNotInaddMember = asyncHandler(async (req, res, next) => {
   const {
     username,
@@ -322,6 +320,99 @@ const getTheMembers = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, project, "Data fetched successfuly"));
 });
 
+const removeTheMember = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params;
+  const { userId } = req.body;
+  if (!projectId) {
+    throw new ApiError(400, "", "the project id is required");
+  }
+
+
+  if (userId == req.user._id) {
+    throw new ApiError(401, "", "admin cannot be removed");
+  }
+  try {
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        $pull: {
+          admins: userId,
+          projectManagers: userId,
+          members: userId,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, "", "member is removed from the project"));
+  } catch (error) {
+    throw new ApiError(400, error, "something went while deleting the member");
+  }
+});
+
+const changeRoles = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params;
+  const { userId, role } = req.body;
+  if (!projectId) {
+    throw new ApiError(400, "", "the project id is required");
+  }
+  if(userId == req.user._id){
+    throw new ApiError(401,"","you can not asign youself a role");
+  }
+
+  try {
+    const project = await Project.findByIdAndUpdate(
+      projectId,
+      {
+        $pull: {
+          admins: userId,
+          projectManagers: userId,
+          members: userId,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    if (role == "ADMIN") {
+      await Project.findByIdAndUpdate(projectId, {
+        $addToSet: {
+          admins: userId,
+        },
+      });
+    } else if (role === "MEMBER") {
+      await Project.findByIdAndUpdate(projectId, {
+        $addToSet: {
+          members: userId,
+        },
+      });
+    } else {
+      await Project.findByIdAndUpdate(projectId, {
+        $addToSet: {
+          projectManagers: userId,
+        },
+      });
+    }
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          "",
+          "member is assigned to given role in the project",
+        ),
+      );
+  } catch (error) {
+    throw new ApiError(400, error, "something went while deleting the member");
+  }
+});
+
 export {
   creatProject,
   updateProject,
@@ -332,4 +423,6 @@ export {
   userNotInaddMember,
   htmlForm,
   getTheMembers,
+  removeTheMember,
+  changeRoles
 };

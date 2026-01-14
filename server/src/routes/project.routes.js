@@ -9,6 +9,8 @@ import {
   userNotInaddMember,
   htmlForm,
   getTheMembers,
+  removeTheMember,
+  changeRoles,
 } from "../controllers/project.controller.js";
 import { registerUser } from "../controllers/auth.controller.js";
 import verfiyJWT from "../middlewares/auth.middleware.js";
@@ -40,6 +42,8 @@ router
     userNotInaddMember,
   );
 router.route("/:projectId/peoples").get(verfiyJWT,getTheMembers);
+router.route("/:projectId/remove-member").delete(verfiyJWT,verifyAdmin,removeTheMember);
+router.route("/:projectId/changeroles").post(verfiyJWT, verifyAdmin,changeRoles);
 
 router.route("/:projectId/add-member").post(verfiyJWT, verifyAdmin, addMember);
 export default router;
