@@ -28,7 +28,7 @@ const creatProject = asyncHandler(async (req, res, next) => {
     const sendProject = project.toObject();
     delete sendProject.admins;
     delete sendProject.projectManagers;
-    delete sendProject.memebers;
+    delete sendProject.members;
 
     res
       .status(201)
@@ -75,7 +75,7 @@ const updateProject = asyncHandler(async (req, res, next) => {
   const sendProject = projectToUpdate.toObject();
   delete sendProject.admins;
   delete sendProject.projectManagers;
-  delete sendProject.memebers;
+  delete sendProject.members;
 
   res
     .status(201)
