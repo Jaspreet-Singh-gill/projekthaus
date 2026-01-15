@@ -103,4 +103,19 @@ const getAllTheNotes = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { createNotes, updateNotes, deleteNotes,getAllTheNotes };
+const getTheNote = asyncHandler(async (req, res, next) => {
+  const { noteId } = req.params;
+  if (!noteId) {
+    throw new ApiError(400, "", "Note id is required");
+  }
+
+  const note = await Notes.findById(noteId);
+  if (!note) {
+    throw new ApiError(404, " ", "Note does not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, note, "The note is fetched successfully"));
+});
+export { createNotes, updateNotes, deleteNotes, getAllTheNotes, getTheNote };
