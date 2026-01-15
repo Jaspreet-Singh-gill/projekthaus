@@ -3,9 +3,10 @@ import healthRoute from "../routes/healthcheck.route.js";
 import authRoute from "../routes/auth.routes.js";
 import projectRoute from "../routes/project.routes.js";
 import notesRoute from "../routes/notes.routes.js";
+import taskRoute from "../routes/task.route.js";
 import cookieParser from "cookie-parser";
 
-const app = express();
+const app = express({ mergeParams: true });
 
 //set the limit of json size that can be sended
 app.use(express.json({ limit: "16kb" }));
@@ -23,5 +24,6 @@ app.use("/api/v1/healthcheck", healthRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/project", projectRoute);
 app.use("/api/v1/notes", notesRoute);
+app.use("/api/v1/task", taskRoute);
 
 export default app;

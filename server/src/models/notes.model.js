@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const schema = new Schema(
   {
     projectId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       trim: true,
       index: true,
