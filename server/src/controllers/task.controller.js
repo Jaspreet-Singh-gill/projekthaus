@@ -37,4 +37,59 @@ const createAnTask = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { createAnTask };
+const updateTask = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+  const { name, description, startDate, endDate, priority, status, progress } =
+    req.body;
+
+  if (!taskId) {
+    throw new ApiError(401, "", "tasId is required to update the task");
+  }
+  try {
+    if (!name) {
+      throw new ApiError(400, "", "Name of the task is required");
+    }
+
+    const updated = await Task.findByIdAndUpdate(
+      taskId,
+      {
+        $set: {
+          name,
+          description,
+          startDate,
+          endDate,
+          priority,
+          status,
+          progress,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, updated, "the task is updated successfully"));
+  } catch (error) {
+    throw new ApiError(500, "", "Something went wrong while updating the task");
+  }
+});
+
+const deleteTask = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+  if (!taskId) {
+    throw new ApiError(401, "", "tasId is required to update the task");
+  }
+
+  try {
+    const deleted = await Task.findByIdAndDelete(taskId);
+
+    res
+      .status(300)
+      .json(new ApiResponse(300, "", "The task is deleted successFully"));
+  } catch (error) {
+    throw new ApiError(500, error, "Something went wrong while deleting");
+  }
+});
+export { createAnTask, updateTask, deleteTask };
