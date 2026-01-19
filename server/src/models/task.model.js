@@ -40,6 +40,17 @@ const schema = new Schema(
       max: [100, "Progress cannot be greater then 100"],
       default: 0,
     },
+    assigned: [
+      {
+        id: {
+          type: Schema.Types.ObjectId,
+        },
+        email: {
+          type: String,
+        },
+        _id: false,
+      },
+    ],
   },
   {
     timestamps: true,
