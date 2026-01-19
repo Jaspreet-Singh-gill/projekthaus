@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  assignedTaskUpdation,
   assignTask,
   createAnTask,
   deleteAssignTask,
@@ -39,5 +40,9 @@ router
 router
   .route("/:projectId/:taskId/delete-assigned-member")
   .delete(verifyJWT, verifyAdminAndProjectManager, deleteAssignTask);
+
+router
+  .route("/:projectId/:taskId/updationOfTask")
+  .put(verifyJWT, memberOfProject, assignedTaskUpdation);
 
 export default router;

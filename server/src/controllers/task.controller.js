@@ -149,7 +149,7 @@ const assignTask = asyncHandler(async (req, res, next) => {
       assignedList.map((obj) => {
         const emailObject = {
           email: obj.email,
-          subject: " new assignement ",   // increases efficiency by running all the sendMails parallely and saves time
+          subject: " new assignement ", // increases efficiency by running all the sendMails parallely and saves time
           mailContent: assignedEmail(
             project.projectName,
             "task",
@@ -158,15 +158,12 @@ const assignTask = asyncHandler(async (req, res, next) => {
           ),
         };
         return sendMail(emailObject);
-       
       }),
     );
 
-    arr = [...arr ,...task.assigned];
+    arr = [...arr, ...task.assigned];
 
-    const combined = new Map(
-      arr.map((obj) => [obj.id.toString(), obj]),
-    );
+    const combined = new Map(arr.map((obj) => [obj.id.toString(), obj]));
     task.assigned = Array.from(combined.values());
 
     await task.save({ validateBeforeSave: false });
@@ -206,6 +203,43 @@ const deleteAssignTask = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, "", "The user is removed from this task"));
 });
 
+const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(401, "", "tasId is required to update the task");
+  }
+  const { progress, status } = req.body;
+  if (!progress || !status) {
+    throw new ApiError(401, "", "progress and status both of them required");
+  }
+  const user = req.user;
+
+  const task = await Task.findById(taskId);
+  if (!task) {
+    throw new ApiError(500, "", "Something went wrong");
+  }
+
+  let arr = task.assigned;
+  let canChange = false;
+  arr?.forEach((obj) => {
+    if (obj.id.equals(user._id)) canChange = true;
+  });
+  if (!canChange) {
+    throw new ApiError(
+      400,
+      "",
+      "You cannot update this task as this was not assigned to you",
+    );
+  }
+
+  task.status = status;
+  task.progress = progress;
+
+  await task.save({ validateBeforeSave: false });
+  res.status(200).json(new ApiResponse(200, "", "update is successfull"));
+});
+
 export {
   createAnTask,
   updateTask,
@@ -214,4 +248,5 @@ export {
   getAllTheTask,
   assignTask,
   deleteAssignTask,
+  assignedTaskUpdation,
 };
