@@ -10,6 +10,16 @@ const schema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
+  fileName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  mimetype: {
+    type: String,
+    required: true,
+    trim: true,
+  },
 });
 
 const taskFile = new mongoose.model("taskFile", schema);

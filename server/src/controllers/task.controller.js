@@ -3,6 +3,8 @@ import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { Task } from "../models/task.model.js";
 import { sendMail, assignedEmail } from "../utils/mail.js";
+import { taskFile } from "../models/taskfile.model.js";
+import { uploadToCloudnary } from "../utils/cloudinary.js";
 
 const createAnTask = asyncHandler(async (req, res, next) => {
   const project = req.project;
@@ -240,6 +242,41 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });
 
+const attachFiles = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(401, "", "tasId is required to update the task");
+  }
+
+  if (!req.files || req.files.length == 0) {
+    throw new ApiError(401, "", "Files are required to send to the cloud");
+  }
+
+  try {
+    const uploadArrayOfFiles = req.files.map(async (obj) => {
+      const response = await uploadToCloudnary(obj.path);
+      return await taskFile.create({
+        url: response.url,
+        taskId: taskId,
+        fileName: obj.originalname,
+        mimetype: obj.mimetype,
+      });
+    });
+
+    await Promise.all(uploadArrayOfFiles);
+
+    res
+      .status(201)
+      .json(
+        new ApiResponse(201, "", "Files are successFully attached to the task"),
+      );
+  } catch (error) {
+    
+    throw new ApiError(500, error, "Something went wrong");
+  }
+});
+
 export {
   createAnTask,
   updateTask,
@@ -249,4 +286,5 @@ export {
   assignTask,
   deleteAssignTask,
   assignedTaskUpdation,
+  attachFiles,
 };

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   assignedTaskUpdation,
   assignTask,
+  attachFiles,
   createAnTask,
   deleteAssignTask,
   deleteTask,
@@ -14,6 +15,7 @@ import {
   memberOfProject,
   verifyAdminAndProjectManager,
 } from "../middlewares/project.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -44,5 +46,14 @@ router
 router
   .route("/:projectId/:taskId/updationOfTask")
   .put(verifyJWT, memberOfProject, assignedTaskUpdation);
+
+router
+  .route("/:projectId/:taskId/attach-files")
+  .post(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    upload.array("filesToSend", 5),
+    attachFiles,
+  );
 
 export default router;
