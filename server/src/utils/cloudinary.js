@@ -37,9 +37,11 @@ const uploadToCloudnary = async function (
   }
 };
 
-const deleteFromCloudinary = async function (public_id) {
+const deleteFromCloudinary = async function (public_id,type = "image") {
   try {
-    const deleteResult = await cloudinary.uploader.destroy(public_id);
+    const deleteResult = await cloudinary.uploader.destroy(public_id,{
+      resource_type:type
+    });
     if (deleteResult.result == "ok")
       console.log("File deleted successFully from cloud");
     else console.log("Files result after deletion is ", deleteResult.result);

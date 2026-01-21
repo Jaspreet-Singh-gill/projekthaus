@@ -9,6 +9,8 @@ import {
   getAllTheTask,
   getTheTask,
   updateTask,
+  getAllTheFiles,
+  deleteTheFile,
 } from "../controllers/task.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import {
@@ -55,5 +57,13 @@ router
     upload.array("filesToSend", 5),
     attachFiles,
   );
+
+router
+  .route("/:projectId/:taskId/get-all-files")
+  .get(verifyJWT, memberOfProject, getAllTheFiles);
+
+router
+  .route("/:projectId/:taskId/:fileId/delete-the-file")
+  .delete(verifyJWT, verifyAdminAndProjectManager, deleteTheFile);
 
 export default router;

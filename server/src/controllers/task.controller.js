@@ -4,7 +4,10 @@ import { ApiResponse } from "../utils/api-response.js";
 import { Task } from "../models/task.model.js";
 import { sendMail, assignedEmail } from "../utils/mail.js";
 import { taskFile } from "../models/taskfile.model.js";
-import { uploadToCloudnary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadToCloudnary,
+} from "../utils/cloudinary.js";
 
 const createAnTask = asyncHandler(async (req, res, next) => {
   const project = req.project;
@@ -260,7 +263,9 @@ const attachFiles = asyncHandler(async (req, res, next) => {
         url: response.url,
         taskId: taskId,
         fileName: obj.originalname,
-        mimetype: obj.mimetype,
+        fileKind : response.resource_type,
+        publicId: response.public_id,
+
       });
     });
 
@@ -272,8 +277,58 @@ const attachFiles = asyncHandler(async (req, res, next) => {
         new ApiResponse(201, "", "Files are successFully attached to the task"),
       );
   } catch (error) {
-    
+    console.log(error);
     throw new ApiError(500, error, "Something went wrong");
+  }
+});
+
+//can be accessed by any member of the project task
+const getAllTheFiles = asyncHandler(async (req, res, next) => {
+  const { taskId } = req.params;
+
+  if (!taskId) {
+    throw new ApiError(401, "", "tasId is required to update the task");
+  }
+
+  const files = await taskFile.find({
+    taskId,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, files, "Files are sended successfully"));
+});
+
+const deleteTheFile = asyncHandler(async (req, res, next) => {
+  const { taskId, fileId } = req.params;
+
+  if (!taskId || !fileId) {
+    throw new ApiError(
+      401,
+      "",
+      "tasId  and fileId both are required to delete the file from this task",
+    );
+  }
+  try {
+    const file = await taskFile.findById(fileId);
+    const deletedTaskFile = await taskFile.findByIdAndDelete(fileId);
+
+    await deleteFromCloudinary(file.publicId,file.fileKind);
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, "", "The file is deleted successFully"));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json(
+        new ApiResponse(
+          500,
+          error,
+          "Something went wrong when deleting the file",
+        ),
+      );
   }
 });
 
@@ -287,4 +342,6 @@ export {
   deleteAssignTask,
   assignedTaskUpdation,
   attachFiles,
+  getAllTheFiles,
+  deleteTheFile,
 };
