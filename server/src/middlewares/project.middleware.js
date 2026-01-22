@@ -94,4 +94,14 @@ const memberOfProject = asyncHandler(async (req, res, next) => {
 
 });
 
+
+
+const isTaskBelongsToProject = asyncHandler(async (req,res,next)=>{
+
+  const {taskId} = req.params;
+
+  
+
+});
+
 export { verifyAdmin, verifyAdminAndProjectManager ,memberOfProject};

@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { createAnSubTask } from "../controllers/subtask.controller.js";
+import {
+  createAnSubTask,
+  updateSubTask,
+  getTheSubTask,
+  getAllTheSubTask,
+  deleteSubTask,
+} from "../controllers/subtask.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import {
   memberOfProject,
@@ -11,9 +17,22 @@ const router = Router();
 
 router
   .route("/:projectId/:taskId/create-subtask")
-  .post(verifyJWT,verifyAdminAndProjectManager, createAnSubTask);
+  .post(verifyJWT, verifyAdminAndProjectManager, createAnSubTask);
 
+router
+  .route("/:projectId/:taskId/:subTaskId/update-subtask")
+  .put(verifyJWT, verifyAdminAndProjectManager, updateSubTask);
 
+router
+  .route("/:projectId/:taskId/:subTaskId/delete-subtask")
+  .delete(verifyJWT, verifyAdminAndProjectManager, deleteSubTask);
 
-  
+router
+  .route("/:projectId/:taskId/:subTaskId/get-the-subtask")
+  .get(verifyJWT, memberOfProject, getTheSubTask);
+
+router
+  .route("/:projectId/:taskId/get-all-subtask")
+  .get(verifyJWT, memberOfProject, getAllTheSubTask);
+
 export default router;
