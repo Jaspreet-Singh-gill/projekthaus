@@ -7,6 +7,7 @@ import {
   deleteFromCloudinary,
   uploadToCloudnary,
 } from "../utils/cloudinary.js";
+import { subTaskFile } from "../models/subtaskFile.model.js";
 
 const createAnSubTask = asyncHandler(async (req, res, next) => {
   const project = req.project;
@@ -136,17 +137,13 @@ const getTheSubTask = asyncHandler(async (req, res, next) => {
 });
 
 const getAllTheSubTask = asyncHandler(async (req, res, next) => {
-  const { taskId} = req.params;
+  const { taskId } = req.params;
   if (!taskId) {
-    throw new ApiError(
-      401,
-      "",
-      "taskId is required to update the task",
-    );
+    throw new ApiError(401, "", "taskId is required to update the task");
   }
   const Subtasks = await SubTask.find({
     projectId: req.project._id,
-    taskId
+    taskId,
   });
 
   if (!Subtasks) {
@@ -157,7 +154,6 @@ const getAllTheSubTask = asyncHandler(async (req, res, next) => {
     .status(200)
     .json(new ApiResponse(200, Subtasks, "List of Subtasks had been sended"));
 });
-
 
 const assignSubTask = asyncHandler(async (req, res, next) => {
   const { subTaskId } = req.params;
@@ -274,14 +270,103 @@ const assignedSubTaskUpdation = asyncHandler(async (req, res, next) => {
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });
 
-export { 
-    createAnSubTask,
-    updateSubTask,
-    deleteSubTask,
-    getTheSubTask,
-    getAllTheSubTask,
-    assignSubTask,
-    deleteAssignSubTask,
-    assignedSubTaskUpdation
+const attachFilesToSubTask = asyncHandler(async (req, res, next) => {
+  const { subTaskId,taskId } = req.params;
 
- };
+
+  if (!subTaskId) {
+    throw new ApiError(401, "", "SubTasId is required to update the task");
+  }
+
+  if (!req.files || req.files.length == 0) {
+    throw new ApiError(401, "", "Files are required to send to the cloud");
+  }
+
+  try {
+    const uploadArrayOfFiles = req.files.map(async (obj) => {
+      const response = await uploadToCloudnary(obj.path);
+      return await subTaskFile.create({
+        url: response.url,
+        taskId: taskId,
+        subTaskId,
+        fileName: obj.originalname,
+        fileKind: response.resource_type,
+        publicId: response.public_id,
+      });
+    });
+
+    await Promise.all(uploadArrayOfFiles);
+
+    res
+      .status(201)
+      .json(
+        new ApiResponse(201, "", "Files are successFully attached to the task"),
+      );
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, error, "Something went wrong");
+  }
+});
+
+const getAllTheFilesSubTask = asyncHandler(async (req, res, next) => {
+  const { taskId ,subTaskId} = req.params;
+
+  if (!subTaskId) {
+    throw new ApiError(401, "", "subTasId is required to update the task");
+  }
+
+  const files = await subTaskFile.find({
+    subTaskId,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, files, "Files are sended successfully"));
+});
+
+const deleteTheFile = asyncHandler(async (req, res, next) => {
+  const { subTaskId, fileId } = req.params;
+
+  if (!subTaskId || !fileId) {
+    throw new ApiError(
+      401,
+      "",
+      "subtasId  and fileId both are required to delete the file from this task",
+    );
+  }
+  try {
+    const file = await subTaskFile.findById(fileId);
+    const deletedTaskFile = await subTaskFile.findByIdAndDelete(fileId);
+
+    await deleteFromCloudinary(file.publicId, file.fileKind);
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, "", "The file is deleted successFully"));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json(
+        new ApiResponse(
+          500,
+          error,
+          "Something went wrong when deleting the file",
+        ),
+      );
+  }
+});
+
+export {
+  createAnSubTask,
+  updateSubTask,
+  deleteSubTask,
+  getTheSubTask,
+  getAllTheSubTask,
+  assignSubTask,
+  deleteAssignSubTask,
+  assignedSubTaskUpdation,
+  attachFilesToSubTask,
+  getAllTheFilesSubTask,
+  deleteTheFile,
+};

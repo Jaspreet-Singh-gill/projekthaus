@@ -8,6 +8,9 @@ import {
   assignSubTask,
   deleteAssignSubTask,
   assignedSubTaskUpdation,
+  attachFilesToSubTask,
+  getAllTheFilesSubTask,
+  deleteTheFile,
 } from "../controllers/subtask.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import {
@@ -50,4 +53,20 @@ router
   .route("/:projectId/:taskId/:subTaskId/update-assigned-subtask")
   .put(verifyJWT, memberOfProject, assignedSubTaskUpdation);
 
+router
+  .route("/:projectId/:taskId/:subTaskId/attach-files-subtask")
+  .post(
+    verifyJWT,
+    upload.array("filesToSend", 5),
+    verifyAdminAndProjectManager,
+    attachFilesToSubTask,
+  );
+
+router
+  .route("/:projectId/:taskId/:subTaskId/get-all-files")
+  .get(verifyJWT, memberOfProject, getAllTheFilesSubTask);
+
+router
+  .route("/:projectId/:taskId/:subTaskId/:fileId/delete-the-file")
+  .delete(verifyJWT, verifyAdminAndProjectManager, deleteTheFile);
 export default router;
