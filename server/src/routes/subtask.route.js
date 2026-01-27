@@ -5,6 +5,9 @@ import {
   getTheSubTask,
   getAllTheSubTask,
   deleteSubTask,
+  assignSubTask,
+  deleteAssignSubTask,
+  assignedSubTaskUpdation,
 } from "../controllers/subtask.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import {
@@ -34,5 +37,17 @@ router
 router
   .route("/:projectId/:taskId/get-all-subtask")
   .get(verifyJWT, memberOfProject, getAllTheSubTask);
+
+router
+  .route("/:projectId/:taskId/:subTaskId/assign-subTask")
+  .post(verifyJWT, verifyAdminAndProjectManager, assignSubTask);
+
+router
+  .route("/:projectId/:taskId/:subTaskId/delete-assigned")
+  .delete(verifyJWT, verifyAdminAndProjectManager, deleteAssignSubTask);
+
+router
+  .route("/:projectId/:taskId/:subTaskId/update-assigned-subtask")
+  .put(verifyJWT, memberOfProject, assignedSubTaskUpdation);
 
 export default router;
