@@ -13,6 +13,9 @@ const createAnTask = asyncHandler(async (req, res, next) => {
   const project = req.project;
   const { name, description, startDate, endDate, priority, status, progress } =
     req.body;
+  if (!name) {
+    throw new ApiError(400, "", "Name of the task is required");
+  }
   try {
     const createdTask = await Task.create({
       name,
@@ -24,10 +27,6 @@ const createAnTask = asyncHandler(async (req, res, next) => {
       status,
       progress,
     });
-
-    if (!name) {
-      throw new ApiError(400, "", "Name of the task is required");
-    }
 
     res
       .status(201)
@@ -263,9 +262,8 @@ const attachFiles = asyncHandler(async (req, res, next) => {
         url: response.url,
         taskId: taskId,
         fileName: obj.originalname,
-        fileKind : response.resource_type,
+        fileKind: response.resource_type,
         publicId: response.public_id,
-
       });
     });
 
@@ -313,7 +311,7 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
     const file = await taskFile.findById(fileId);
     const deletedTaskFile = await taskFile.findByIdAndDelete(fileId);
 
-    await deleteFromCloudinary(file.publicId,file.fileKind);
+    await deleteFromCloudinary(file.publicId, file.fileKind);
 
     res
       .status(200)

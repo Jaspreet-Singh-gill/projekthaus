@@ -15,6 +15,9 @@ const createAnSubTask = asyncHandler(async (req, res, next) => {
 
   const { name, description, startDate, endDate, priority, status, progress } =
     req.body;
+  if (!name) {
+    throw new ApiError(400, "", "Name of the task is required");
+  }
   try {
     const createdsubTask = await SubTask.create({
       name,
@@ -27,10 +30,6 @@ const createAnSubTask = asyncHandler(async (req, res, next) => {
       status,
       progress,
     });
-
-    if (!name) {
-      throw new ApiError(400, "", "Name of the task is required");
-    }
 
     res
       .status(201)
@@ -271,8 +270,7 @@ const assignedSubTaskUpdation = asyncHandler(async (req, res, next) => {
 });
 
 const attachFilesToSubTask = asyncHandler(async (req, res, next) => {
-  const { subTaskId,taskId } = req.params;
-
+  const { subTaskId, taskId } = req.params;
 
   if (!subTaskId) {
     throw new ApiError(401, "", "SubTasId is required to update the task");
@@ -309,7 +307,7 @@ const attachFilesToSubTask = asyncHandler(async (req, res, next) => {
 });
 
 const getAllTheFilesSubTask = asyncHandler(async (req, res, next) => {
-  const { taskId ,subTaskId} = req.params;
+  const { taskId, subTaskId } = req.params;
 
   if (!subTaskId) {
     throw new ApiError(401, "", "subTasId is required to update the task");
