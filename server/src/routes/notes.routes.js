@@ -1,6 +1,9 @@
 import { Router } from "express";
 import verifyJWT from "../middlewares/auth.middleware.js";
-import { verifyAdmin } from "../middlewares/project.middleware.js";
+import {
+  verifyAdmin,
+  memberOfProject,
+} from "../middlewares/project.middleware.js";
 import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import {
@@ -22,7 +25,11 @@ router
 router
   .route("/:projectId/:noteId/delete-note")
   .delete(verifyJWT, verifyAdmin, deleteNotes);
-router.route("/:projectId/list-notes").get(getAllTheNotes);
-router.route("/:projectId/:noteId/get-note").get(getTheNote);
+router
+  .route("/:projectId/list-notes")
+  .get(verifyJWT, memberOfProject, getAllTheNotes);
+router
+  .route("/:projectId/:noteId/get-note")
+  .get(verifyJWT, memberOfProject, getTheNote);
 
 export default router;
