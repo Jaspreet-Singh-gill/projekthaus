@@ -108,7 +108,7 @@ const listAllTheProject = asyncHandler(async (req, res, next) => {
     {
       $match: {
         $or: [
-          { member: new mongoose.Types.ObjectId(user._id) },
+          { members: new mongoose.Types.ObjectId(user._id) },
           { admins: new mongoose.Types.ObjectId(user._id) },
           { projectManagers: new mongoose.Types.ObjectId(user._id) },
         ],
