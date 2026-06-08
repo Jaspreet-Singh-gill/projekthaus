@@ -204,7 +204,7 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const user = await User.findOne({
       addMemberToken: hashedToken,
-      // addMemberTokenExpiry: { $gt: Date.now() },
+      addMemberTokenExpiry: { $gt: Date.now() },
     });
     if (!user) {
       throw "User is not found";
