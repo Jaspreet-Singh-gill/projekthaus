@@ -69,7 +69,7 @@ const deleteNotes = asyncHandler(async (req, res, next) => {
     await Notes.findByIdAndDelete(noteId);
     res
       .status(200)
-      .json(new ApiResponse(200, "The note is successfully deleted"));
+      .json(new ApiResponse(200,[], "The note is successfully deleted"));
   } catch (error) {
     throw new ApiError(
       400,
