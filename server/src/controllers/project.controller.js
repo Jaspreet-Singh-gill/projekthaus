@@ -327,9 +327,28 @@ const removeTheMember = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "", "the project id is required");
   }
 
-
   if (userId == req.user._id) {
-    throw new ApiError(401, "", "admin cannot be removed");
+    throw new ApiError(401, "", "you cannot remove youself from the project");
+  }
+
+  const projectDetails = await Project.findById(projectId);
+  if (!projectDetails) {
+    throw new ApiError(
+      404,
+      "",
+      "project with the given project id does not found",
+    );
+  }
+
+  if (
+    projectDetails.admins.length == 1 &&
+    projectDetails.admins[0].toString() === userId.toString()
+  ) {
+    throw new ApiError(
+      401,
+      "",
+      "Admin is the last one so it cannot be removed",
+    );
   }
   try {
     const project = await Project.findByIdAndUpdate(
@@ -360,8 +379,8 @@ const changeRoles = asyncHandler(async (req, res, next) => {
   if (!projectId) {
     throw new ApiError(400, "", "the project id is required");
   }
-  if(userId == req.user._id){
-    throw new ApiError(401,"","you can not asign youself a role");
+  if (userId == req.user._id) {
+    throw new ApiError(401, "", "you can not asign youself a role");
   }
 
   try {
@@ -424,5 +443,5 @@ export {
   htmlForm,
   getTheMembers,
   removeTheMember,
-  changeRoles
+  changeRoles,
 };
