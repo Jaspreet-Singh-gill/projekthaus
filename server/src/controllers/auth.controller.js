@@ -55,7 +55,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
   let response = undefined;
   const filePath = req.file?.path;
-  if (filePath) response = await uploadToCloudnary(filePath);
+  if (filePath) {
+    response = await uploadToCloudnary(filePath);
+  }
   //console.log(response.public_id);
   const object = {
     username,
@@ -111,7 +113,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
         ),
       );
   } catch (error) {
-    deleteFromCloudinary(response.public_id);
+    if (!response) {
+      deleteFromCloudinary(response.public_id);
+    }
     throw error;
   }
 });
@@ -295,8 +299,7 @@ const changeAvatar = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    if (req.user.avatar)
-      await deleteFromCloudinary(req.user.avatar.publicId);
+    if (req.user.avatar) await deleteFromCloudinary(req.user.avatar.publicId);
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
