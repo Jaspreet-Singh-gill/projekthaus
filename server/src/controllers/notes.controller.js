@@ -45,7 +45,7 @@ const updateNotes = asyncHandler(async (req, res, next) => {
     },
   });
 
-  if (!updatedContent) {
+  if (!updatedNote) {
     throw new ApiError(400, "", "some error has occured while updating");
   }
 
