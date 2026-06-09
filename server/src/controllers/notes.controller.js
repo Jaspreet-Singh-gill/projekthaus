@@ -38,12 +38,15 @@ const updateNotes = asyncHandler(async (req, res, next) => {
   if (!updatedContent) {
     throw new ApiError(400, "", "some content is required to being updated");
   }
-
-  const updatedNote = await Notes.findByIdAndUpdate(noteId, {
-    $set: {
-      content: updatedContent,
+  const updatedNote = await Notes.findOneAndUpdate(
+    { _id: noteId, projectId: req.projectId },
+    {
+      $set: {
+        content: updatedContent,
+      },
     },
-  });
+    { $new: true },
+  );
 
   if (!updatedNote) {
     throw new ApiError(400, "", "some error has occured while updating");
@@ -65,11 +68,12 @@ const deleteNotes = asyncHandler(async (req, res, next) => {
   if (!noteId) {
     throw new ApiError(400, "", "id of the note is required to delete it");
   }
+
   try {
-    await Notes.findByIdAndDelete(noteId);
+    await Notes.findOneAndDelete({ _id: noteId, projectId: req.projectId });
     res
       .status(200)
-      .json(new ApiResponse(200,[], "The note is successfully deleted"));
+      .json(new ApiResponse(200, [], "The note is successfully deleted"));
   } catch (error) {
     throw new ApiError(
       400,
