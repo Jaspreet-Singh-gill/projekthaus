@@ -121,7 +121,7 @@ const listAllTheProject = asyncHandler(async (req, res, next) => {
     },
   ]);
 
-  if (project.length === 0) {
+  if (projects.length === 0) {
     throw new ApiError(401, "", "something went wrong");
   }
 
