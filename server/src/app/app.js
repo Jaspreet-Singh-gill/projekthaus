@@ -8,6 +8,7 @@ import subTaskRoute from "../routes/subtask.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { errorHandler } from "../middlewares/error.middleware.js";
+import { globalLimiter, authLimiter } from "../utils/rateLimiter.js";
 
 const app = express({ mergeParams: true });
 
@@ -17,8 +18,8 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN?.split(","),
     credentials: true,
-    methods: ["get", "post", "put", "update", "delete"],
-    allowedHeaders: ["content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 //set the limit of json size that can be sended
@@ -29,16 +30,18 @@ app.use(express.urlencoded({ limit: "16kb" }));
 //make the content of this folder static
 app.use(express.static("public"));
 
+app.use(globalLimiter);
 //middleware to access and send cookies
 
 app.use(cookieParser());
 
 app.use("/api/v1/healthcheck", healthRoute);
-app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/auth", authLimiter, authRoute);
 app.use("/api/v1/project", projectRoute);
 app.use("/api/v1/notes", notesRoute);
 app.use("/api/v1/task", taskRoute);
 app.use("/api/v1/subtask", subTaskRoute);
-app.use();
+app.use(errorHandler);
+
 
 export default app;
