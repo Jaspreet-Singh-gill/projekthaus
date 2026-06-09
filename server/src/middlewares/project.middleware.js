@@ -3,6 +3,8 @@ import { Project } from "../models/project.model.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/apiErrorResponse.js";
 import { asyncHandler } from "../utils/aysncHandler.js";
+import { Task } from "../models/task.model.js";
+import { SubTask } from "../models/subtask.model.js";
 
 const verifyAdmin = asyncHandler(async (req, res, next) => {
   const { projectId } = req.params; //get the projectId from the url
@@ -85,23 +87,56 @@ const memberOfProject = asyncHandler(async (req, res, next) => {
     },
   ]);
 
-    if (!project || project.length == 0) {
-      throw new ApiError(400, "", "unautherized to access this route");
-    }
+  if (!project || project.length == 0) {
+    throw new ApiError(400, "", "unautherized to access this route");
+  }
 
-    req.project = project[0];
-    next();
-
+  req.project = project[0];
+  next();
 });
 
+const isTaskBelongsToProject = asyncHandler(async (req, res, next) => {
+  const { taskId, projectId } = req.params;
+  if (!taskId || !projectId) {
+    throw new ApiError(400, "", "project id or task id is missing");
+  }
 
+  const projectTask = await Task.findOne({
+    _id: taskId,
+    projectId: projectId,
+  });
 
-const isTaskBelongsToProject = asyncHandler(async (req,res,next)=>{
-
-  const {taskId} = req.params;
-
-  
-
+  if (!projectTask) {
+    throw new ApiError(404, "", "Task not found in this project");
+  }
+  req.task = projectTask;
+  next();
 });
 
-export { verifyAdmin, verifyAdminAndProjectManager ,memberOfProject};
+const isSubTaskBelongToProjectTask = asyncHandler(async (req, res, next) => {
+  const { taskId, projectId, subTaskId } = req.params;
+
+  if (!taskId || !projectId || !subTaskId) {
+    throw new ApiError(401, "", "taskid projectId subtaskid is missing");
+  }
+
+  const projectSubTask = await SubTask.findOne({
+    _id: subTaskId,
+    projectId,
+    taskId,
+  });
+
+  if (!projectSubTask) {
+    throw new ApiError(404, "", "SubTask not found for this task and project");
+  }
+  req.subTask = projectSubTask;
+  next();
+});
+
+export {
+  verifyAdmin,
+  verifyAdminAndProjectManager,
+  memberOfProject,
+  isTaskBelongsToProject,
+  isSubTaskBelongToProjectTask,
+};

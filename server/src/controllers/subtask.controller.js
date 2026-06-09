@@ -125,10 +125,7 @@ const getTheSubTask = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const task = await SubTask.findOne({ _id: subTaskId, taskId });
-  if (!task) {
-    throw new ApiError(404, "", "SubTask not found with the given task id");
-  }
+  const task = req.subTask;
 
   res
     .status(200)

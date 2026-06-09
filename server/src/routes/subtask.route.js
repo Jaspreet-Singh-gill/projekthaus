@@ -16,6 +16,8 @@ import verifyJWT from "../middlewares/auth.middleware.js";
 import {
   memberOfProject,
   verifyAdminAndProjectManager,
+  isTaskBelongsToProject,
+  isSubTaskBelongToProjectTask,
 } from "../middlewares/project.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -27,31 +29,56 @@ router
 
 router
   .route("/:projectId/:taskId/:subTaskId/update-subtask")
-  .put(verifyJWT, verifyAdminAndProjectManager, updateSubTask);
+  .put(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
+    updateSubTask,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/delete-subtask")
-  .delete(verifyJWT, verifyAdminAndProjectManager, deleteSubTask);
+  .delete(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
+    deleteSubTask,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/get-the-subtask")
-  .get(verifyJWT, memberOfProject, getTheSubTask);
+  .get(verifyJWT, memberOfProject, isSubTaskBelongToProjectTask, getTheSubTask);
 
 router
   .route("/:projectId/:taskId/get-all-subtask")
-  .get(verifyJWT, memberOfProject, getAllTheSubTask);
+  .get(verifyJWT, memberOfProject, isTaskBelongsToProject, getAllTheSubTask);
 
 router
   .route("/:projectId/:taskId/:subTaskId/assign-subTask")
-  .post(verifyJWT, verifyAdminAndProjectManager, assignSubTask);
+  .post(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
+    assignSubTask,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/delete-assigned")
-  .delete(verifyJWT, verifyAdminAndProjectManager, deleteAssignSubTask);
+  .delete(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
+    deleteAssignSubTask,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/update-assigned-subtask")
-  .put(verifyJWT, memberOfProject, assignedSubTaskUpdation);
+  .put(
+    verifyJWT,
+    memberOfProject,
+    isSubTaskBelongToProjectTask,
+    assignedSubTaskUpdation,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/attach-files-subtask")
@@ -59,14 +86,25 @@ router
     verifyJWT,
     upload.array("filesToSend", 5),
     verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
     attachFilesToSubTask,
   );
 
 router
   .route("/:projectId/:taskId/:subTaskId/get-all-files")
-  .get(verifyJWT, memberOfProject, getAllTheFilesSubTask);
+  .get(
+    verifyJWT,
+    memberOfProject,
+    isSubTaskBelongToProjectTask,
+    getAllTheFilesSubTask,
+  );
 
 router
   .route("/:projectId/:taskId/:subTaskId/:fileId/delete-the-file")
-  .delete(verifyJWT, verifyAdminAndProjectManager, deleteTheFile);
+  .delete(
+    verifyJWT,
+    verifyAdminAndProjectManager,
+    isSubTaskBelongToProjectTask,
+    deleteTheFile,
+  );
 export default router;

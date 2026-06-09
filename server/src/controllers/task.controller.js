@@ -104,7 +104,7 @@ const getTheTask = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "", "tasId is required to update the task");
   }
 
-  const task = await Task.findById(taskId);
+  const task = req.task;
   if (!task) {
     throw new ApiError(404, "", "Task not found with the given task id");
   }
