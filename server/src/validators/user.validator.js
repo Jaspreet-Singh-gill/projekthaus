@@ -32,9 +32,9 @@ const registerLoginVerifcation = function () {
       .toLowerCase()
       .notEmpty()
       .withMessage("gender is required"),
-    body("phoneNUmber").trim().optional(),
+    body("phoneNumber").trim().optional(),
     body("address").trim().toLowerCase().optional(),
-    body("organisation").trim().toLowerCase().optional(),
+    body("organization").trim().toLowerCase().optional(),
     body("age").optional(),
   ];
 };
@@ -69,7 +69,7 @@ const updateInfo = function () {
       .toLowerCase()
       .notEmpty()
       .withMessage("gender is required"),
-    body("phonenumber").trim().optional(),
+    body("phoneNumber").trim().optional(),
     body("address").trim().toLowerCase().optional(),
     body("organization").trim().toLowerCase().optional(),
     body("age").optional(),

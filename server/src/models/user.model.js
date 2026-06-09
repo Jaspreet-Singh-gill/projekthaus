@@ -39,7 +39,7 @@ const user = Schema(
       type: String,
       required: [true, "password is required"],
     },
-    phonenumber: {
+    phoneNumber: {
       countryCode: {
         type: String,
       },

@@ -119,7 +119,7 @@ const getAllTheTask = asyncHandler(async (req, res, next) => {
     projectId: req.project._id,
   });
 
-  if (!tasks) {
+  if (tasks.length == 0) {
     throw new ApiError(400, "", "The tasks are empty");
   }
 

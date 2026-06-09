@@ -142,7 +142,7 @@ const getAllTheSubTask = asyncHandler(async (req, res, next) => {
     taskId,
   });
 
-  if (!Subtasks) {
+  if (Subtasks.length == 0) {
     throw new ApiError(400, "", "The Subtasks are empty");
   }
 

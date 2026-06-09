@@ -335,7 +335,7 @@ const changeAvatar = asyncHandler(async (req, res, next) => {
 const updateUserProfile = asyncHandler(async (req, res, next) => {
   //frontend is made such that even if user change one thing
   //it will send all the data field wheater the information is change or not to make things simple
-  const { username, name, gender, phonenumber, organization, address, age } =
+  const { username, name, gender, phoneNumber, organization, address, age } =
     req.body;
 
   const user = await User.findByIdAndUpdate(
@@ -344,7 +344,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
       $set: {
         name,
         gender,
-        phonenumber,
+        phoneNumber,
         organization,
         address,
         age,
