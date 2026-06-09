@@ -113,7 +113,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
         ),
       );
   } catch (error) {
-    if (!response) {
+    if (response) {
       deleteFromCloudinary(response.public_id);
     }
     throw error;
