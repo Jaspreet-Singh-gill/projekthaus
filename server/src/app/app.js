@@ -6,10 +6,21 @@ import notesRoute from "../routes/notes.routes.js";
 import taskRoute from "../routes/task.route.js";
 import subTaskRoute from "../routes/subtask.route.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { errorHandler } from "../middlewares/error.middleware.js";
 
 const app = express({ mergeParams: true });
 
+//add the cors for browsers
+
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN?.split(","),
+    credentials: true,
+    methods: ["get", "post", "put", "update", "delete"],
+    allowedHeaders: ["content-Type", "Authorization"],
+  }),
+);
 //set the limit of json size that can be sended
 app.use(express.json({ limit: "16kb" }));
 //set the limit of data that can be send using the url
