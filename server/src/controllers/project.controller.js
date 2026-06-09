@@ -13,7 +13,7 @@ const creatProject = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
   if (!name) {
     throw new ApiError(
-      401,
+      400,
       "",
       "The name of the project is required to create it",
     );
@@ -49,7 +49,7 @@ const updateProject = asyncHandler(async (req, res, next) => {
   const project = req.project;
   if (!name) {
     throw new ApiError(
-      401,
+      400,
       "",
       "The name of the project is required for updation of it",
     );
@@ -69,7 +69,7 @@ const updateProject = asyncHandler(async (req, res, next) => {
   );
 
   if (!projectToUpdate) {
-    throw new ApiError(400, "", "updation of the project was unsuccessfull");
+    throw new ApiError(404, "", "updation of the project was unsuccessfull");
   }
 
   const sendProject = projectToUpdate.toObject();
@@ -78,8 +78,8 @@ const updateProject = asyncHandler(async (req, res, next) => {
   delete sendProject.members;
 
   res
-    .status(201)
-    .json(new ApiResponse(201, sendProject, "project is updated successfully"));
+    .status(200)
+    .json(new ApiResponse(200, sendProject, "project is updated successfully"));
 });
 
 //can be accessed by
@@ -120,10 +120,6 @@ const listAllTheProject = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-
-  if (projects.length === 0) {
-    throw new ApiError(401, "", "something went wrong");
-  }
 
   res
     .status(200)
@@ -215,7 +211,7 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
       addMemberTokenExpiry: { $gt: Date.now() },
     });
     if (!user) {
-      throw new ApiError(404, "", "User is not found");
+      throw new ApiError(401, "", "Invalid or expired invite token");
     }
     const project = await Project.findByIdAndUpdate(
       projectId,
@@ -241,6 +237,9 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
         ),
       );
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     throw new ApiError(500, error, "something went wrong");
   }
 });
@@ -309,6 +308,9 @@ const userNotInaddMember = asyncHandler(async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, "", "successflly joined the project"));
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     throw new ApiError(500, error, "something went wrong");
   }
 });
@@ -336,7 +338,7 @@ const removeTheMember = asyncHandler(async (req, res, next) => {
   }
 
   if (userId == req.user._id) {
-    throw new ApiError(401, "", "you cannot remove youself from the project");
+    throw new ApiError(403, "", "you cannot remove youself from the project");
   }
 
   const projectDetails = await Project.findById(projectId);
@@ -353,7 +355,7 @@ const removeTheMember = asyncHandler(async (req, res, next) => {
     projectDetails.admins[0].toString() === userId.toString()
   ) {
     throw new ApiError(
-      401,
+      403,
       "",
       "Admin is the last one so it cannot be removed",
     );
@@ -377,7 +379,10 @@ const removeTheMember = asyncHandler(async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, "", "member is removed from the project"));
   } catch (error) {
-    throw new ApiError(400, error, "something went while deleting the member");
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, error, "something went while deleting the member");
   }
 });
 
@@ -388,7 +393,7 @@ const changeRoles = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "", "the project id is required");
   }
   if (userId == req.user._id) {
-    throw new ApiError(401, "", "you can not asign youself a role");
+    throw new ApiError(403, "", "you can not asign youself a role");
   }
 
   try {
@@ -436,7 +441,10 @@ const changeRoles = asyncHandler(async (req, res, next) => {
         ),
       );
   } catch (error) {
-    throw new ApiError(400, error, "something went while deleting the member");
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, error, "something went while updating the member role");
   }
 });
 

@@ -9,10 +9,10 @@ const globalLimiter = rateLimit({
   handler: (req, res) => {
     // executes when limit of a an ip address is reached
     res
-      .status(400)
+      .status(429)
       .json(
         new ApiResponse(
-          400,
+          429,
           null,
           "Too many requests. Please try again later.",
         ),
@@ -27,9 +27,9 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
   handler: (req, res) => {
     res
-      .status(400)
+      .status(429)
       .json(
-        new ApiResponse(400, null, "Too many requests. Please apply later."),
+        new ApiResponse(429, null, "Too many requests. Please apply later."),
       );
   },
 });

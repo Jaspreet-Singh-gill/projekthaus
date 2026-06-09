@@ -48,7 +48,7 @@ const updateTask = asyncHandler(async (req, res, next) => {
     req.body;
 
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
   try {
     if (!name) {
@@ -84,15 +84,15 @@ const updateTask = asyncHandler(async (req, res, next) => {
 const deleteTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
 
   try {
     const deleted = await Task.findByIdAndDelete(taskId);
 
     res
-      .status(300)
-      .json(new ApiResponse(300, "", "The task is deleted successFully"));
+      .status(200)
+      .json(new ApiResponse(200, "", "The task is deleted successFully"));
   } catch (error) {
     throw new ApiError(500, error, "Something went wrong while deleting");
   }
@@ -101,7 +101,7 @@ const deleteTask = asyncHandler(async (req, res, next) => {
 const getTheTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
 
   const task = req.task;
@@ -119,10 +119,6 @@ const getAllTheTask = asyncHandler(async (req, res, next) => {
     projectId: req.project._id,
   });
 
-  if (tasks.length == 0) {
-    throw new ApiError(400, "", "The tasks are empty");
-  }
-
   res
     .status(200)
     .json(new ApiResponse(200, tasks, "List of tasks had been sended"));
@@ -134,18 +130,18 @@ const assignTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
   const project = req.project;
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
   const { assignedList } = req.body;
   if (!assignedList) {
-    throw new ApiError(401, "", "assigned list members are required");
+    throw new ApiError(400, "", "assigned list members are required");
   }
 
   //checking multiple assgined user later on
 
   const task = await Task.findById(taskId);
   if (!task) {
-    throw new ApiError(500, "", "Something went wrong");
+    throw new ApiError(404, "", "Task not found");
   }
   let arr = assignedList;
   try {
@@ -176,6 +172,9 @@ const assignTask = asyncHandler(async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, "", "memeber are assigned to the task"));
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     throw new ApiError(500, error, "Something went wrong");
   }
 });
@@ -184,16 +183,16 @@ const deleteAssignTask = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
 
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
   const { assignedMemeberId } = req.body;
   if (!assignedMemeberId) {
-    throw new ApiError(401, "", "assigned list members are required");
+    throw new ApiError(400, "", "assigned list members are required");
   }
 
   const task = await Task.findById(taskId);
   if (!task) {
-    throw new ApiError(500, "", "Something went wrong");
+    throw new ApiError(404, "", "Task not found");
   }
   let arr = task.assigned;
   arr = arr?.filter((user) => user.id != assignedMemeberId);
@@ -211,17 +210,17 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
 
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
   const { progress, status } = req.body;
   if ((!progress && progress != 0) || !status) {
-    throw new ApiError(401, "", "progress and status both of them required");
+    throw new ApiError(400, "", "progress and status both of them required");
   }
   const user = req.user;
 
   const task = await Task.findById(taskId);
   if (!task) {
-    throw new ApiError(500, "", "Something went wrong");
+    throw new ApiError(404, "", "Task not found");
   }
 
   let arr = task.assigned;
@@ -231,7 +230,7 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
   });
   if (!canChange) {
     throw new ApiError(
-      400,
+      403,
       "",
       "You cannot update this task as this was not assigned to you",
     );
@@ -248,18 +247,18 @@ const attachFiles = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
 
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
 
   if (!req.files || req.files.length == 0) {
-    throw new ApiError(401, "", "Files are required to send to the cloud");
+    throw new ApiError(400, "", "Files are required to send to the cloud");
   }
 
   try {
     const uploadArrayOfFiles = req.files.map(async (obj) => {
       const response = await uploadToCloudnary(obj.path);
       if (!response)
-        throw new ApiError(501, "", "file upload failed try again latter");
+        throw new ApiError(502, "", "file upload failed try again latter");
       return await taskFile.create({
         url: response.url,
         taskId: taskId,
@@ -277,6 +276,9 @@ const attachFiles = asyncHandler(async (req, res, next) => {
         new ApiResponse(201, "", "Files are successFully attached to the task"),
       );
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.log(error);
     throw new ApiError(500, error, "Something went wrong");
   }
@@ -287,7 +289,7 @@ const getAllTheFiles = asyncHandler(async (req, res, next) => {
   const { taskId } = req.params;
 
   if (!taskId) {
-    throw new ApiError(401, "", "tasId is required to update the task");
+    throw new ApiError(400, "", "tasId is required to update the task");
   }
 
   const files = await taskFile.find({
@@ -304,7 +306,7 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
 
   if (!taskId || !fileId) {
     throw new ApiError(
-      401,
+      400,
       "",
       "tasId  and fileId both are required to delete the file from this task",
     );
@@ -320,16 +322,11 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, "", "The file is deleted successFully"));
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.log(error);
-    res
-      .status(500)
-      .json(
-        new ApiResponse(
-          500,
-          error,
-          "Something went wrong when deleting the file",
-        ),
-      );
+    throw new ApiError(500, error, "Something went wrong when deleting the file");
   }
 });
 

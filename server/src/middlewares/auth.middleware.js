@@ -22,7 +22,10 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    throw error;
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(401, [], "unauthorized access");
   }
 });
 

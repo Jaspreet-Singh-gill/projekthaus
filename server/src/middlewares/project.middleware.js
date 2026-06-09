@@ -59,7 +59,7 @@ const verifyAdminAndProjectManager = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!project || project.length == 0) {
-    throw new ApiError(400, "", "unautherized to access this route");
+    throw new ApiError(403, "", "unautherized to access this route");
   }
 
   req.project = project[0];
@@ -88,7 +88,7 @@ const memberOfProject = asyncHandler(async (req, res, next) => {
   ]);
 
   if (!project || project.length == 0) {
-    throw new ApiError(400, "", "unautherized to access this route");
+    throw new ApiError(403, "", "unautherized to access this route");
   }
 
   req.project = project[0];
@@ -117,7 +117,7 @@ const isSubTaskBelongToProjectTask = asyncHandler(async (req, res, next) => {
   const { taskId, projectId, subTaskId } = req.params;
 
   if (!taskId || !projectId || !subTaskId) {
-    throw new ApiError(401, "", "taskid projectId subtaskid is missing");
+    throw new ApiError(400, "", "taskid projectId subtaskid is missing");
   }
 
   const projectSubTask = await SubTask.findOne({

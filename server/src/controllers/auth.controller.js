@@ -98,7 +98,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
       "-password -emailVerificationToken -emailVerificationTokenExpiry",
     );
     if (!createdUser) {
-      throw new ApiError(401, [], "your registeration failed");
+      throw new ApiError(500, [], "your registeration failed");
     }
 
     req.user = createdUser;
@@ -162,11 +162,11 @@ const loginUser = asyncHandler(async (req, res, next) => {
     email,
   });
   if (!user) {
-    throw new ApiError(404, [], "invalid credentials");
+    throw new ApiError(401, [], "invalid credentials");
   }
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
-  if (!isPasswordCorrect) throw new ApiError(404, [], "invalid credentials");
+  if (!isPasswordCorrect) throw new ApiError(401, [], "invalid credentials");
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id,
@@ -231,9 +231,12 @@ const refreshTokens = asyncHandler(async (req, res, next) => {
       .status(200)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
-      .json(new ApiResponse(200, [], "refresh and token updated"));
+      .json(new ApiResponse(200, "", "refresh and token updated"));
   } catch (error) {
-    throw error;
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(401, [], "invalid token or token expired");
   }
 });
 
@@ -245,7 +248,7 @@ const resendEmailVerification = asyncHandler(async (req, res, next) => {
 
   const user = await User.findById(req.user._id);
   if (!user) {
-    throw new ApiError(402, [], "unautherized access to the server");
+    throw new ApiError(404, [], "User not found");
   }
   const { unHashedToken, hashedToken, tokenExpiry } =
     user.generateTempararyTokens();
@@ -265,8 +268,8 @@ const resendEmailVerification = asyncHandler(async (req, res, next) => {
 
     await user.save({ validateBeforeSave: false });
     return res
-      .status(201)
-      .json(new ApiResponse(201, [], "email is send for verification"));
+      .status(200)
+      .json(new ApiResponse(200, [], "email is send for verification"));
   } catch (error) {
     throw new ApiError(500, error, "Something went wrong try again");
   }
@@ -303,7 +306,7 @@ const changeAvatar = asyncHandler(async (req, res, next) => {
   const filePath = req.file?.path;
   const response = await uploadToCloudnary(filePath);
   if (!response) {
-    throw new ApiError(400, [], "Upload of avatar to cloud failed");
+    throw new ApiError(502, [], "Upload of avatar to cloud failed");
   }
 
   try {
@@ -368,7 +371,7 @@ const changePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
   if (!user) {
-    throw new ApiError(500, [], "Somthing went wrong");
+    throw new ApiError(404, [], "User not found");
   }
 
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
@@ -381,8 +384,8 @@ const changePassword = asyncHandler(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   res
-    .status(201)
-    .json(new ApiResponse(201, [], "password is changed successfully"));
+    .status(200)
+    .json(new ApiResponse(200, [], "password is changed successfully"));
 });
 
 const forgetPassword = asyncHandler(async (req, res, next) => {
@@ -409,10 +412,10 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
     user.forgetPasswordExpiry = tokenExpiry;
     await user.save({ validateBeforeSave: false });
     res
-      .status(201)
+      .status(200)
       .json(
         new ApiResponse(
-          201,
+          200,
           "",
           "password reset link has been sent to your email",
         ),
@@ -430,7 +433,7 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   const { token } = req.params;
 
   if (!token) {
-    throw new ApiError(402, "", "unautherized access to this route");
+    throw new ApiError(400, "", "Reset token is required in the URL");
   }
   try {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
@@ -449,6 +452,9 @@ const resetPassword = asyncHandler(async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, "", "reset of the email is successfull"));
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     throw error;
   }
 });

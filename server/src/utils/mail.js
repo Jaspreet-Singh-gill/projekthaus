@@ -25,7 +25,7 @@ const sendMail = async (options) => {
     });
   } catch (error) {
     throw new ApiError(
-      501,
+      502,
       error,
       "An error had occured while sending the email",
     );

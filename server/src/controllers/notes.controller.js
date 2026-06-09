@@ -21,7 +21,7 @@ const createNotes = asyncHandler(async (req, res, next) => {
       .json(new ApiResponse(201, createOne, "Notes are created successfully"));
   } catch (error) {
     throw new ApiError(
-      400,
+      500,
       error,
       "something went wrong while creating the notes",
     );
@@ -49,7 +49,7 @@ const updateNotes = asyncHandler(async (req, res, next) => {
   );
 
   if (!updatedNote) {
-    throw new ApiError(400, "", "some error has occured while updating");
+    throw new ApiError(404, "", "Note not found in this project");
   }
 
   res
@@ -76,7 +76,7 @@ const deleteNotes = asyncHandler(async (req, res, next) => {
       .json(new ApiResponse(200, [], "The note is successfully deleted"));
   } catch (error) {
     throw new ApiError(
-      400,
+      500,
       error,
       "Some error has occured while deleting the notes",
     );
@@ -103,7 +103,7 @@ const getAllTheNotes = asyncHandler(async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, listOfNotes, "notes fetched successfully"));
   } catch (error) {
-    throw new ApiError(400, "", "something went wrong");
+    throw new ApiError(500, "", "something went wrong");
   }
 });
 
