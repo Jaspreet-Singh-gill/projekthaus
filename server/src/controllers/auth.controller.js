@@ -176,6 +176,14 @@ const loginUser = asyncHandler(async (req, res, next) => {
     "-password -refreshToken",
   );
 
+  if (!sendUser.isEmailVerified) {
+    throw new ApiError(
+      401,
+      "",
+      "Email is not verified please verify then login",
+    );
+  }
+
   let options = {
     httpOnly: true,
     secure: true,

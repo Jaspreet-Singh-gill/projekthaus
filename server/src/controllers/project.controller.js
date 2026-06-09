@@ -187,10 +187,18 @@ const htmlForm = asyncHandler(async (req, res, next) => {
   if (!projectId) {
     throw new ApiError(400, "", "projectId is required");
   }
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
   const link = `${process.env.projectDomain}/${projectId}/join-project`;
   let htmlContent = await fs.readFile("./public/html/joinCreate.html", "utf-8");
   htmlContent = htmlContent.replace("{{ACTION_LINK}}", link);
-  htmlContent = htmlContent.replace("{{EMAIL}}", email);
+  htmlContent = htmlContent.replace("{{EMAIL}}", escapeHtml(email));
 
   res.status(200).send(htmlContent);
 });
