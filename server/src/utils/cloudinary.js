@@ -26,12 +26,12 @@ const uploadToCloudnary = async function (
       folder: foldername,
       unique_filename: true,
     });
-
     fs.unlinkSync(filepath);
     return uploadResult;
 
   } catch (error) {
-    fs.unlinkSync(filepath);
+    if(filepath)
+      fs.unlinkSync(filepath);
     console.log("An error has occured while uploading to the cloud ", error);
     return null;
   }

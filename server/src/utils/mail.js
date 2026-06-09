@@ -1,5 +1,6 @@
 import Mailgen from "mailgen"; //modules makes simple for writting the html and text format for emails
 import nodemailer from "nodemailer";
+import { ApiError } from "./apiErrorResponse";
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
@@ -23,8 +24,11 @@ const sendMail = async (options) => {
       html: emailContent,
     });
   } catch (error) {
-    console.log("An error had occured while sending the mail");
-    console.log("Error :", error);
+    throw new ApiError(
+      501,
+      error,
+      "An error had occured while sending the email",
+    );
   }
 };
 

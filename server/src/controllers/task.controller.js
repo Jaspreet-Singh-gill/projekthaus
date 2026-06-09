@@ -158,7 +158,7 @@ const assignTask = asyncHandler(async (req, res, next) => {
             project.projectName,
             "task",
             task.name,
-            "https://google.com",
+            `${process.env.SITE_MAIN_URL}/${project._id}/${taskId}`,
           ),
         };
         return sendMail(emailObject);
@@ -214,7 +214,7 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "", "tasId is required to update the task");
   }
   const { progress, status } = req.body;
-  if (!progress || !status) {
+  if ((!progress && progress != 0) || !status) {
     throw new ApiError(401, "", "progress and status both of them required");
   }
   const user = req.user;
@@ -258,6 +258,8 @@ const attachFiles = asyncHandler(async (req, res, next) => {
   try {
     const uploadArrayOfFiles = req.files.map(async (obj) => {
       const response = await uploadToCloudnary(obj.path);
+      if (!response)
+        throw new ApiError(501, "", "file upload failed try again latter");
       return await taskFile.create({
         url: response.url,
         taskId: taskId,
@@ -309,6 +311,7 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
   }
   try {
     const file = await taskFile.findById(fileId);
+    if (!file) throw new ApiError(404, "", "file does not exists");
     const deletedTaskFile = await taskFile.findByIdAndDelete(fileId);
 
     await deleteFromCloudinary(file.publicId, file.fileKind);

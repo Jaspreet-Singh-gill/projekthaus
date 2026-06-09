@@ -48,7 +48,6 @@ const loginVerification = function () {
       .toLowerCase()
       .isEmail()
       .withMessage("Email is not valid"),
-    ,
     body("password")
       .trim()
       .notEmpty()
@@ -92,5 +91,9 @@ const changePasswordValidator = function () {
   ];
 };
 
-
-export { registerLoginVerifcation, loginVerification, updateInfo,changePasswordValidator };
+export {
+  registerLoginVerifcation,
+  loginVerification,
+  updateInfo,
+  changePasswordValidator,
+};

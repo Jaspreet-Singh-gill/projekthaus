@@ -215,7 +215,7 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
       addMemberTokenExpiry: { $gt: Date.now() },
     });
     if (!user) {
-      throw "User is not found";
+      throw new ApiError(404, "", "User is not found");
     }
     const project = await Project.findByIdAndUpdate(
       projectId,

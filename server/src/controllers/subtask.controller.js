@@ -179,7 +179,7 @@ const assignSubTask = asyncHandler(async (req, res, next) => {
             project.projectName,
             "subTask",
             subTask.name,
-            "https://google.com",
+            `${process.env.SITE_MAIN_URL}/${project._id}/${subTaskId}/${taskId}`,
           ),
         };
         return sendMail(emailObject);
@@ -280,6 +280,8 @@ const attachFilesToSubTask = asyncHandler(async (req, res, next) => {
   try {
     const uploadArrayOfFiles = req.files.map(async (obj) => {
       const response = await uploadToCloudnary(obj.path);
+      if (!response)
+        throw new ApiError(501, "", "file upload failed try again latter");
       return await subTaskFile.create({
         url: response.url,
         taskId: taskId,
@@ -331,6 +333,7 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
   }
   try {
     const file = await subTaskFile.findById(fileId);
+    if (!file) throw new ApiError(404, "", "File does not exists");
     const deletedTaskFile = await subTaskFile.findByIdAndDelete(fileId);
 
     await deleteFromCloudinary(file.publicId, file.fileKind);

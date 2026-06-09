@@ -399,7 +399,7 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
       user.generateTempararyTokens();
     const emailToSend = {
       email: user.email,
-      subject: "Verify your email",
+      subject: "resset your password",
       mailContent: resetPasswordEmail(
         `${process.env.forgetpassword}/${unHashedToken}`,
       ),

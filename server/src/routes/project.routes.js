@@ -37,7 +37,7 @@ router.route("/listAll").get(verfiyJWT, listAllTheProject);
 
 //member routes
 router.route("/:projectId/:email/htmlForm").get(htmlForm);
-router.route("/:projectId/join-the-project/:token/").get(userInaddMember);
+router.route("/:projectId/join-the-project/:token/").post(userInaddMember);
 router
   .route("/:projectId/join-project")
   .post(
