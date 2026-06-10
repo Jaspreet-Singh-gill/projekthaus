@@ -5,6 +5,7 @@ import {
   verifyEmailAdress,
   loginUser,
   refreshTokens,
+  getCurrentUser,
   resendEmailVerification,
   logOut,
   changeAvatar,
@@ -39,6 +40,7 @@ router.route("/reset-password/:token/").post(resetPassword);
 
 //secure routes
 router.route("/refreshTokens").get(refreshTokens);
+router.route("/me").get(verifyJWT, getCurrentUser);
 
 router
   .route("/resendEmailVerification")

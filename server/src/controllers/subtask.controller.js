@@ -175,7 +175,7 @@ const assignSubTask = asyncHandler(async (req, res, next) => {
             project.projectName,
             "subTask",
             subTask.name,
-            `${process.env.SITE_MAIN_URL}/${project._id}/${subTaskId}/${taskId}`,
+            `${process.env.SITE_MAIN_URL}/${project._id}/${subTask.taskId}/${taskId}`,
           ),
         };
         return sendMail(emailObject);
@@ -348,7 +348,11 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
       throw error;
     }
     console.log(error);
-    throw new ApiError(500, error, "Something went wrong when deleting the file");
+    throw new ApiError(
+      500,
+      error,
+      "Something went wrong when deleting the file",
+    );
   }
 });
 

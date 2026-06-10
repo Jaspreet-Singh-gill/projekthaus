@@ -275,6 +275,20 @@ const resendEmailVerification = asyncHandler(async (req, res, next) => {
   }
 });
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken",
+  );
+
+  if (!user) {
+    throw new ApiError(401, [], "unauthorized access");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, user, "current user fetched successfully"));
+});
+
 const logOut = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
@@ -464,6 +478,7 @@ export {
   verifyEmailAdress,
   loginUser,
   refreshTokens,
+  getCurrentUser,
   resendEmailVerification,
   logOut,
   changeAvatar,

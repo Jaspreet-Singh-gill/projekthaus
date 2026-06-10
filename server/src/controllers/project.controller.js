@@ -224,6 +224,9 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
         new: true,
       },
     );
+    if (!project) {
+      throw new ApiError(404, "", "The project does not found");
+    }
     user.addMemberToken = undefined;
     user.addMemberTokenExpiry = undefined;
     await user.save({ validateBeforeSave: false });
@@ -444,7 +447,11 @@ const changeRoles = asyncHandler(async (req, res, next) => {
     if (error instanceof ApiError) {
       throw error;
     }
-    throw new ApiError(500, error, "something went while updating the member role");
+    throw new ApiError(
+      500,
+      error,
+      "something went while updating the member role",
+    );
   }
 });
 
