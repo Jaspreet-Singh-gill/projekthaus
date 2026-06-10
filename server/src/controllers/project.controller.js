@@ -104,19 +104,41 @@ const getTheProject = asyncHandler(async (req, res, next) => {
 const listAllTheProject = asyncHandler(async (req, res, next) => {
   const user = req.user;
 
+  const userId = new mongoose.Types.ObjectId(user._id);
+
   const projects = await Project.aggregate([
     {
       $match: {
         $or: [
-          { members: new mongoose.Types.ObjectId(user._id) },
-          { admins: new mongoose.Types.ObjectId(user._id) },
-          { projectManagers: new mongoose.Types.ObjectId(user._id) },
+          { members: userId },
+          { admins: userId },
+          { projectManagers: userId },
         ],
       },
     },
     {
       $project: {
         projectName: 1,
+        _id: 1,
+        role: {
+          $switch: {
+            branches: [
+              {
+                case: { $in: [userId, "$admins"] },
+                then: "ADMIN",
+              },
+              {
+                case: { $in: [userId, "$projectManagers"] },
+                then: "PROJECT_MANAGER",
+              },
+              {
+                case: { $in: [userId, "$members"] },
+                then: "MEMBER",
+              },
+            ],
+            default: null,
+          },
+        },
       },
     },
   ]);
@@ -426,12 +448,18 @@ const changeRoles = asyncHandler(async (req, res, next) => {
           members: userId,
         },
       });
-    } else {
+    } else if (role === "PROJECT_MANAGER") {
       await Project.findByIdAndUpdate(projectId, {
         $addToSet: {
           projectManagers: userId,
         },
       });
+    } else {
+      throw new ApiError(
+        400,
+        "",
+        "Invalid role. Allowed: ADMIN, MEMBER, PROJECT_MANAGER",
+      );
     }
 
     res
