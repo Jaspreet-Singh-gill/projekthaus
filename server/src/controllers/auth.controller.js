@@ -83,7 +83,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
       email,
       subject: "Verify your email",
       mailContent: emailVerificationEmail(
-        `${process.env.emailVerificationAddress}/${unHashedToken}`,
+        `${process.env.FRONTEND_URL}/waitingPage/${unHashedToken}`,
       ),
     };
 
@@ -162,11 +162,11 @@ const loginUser = asyncHandler(async (req, res, next) => {
     email,
   });
   if (!user) {
-    throw new ApiError(401, [], "invalid credentials");
+    throw new ApiError(406, [], "invalid credentials");
   }
 
   const isPasswordCorrect = await user.isPasswordCorrect(password);
-  if (!isPasswordCorrect) throw new ApiError(401, [], "invalid credentials");
+  if (!isPasswordCorrect) throw new ApiError(406, [], "invalid credentials");
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id,
@@ -178,7 +178,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 
   if (!sendUser.isEmailVerified) {
     throw new ApiError(
-      401,
+      406,
       "",
       "Email is not verified please verify then login",
     );

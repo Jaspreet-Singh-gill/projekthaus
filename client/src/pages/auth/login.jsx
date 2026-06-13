@@ -24,14 +24,14 @@ const Login = () => {
         });
 
         console.log(result);
-        
+
         if (!result.success) {
-                toast.error(result.error.message);
+            toast.error(result.error.message);
             return;
         }
 
         try {
-            const  data  = await authService.login(result.data);
+            const data = await authService.login(result.data);
             setTheUser(data.data);
             toast.success(data.message || "Logged in successfully!");
             navigate("/dashboard");
@@ -122,9 +122,12 @@ const Login = () => {
 
                 <div className="mt-8 text-center text-sm text-slate-400">
                     Don't have an account?{" "}
-                    <a href="#" className="text-violet-400 hover:text-violet-300 font-medium hover:underline transition duration-150">
+                    <span
+                        onClick={() => navigate("/register")}
+                        className="text-violet-400 hover:text-violet-300 font-medium hover:underline transition duration-150 cursor-pointer"
+                    >
                         Create one
-                    </a>
+                    </span>
                 </div>
             </div>
         </div>

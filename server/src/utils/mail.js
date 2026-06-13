@@ -1,6 +1,6 @@
 import Mailgen from "mailgen"; //modules makes simple for writting the html and text format for emails
 import nodemailer from "nodemailer";
-import { ApiError } from "./apiErrorResponse";
+import { ApiError } from "./apiErrorResponse.js";
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,

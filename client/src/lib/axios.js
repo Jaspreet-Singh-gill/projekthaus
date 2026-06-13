@@ -17,27 +17,34 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    const status = error.status;
-    if (status == 401 && !originalRequest._retry) {
+    const status = error.response?.status || error.status;
+
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-    }
-    try {
-      await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/refreshTokens`,
-      );
-      return api(originalRequest);
-    } catch {
-      useAuthStore.getState().clearTheUser();
-      window.location.href = "/login";
+      try {
+        await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/auth/refreshTokens`,
+          { withCredentials: true }
+        );
+        return api(originalRequest);
+      } catch (refreshError) {
+        useAuthStore.getState().clearTheUser();
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
+        return Promise.reject(refreshError);
+      }
     }
 
-    if (status == 429) {
-      toast.error("Too many requests please try again latter");
+    if (status === 429) {
+      toast.error("Too many requests please try again later");
     }
 
-    if (status == 502) {
-      toast.error("Service is temperory unavailable");
+    if (status === 502) {
+      toast.error("Service is temporarily unavailable");
     }
+
+    return Promise.reject(error.response.data);
   },
 );
 

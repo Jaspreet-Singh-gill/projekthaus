@@ -14,14 +14,14 @@ class AuthService {
     return response.data;
   }
 
-  // async verifyEmailAddress(token) {
-  //   const response = await api.get(
-  //     `${this.#basePath}/verify-email-address/${token}/`,
-  //   );
-  //   return response.data;
-  // }
+  async verifyEmailAddress(token) {
+    const response = await api.get(
+      `${this.#basePath}/verify-email-address/${token}/`,
+    );
+    return response.data;
+  }
 
-  //  does not need because it is hit using the email
+
 
   async login(credentials) {
     const response = await api.post(`${this.#basePath}/login`, credentials);
