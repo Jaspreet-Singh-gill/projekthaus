@@ -11,7 +11,7 @@ const authStore = (set) => ({
   },
 });
 
-const useAuthStore = create(presist(authStore), {
+const useAuthStore = create(persist(authStore), {
   name: "user-data",
   partialize: (state) => ({ user: state.user }),
 });
