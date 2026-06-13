@@ -1,9 +1,9 @@
 import rateLimit from "express-rate-limit";
-import { ApiResponse } from "./api-response";
+import { ApiResponse } from "./api-response.js";
 
 const globalLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // in 10 minutes allow only 200 requests
-  max: 200,
+  max: 2000,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
@@ -22,7 +22,7 @@ const globalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 5,
+  max: 500,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {

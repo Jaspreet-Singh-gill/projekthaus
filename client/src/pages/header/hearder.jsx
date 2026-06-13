@@ -1,0 +1,342 @@
+import React, { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
+import useAuthStore from "../../store/authStore";
+import { authService } from "../../api/index";
+
+const Header = () => {
+  const { user, clearTheUser } = useAuthStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const dropdownRef = useRef(null);
+  const notificationRef = useRef(null);
+
+  // Add background blur on scroll to keep the layout feeling tactile and premium
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle click outside to close dropdowns like a professional, polished app should
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setIsNotificationsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      clearTheUser();
+      toast.success("Successfully logged out");
+      setIsProfileDropdownOpen(false);
+    } catch (error) {
+      toast.error(error.message || "Logout failed");
+    }
+  };
+
+  const navLinks = [
+    { label: "Dashboard", href: "#" },
+    { label: "Projects", href: "#" },
+    { label: "Tasks", href: "#" },
+    { label: "Notes", href: "#" },
+    { label: "Team", href: "#" },
+  ];
+
+  // Dummy notifications to add human realism to the UI
+  const dummyNotifications = [
+    { id: 1, text: "Sarah assigned you a new subtask in Projekt Alpha", time: "5m ago", unread: true },
+    { id: 2, text: "Project roadmap updated by Admin", time: "1h ago", unread: true },
+    { id: 3, text: "Weekly sprint review notes published", time: "1d ago", unread: false },
+  ];
+
+  return (
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
+        scrolled
+          ? "bg-slate-950/80 backdrop-blur-md border-slate-900/80 shadow-lg shadow-black/10"
+          : "bg-transparent border-transparent"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo & Brand */}
+          <div className="flex items-center">
+            <a href="#" className="flex items-center gap-2.5 group">
+              <div className="w-9 h-9 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/10 group-hover:scale-105 transition-transform duration-200">
+                <svg
+                  className="w-5 h-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent tracking-tight">
+                projekt<span className="text-violet-400">Haus</span>
+              </span>
+            </a>
+
+            {/* Desktop Navigation Link Items */}
+            <nav className="hidden md:flex items-center ml-10 space-x-1">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-900/60 transition-all duration-200"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          {/* Right-side utilities */}
+          <div className="hidden md:flex items-center gap-4">
+            {user ? (
+              <>
+                {/* Notifications Button */}
+                <div className="relative" ref={notificationRef}>
+                  <button
+                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition-colors duration-200 relative focus:outline-none"
+                    aria-label="View notifications"
+                  >
+                    <svg className="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    {dummyNotifications.some(n => n.unread) && (
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-slate-950 animate-pulse" />
+                    )}
+                  </button>
+
+                  {/* Notifications Dropdown Panel */}
+                  {isNotificationsOpen && (
+                    <div className="absolute right-0 mt-2.5 w-80 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
+                      <div className="px-4 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                        <span className="text-xs font-semibold text-slate-200">Notifications</span>
+                        <span className="text-[10px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full font-medium">
+                          {dummyNotifications.filter(n => n.unread).length} New
+                        </span>
+                      </div>
+                      <div className="divide-y divide-slate-800/60 max-h-80 overflow-y-auto">
+                        {dummyNotifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`p-4 hover:bg-slate-950/40 transition-colors duration-150 cursor-pointer ${
+                              notification.unread ? "bg-violet-950/5" : ""
+                            }`}
+                          >
+                            <p className="text-xs text-slate-300 leading-relaxed">{notification.text}</p>
+                            <span className="text-[10px] text-slate-500 block mt-1.5">{notification.time}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <a href="#" className="block py-2 text-center text-xs text-violet-400 hover:text-violet-300 font-medium border-t border-slate-800 bg-slate-950/20">
+                        View all notifications
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-slate-900/60 transition-colors duration-200 focus:outline-none"
+                  >
+                    <div className="w-8.5 h-8.5 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 flex items-center justify-center shadow-md">
+                      {user.avatar?.url ? (
+                        <img
+                          src={user.avatar.url}
+                          alt={user.name || "User profile"}
+                          className="w-full h-full object-cover rounded-[6px]"
+                        />
+                      ) : (
+                        <span className="text-xs font-semibold text-white uppercase">
+                          {user.name ? user.name.substring(0, 2) : user.username?.substring(0, 2) || "U"}
+                        </span>
+                      )}
+                    </div>
+                    <svg
+                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                        isProfileDropdownOpen ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Profile Dropdown Options */}
+                  {isProfileDropdownOpen && (
+                    <div className="absolute right-0 mt-2.5 w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-slate-800">
+                      <div className="px-4 py-3 bg-slate-900/50">
+                        <p className="text-xs text-slate-400 font-medium">Logged in as</p>
+                        <p className="text-sm font-semibold text-white truncate mt-0.5">{user.name || user.username}</p>
+                        <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
+                      </div>
+                      <div className="py-1 bg-slate-900">
+                        <a
+                          href="#"
+                          className="flex items-center px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/55 transition-colors duration-150"
+                        >
+                          My Profile
+                        </a>
+                        <a
+                          href="#"
+                          className="flex items-center px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/55 transition-colors duration-150"
+                        >
+                          Project Settings
+                        </a>
+                      </div>
+                      <div className="py-1 bg-slate-900">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center text-left px-4 py-2 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors duration-150 focus:outline-none"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <>
+                <a
+                  href="#"
+                  className="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-200"
+                >
+                  Sign In
+                </a>
+                <a
+                  href="#"
+                  className="py-2.5 px-4 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-semibold text-sm rounded-xl shadow-md shadow-violet-500/15 active:scale-[0.98] transition-all duration-150 focus:outline-none"
+                >
+                  Get Started
+                </a>
+              </>
+            )}
+          </div>
+
+          {/* Mobile hamburger menu toggle */}
+          <div className="md:hidden flex items-center gap-3">
+            {user && (
+              <div className="w-8.5 h-8.5 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 flex items-center justify-center">
+                {user.avatar?.url ? (
+                  <img
+                    src={user.avatar.url}
+                    alt={user.name || "User profile"}
+                    className="w-full h-full object-cover rounded-[6px]"
+                  />
+                ) : (
+                  <span className="text-xs font-semibold text-white uppercase">
+                    {user.name ? user.name.substring(0, 2) : user.username?.substring(0, 2) || "U"}
+                  </span>
+                )}
+              </div>
+            )}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition-colors duration-200 focus:outline-none"
+              aria-label="Toggle Navigation Menu"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Panel */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-900 bg-slate-950 px-4 pt-3 pb-6 space-y-4 shadow-2xl animate-fade-in">
+          <div className="space-y-1">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-350 hover:text-white hover:bg-slate-900 transition-colors duration-150"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="pt-4 border-t border-slate-900 space-y-3">
+            {user ? (
+              <>
+                <a
+                  href="#"
+                  className="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white"
+                >
+                  My Profile
+                </a>
+                <a
+                  href="#"
+                  className="block px-3 py-2 text-sm font-medium text-slate-400 hover:text-white"
+                >
+                  Settings
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left block px-3 py-2 text-sm font-medium text-rose-400 hover:text-rose-300"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2 px-3">
+                <a
+                  href="#"
+                  className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white border border-slate-800 hover:bg-slate-900 transition-colors duration-150"
+                >
+                  Sign In
+                </a>
+                <a
+                  href="#"
+                  className="w-full text-center py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-md transition-all duration-150"
+                >
+                  Get Started
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+export default Header;
