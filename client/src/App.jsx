@@ -5,6 +5,8 @@ import Home from "./pages/home/home.jsx"
 import Login from "./pages/auth/login.jsx"
 import Register from "./pages/auth/register.jsx"
 import WaitingPage from "./pages/auth/emailVerificationPage.jsx"
+import ForgetPasswordPage from "./pages/auth/forgetPassword.jsx"
+import ResetPasswordPage from "./pages/auth/resetPassword.jsx"
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -13,6 +15,8 @@ const route = createBrowserRouter(
       </Route>
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="forget-password" element={<ForgetPasswordPage />} />
+      <Route path="reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="waitingPage/:token" element={<WaitingPage />} />
     </Route>
   )

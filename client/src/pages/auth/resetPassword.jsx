@@ -1,46 +1,48 @@
 import React, { useState } from "react";
+import { authService } from "../../api/index.js";
+import { useNavigate, useParams } from "react-router-dom";
+import { Loader } from "../../components/skeleton/loader.jsx";
 import * as z from "zod";
 import { toast } from "sonner";
-import { authService } from "../../api/index";
-import useAuthStore from "../../store/authStore";
-import { useNavigate } from "react-router-dom";
 
-const User = z.object({
-    email: z.email(),
-    password: z.string(),
+const Pass = z.object({
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const setTheUser = useAuthStore((state) => state.setTheUser);
+const ResetPasswordPage = () => {
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { token } = useParams();
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const result = User.safeParse({
-            email,
-            password,
-        });
 
-        console.log(result);
-
-        if (!result.success) {
-            toast.error(result.error.message);
+        const validation = Pass.safeParse({ newPassword });
+        if (!validation.success) {
+            toast.error(validation.error.issues[0].message);
             return;
         }
-
+        if (newPassword !== confirmPassword) {
+            toast.error("Confirm password is not equal to new password");
+            return;
+        }
         try {
-            const data = await authService.login(result.data);
-            setTheUser(data.data);
-            toast.success(data.message || "Logged in successfully!");
-            navigate("/dashboard");
+            setLoading(true);
+            const response = await authService.resetPassword(token, { newPassword });
+            toast.success(response.message || "Password reset successfully");
+            setLoading(false);
+            setTimeout(() => {
+                navigate("/login");
+            }, 4000);
         } catch (error) {
             toast.error(error.message);
+            setLoading(false);
         }
     };
 
-    return (
+    return isLoading ? <Loader /> : (
         <div className="min-h-screen flex items-center justify-center bg-slate-950 relative overflow-hidden font-sans">
             {/* Ambient background glow */}
             <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[120px] pointer-events-none" />
@@ -54,49 +56,19 @@ const Login = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
-                        Welcome Back
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight text-center">
+                        Reset Password
                     </h1>
-                    <p className="text-sm text-slate-400 mt-2">
-                        Sign in to your projektHaus account
+                    <p className="text-sm text-slate-400 mt-2 text-center">
+                        Please enter and confirm your new password below.
                     </p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="email">
-                            Email Address
+                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="newPassword">
+                            New Password
                         </label>
-                        <div className="relative">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                </svg>
-                            </span>
-                            <input
-                                id="email"
-                                type="email"
-                                placeholder="name@company.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider" htmlFor="password">
-                                Password
-                            </label>
-                            <span
-                                onClick={() => navigate("/forget-password")}
-                                className="text-xs text-violet-400 hover:text-violet-300 hover:underline transition duration-150 cursor-pointer"
-                            >
-                                Forgot password?
-                            </span>
-                        </div>
                         <div className="relative">
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -104,11 +76,33 @@ const Login = () => {
                                 </svg>
                             </span>
                             <input
-                                id="password"
+                                id="newPassword"
                                 type="password"
                                 placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="confirmPassword">
+                            Confirm New Password
+                        </label>
+                        <div className="relative">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </span>
+                            <input
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="••••••••"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 className="w-full pl-10 pr-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
@@ -119,17 +113,17 @@ const Login = () => {
                         type="submit"
                         className="w-full py-3 px-4 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/20 active:scale-[0.98] transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-900"
                     >
-                        Sign In
+                        Reset Password
                     </button>
                 </form>
 
                 <div className="mt-8 text-center text-sm text-slate-400">
-                    Don't have an account?{" "}
+                    Back to{" "}
                     <span
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/login")}
                         className="text-violet-400 hover:text-violet-300 font-medium hover:underline transition duration-150 cursor-pointer"
                     >
-                        Create one
+                        Sign In
                     </span>
                 </div>
             </div>
@@ -137,4 +131,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default ResetPasswordPage;

@@ -418,7 +418,7 @@ const forgetPassword = asyncHandler(async (req, res, next) => {
       email: user.email,
       subject: "resset your password",
       mailContent: resetPasswordEmail(
-        `${process.env.forgetpassword}/${unHashedToken}`,
+        `${process.env.FRONTEND_URL}/reset-password/${unHashedToken}`,
       ),
     };
     await sendMail(emailToSend);
