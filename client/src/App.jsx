@@ -7,6 +7,8 @@ import Register from "./pages/auth/register.jsx"
 import WaitingPage from "./pages/auth/emailVerificationPage.jsx"
 import ForgetPasswordPage from "./pages/auth/forgetPassword.jsx"
 import ResetPasswordPage from "./pages/auth/resetPassword.jsx"
+import {ProtectedRoute} from "./components/protectedRoutes/protectedRoute.jsx";
+import { Dashboard } from "./pages/dashboard/dashboard.jsx"
 
 const route = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +20,12 @@ const route = createBrowserRouter(
       <Route path="forget-password" element={<ForgetPasswordPage />} />
       <Route path="reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="waitingPage/:token" element={<WaitingPage />} />
+
+
+      {/* protected routes */}
+      <Route element={<ProtectedRoute />} >    
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
     </Route>
   )
 )
