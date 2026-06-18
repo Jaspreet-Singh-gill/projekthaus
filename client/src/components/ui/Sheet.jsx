@@ -29,35 +29,34 @@ export function Sheet({ open, onClose, children }) {
   return (
     // Outer wrapper: stays in the DOM, toggles opacity, and uses pointer-events-none when hidden
     <div
-      className={`fixed inset-0 z-40 transition-opacity duration-200 ${
-        open ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-[100] transition-opacity duration-200 ${open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
     >
       {/* Backdrop overlay: identical styling to Dialog (black/50, triggers onClose on click) */}
       <div
-        className="fixed inset-0 bg-black/50"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs"
         onClick={onClose}
       />
 
       {/* Sliding Panel: fixed on the left, slides via transition-transform */}
       <div
-        className={`fixed left-0 top-0 h-full w-[280px] bg-white z-50 shadow-xl p-6 transition-transform duration-200 ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed left-0 top-0 h-full w-[280px] bg-slate-950 border-r border-slate-900/60 z-50 shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
-        {/* Header containing only the close button */}
-        <div className="flex justify-end mb-4">
+        {/* Floating Close Button */}
+        <div className="absolute top-4 right-4 z-[60]">
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md p-1 transition-colors"
+            className="text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg p-1.5 transition-colors focus:outline-none cursor-pointer"
             aria-label="Close sheet"
+            
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Content body container with safe scrolling for overflow content */}
-        <div className="text-sm text-gray-700 h-[calc(100%-2rem)] overflow-y-auto">
+        {/* Content body container: full size for seamless sidebar integration */}
+        <div className="h-full w-full overflow-hidden">
           {children}
         </div>
       </div>

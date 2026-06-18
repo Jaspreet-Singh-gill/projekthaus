@@ -6,7 +6,7 @@ import { Separator } from "../ui/index.js";
 import CreateProjectDialogBox from "../projects/createProjectDialogBox.jsx";
 import { Plus, LayoutDashboard, Folder } from "lucide-react";
 
-const SideBar = () => {
+const SideBar = ({className}) => {
     const location = useLocation();
     const projectsList = useProjectQuery();
 
@@ -14,7 +14,7 @@ const SideBar = () => {
 
     return (
         <>
-            <div className="w-full h-full flex flex-col bg-slate-950 border-r border-slate-900 text-slate-200 select-none">
+            <div className={`${className} w-full h-full flex flex-col bg-slate-950 border-r border-slate-900 text-slate-200 select-none`}>
                 {/* Logo & Brand Header */}
                 <div className="flex items-center gap-2.5 px-6 py-5 border-b border-slate-900/60">
                     <div className="w-8 h-8 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md shadow-violet-500/10">

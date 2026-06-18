@@ -15,8 +15,8 @@ const queryClient = new QueryClient();
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route path="" element={<Home />}>
-      </Route>
+      <Route path="" element={<Home />}/>
+     
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="forget-password" element={<ForgetPasswordPage />} />
