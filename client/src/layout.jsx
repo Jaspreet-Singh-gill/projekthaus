@@ -31,7 +31,7 @@ const Layout = () => {
         {/* Main Content Pane */}
         <div className="flex flex-col flex-1 min-w-0">
           <Header onMenuClick={() => setIsMobileMenuOpen(true)} className="w-full" onMenuOpen={isMobileMenuOpen}/>
-          <main className="flex-grow">
+          <main className="flex-1 overflow-y-auto">
             <Outlet />
           </main>
         </div>

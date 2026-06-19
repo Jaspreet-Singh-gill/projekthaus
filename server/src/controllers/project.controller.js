@@ -85,20 +85,53 @@ const updateProject = asyncHandler(async (req, res, next) => {
 //can be accessed by
 const getTheProject = asyncHandler(async (req, res, next) => {
   const { projectId } = req.params;
+  const userId = req.user;
 
   if (!projectId) {
     throw new ApiError(400, "", "projectid to access the project info");
   }
-  const project = await Project.findById(projectId).select(
-    "projectName projectDescription _id",
-  );
-  if (!project) {
+  const project = await Project.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(projectId),
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        projectName: 1,
+        projectDescription: 1,
+        role: {
+          $switch: {
+            branches: [
+              {
+                case: { $in: [userId, "$admins"] },
+                then: "ADMIN",
+              },
+              {
+                case: { $in: [userId, "$projectManagers"] },
+                then: "PROJECT_MANAGER",
+              },
+              {
+                case: { $in: [userId, "$members"] },
+                then: "MEMBER",
+              },
+            ],
+            default: null,
+          },
+        },
+      },
+    },
+  ]);
+
+  const result = project[0];
+  if (!result) {
     throw new ApiError(404, "", "The porject with given id does not exists");
   }
 
   res
     .status(200)
-    .json(new ApiResponse(200, project, "the project is fetched successfully"));
+    .json(new ApiResponse(200, result, "the project is fetched successfully"));
 });
 
 const listAllTheProject = asyncHandler(async (req, res, next) => {
@@ -120,25 +153,7 @@ const listAllTheProject = asyncHandler(async (req, res, next) => {
       $project: {
         projectName: 1,
         _id: 1,
-        role: {
-          $switch: {
-            branches: [
-              {
-                case: { $in: [userId, "$admins"] },
-                then: "ADMIN",
-              },
-              {
-                case: { $in: [userId, "$projectManagers"] },
-                then: "PROJECT_MANAGER",
-              },
-              {
-                case: { $in: [userId, "$members"] },
-                then: "MEMBER",
-              },
-            ],
-            default: null,
-          },
-        },
+        projectDescription: 1,
       },
     },
   ]);
@@ -422,20 +437,6 @@ const changeRoles = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const project = await Project.findByIdAndUpdate(
-      projectId,
-      {
-        $pull: {
-          admins: userId,
-          projectManagers: userId,
-          members: userId,
-        },
-      },
-      {
-        new: true,
-      },
-    );
-
     if (role == "ADMIN") {
       await Project.findByIdAndUpdate(projectId, {
         $addToSet: {
