@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "../ui/index.js";
-import { useCreateProjectMutation } from "../../hooks/project/useProject.js";
 import { toast } from "sonner";
 import * as z from "zod";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +10,15 @@ const projectVerify = z.object({
     projectDescription: z.string()
 });
 
-export const CreateProjectDialogBox = ({ open, onClose }) => {
-    const [projectName, setProjectName] = useState("");
-    const [projectDescription, setProjectDescription] = useState("");
-    const mutation = useCreateProjectMutation();
+export const ProjectDialogBox = ({ open, onClose, mutation, data }) => {
+    const [projectName, setProjectName] = useState(data?.projectName);
+    const [projectDescription, setProjectDescription] = useState(data?.projectDescription);
+
+    useEffect(() => {
+        setProjectName(data?.projectName);
+        setProjectDescription(data?.projectDescription);
+    }, [data]);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -31,12 +35,17 @@ export const CreateProjectDialogBox = ({ open, onClose }) => {
         }
 
         try {
+
             await mutation.mutateAsync({
                 name: projectName,
                 description: projectDescription
             });
 
-            toast.success("The project is created successfully");
+            if(data){
+                toast.success("The project is updated successfully");
+            }else{
+                toast.success("The project is updated successfully");
+            }
             setProjectName("");
             setProjectDescription("");
             onClose();
@@ -120,4 +129,4 @@ export const CreateProjectDialogBox = ({ open, onClose }) => {
     );
 };
 
-export default CreateProjectDialogBox;
+export default ProjectDialogBox;

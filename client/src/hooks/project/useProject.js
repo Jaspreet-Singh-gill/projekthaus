@@ -22,4 +22,24 @@ const useCreateProjectMutation = () => {
     });
 };
 
-export { useProjectQuery, useCreateProjectMutation };
+const useGetTheProject = (id) => {
+    return useQuery({
+        queryKey: ["project", id],
+        queryFn: () => projectService.getProject(id),
+        staleTime: 60 * 1000
+    })
+}
+
+const useUpdateTheProject = (id) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload) => projectService.updateProject(id, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["project", id]
+            });
+        }
+    })
+}
+
+export { useProjectQuery, useCreateProjectMutation, useGetTheProject, useUpdateTheProject };

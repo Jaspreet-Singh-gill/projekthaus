@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { useProjectQuery } from "../../hooks/project/useProject.js";
+import { useProjectQuery, useCreateProjectMutation } from "../../hooks/project/useProject.js";
 import Skeleton from "../ui/Skeleton.jsx";
 import { Separator } from "../ui/index.js";
 import CreateProjectDialogBox from "../projects/createProjectDialogBox.jsx";
 import { Plus, LayoutDashboard, Folder } from "lucide-react";
 
-const SideBar = ({className}) => {
+const SideBar = ({ className }) => {
     const location = useLocation();
     const projectsList = useProjectQuery();
+    const mutation = useCreateProjectMutation();
 
     const [openCreateButton, setOpenCreateButton] = useState(false);
 
@@ -126,7 +127,7 @@ const SideBar = ({className}) => {
                         <span>Create Project</span>
                     </button>
                 </div>
-                <CreateProjectDialogBox open={openCreateButton} onClose={() => setOpenCreateButton(false)} />
+                <CreateProjectDialogBox open={openCreateButton} onClose={() => setOpenCreateButton(false)} mutation={mutation} />
             </div>
         </>
     );

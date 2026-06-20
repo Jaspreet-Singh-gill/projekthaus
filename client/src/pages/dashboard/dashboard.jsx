@@ -1,6 +1,6 @@
 import React from "react";
 import CreateProjectDialogBox from "../../components/projects/createProjectDialogBox.jsx";
-import { useProjectQuery } from "../../hooks/project/useProject.js";
+import { useProjectQuery,useCreateProjectMutation } from "../../hooks/project/useProject.js";
 import CardSkeleton from "../../components/skeleton/projectCardLoader.jsx";
 import ProjectCard from "../../components/projects/projectCard.jsx";
 import { FolderPlus } from "lucide-react";
@@ -8,6 +8,7 @@ import { FolderPlus } from "lucide-react";
 export function Dashboard() {
     const [open, setOpen] = React.useState(false);
     const projects = useProjectQuery();
+    const mutation = useCreateProjectMutation();
 
     return (
         <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-100">
@@ -78,7 +79,7 @@ export function Dashboard() {
             </div>
 
             {/* Create Project Modal */}
-            <CreateProjectDialogBox open={open} onClose={() => setOpen(false)} />
+            <CreateProjectDialogBox open={open} onClose={() => setOpen(false)} mutation={mutation} />
         </div>
     );
 }       

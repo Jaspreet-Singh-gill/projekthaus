@@ -9,14 +9,15 @@ import ForgetPasswordPage from "./pages/auth/forgetPassword.jsx"
 import ResetPasswordPage from "./pages/auth/resetPassword.jsx"
 import { ProtectedRoute } from "./components/protectedRoutes/protectedRoute.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx"
+import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route path="" element={<Home />}/>
-     
+      <Route path="" element={<Home />} />
+
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="forget-password" element={<ForgetPasswordPage />} />
@@ -27,6 +28,7 @@ const route = createBrowserRouter(
       {/* protected routes */}
       <Route element={<ProtectedRoute />} >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/project/:projectId" element={<ProjectDashBoard />} />
       </Route>
     </Route>
   )

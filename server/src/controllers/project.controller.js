@@ -85,7 +85,7 @@ const updateProject = asyncHandler(async (req, res, next) => {
 //can be accessed by
 const getTheProject = asyncHandler(async (req, res, next) => {
   const { projectId } = req.params;
-  const userId = req.user;
+  const userId = new mongoose.Types.ObjectId(req.user);
 
   if (!projectId) {
     throw new ApiError(400, "", "projectid to access the project info");
