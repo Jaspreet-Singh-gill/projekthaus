@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import { useGetTheProject, useUpdateTheProject } from "../../hooks/project/useProject.js";
 import UpdateProjectDialogBox from "../../components/projects/createProjectDialogBox.jsx";
+import MemberDialogBox from "../../components/member/memberOfProject.jsx";
 import { EditIcon } from "lucide-react";
 import { Loader } from "../../components/skeleton/loader.jsx";
 
@@ -13,6 +14,7 @@ const ProjectDashBoard = () => {
     const roleOfUser = theProject.data?.data?.role;
     const [isAdminEditDialogOpen, setIsAdminEditDialogBox] = useState(false);
     const mutation = useUpdateTheProject(projectId);
+    const [isMemberBoxOpen, setIsMemberBoxOpen] = useState(false);
 
     return <>
         {
@@ -27,23 +29,22 @@ const ProjectDashBoard = () => {
                             <p className="text-sm text-slate-400 leading-relaxed max-w-2xl truncate" title={theProject.data.data.projectDescription}>
                                 {theProject.data.data.projectDescription}
                             </p>
-                            
+
                             {/* User Role Badge */}
                             <div className="flex items-center gap-2 bg-slate-900/30 border border-slate-900/60 rounded-lg px-3 py-1.5 self-start text-xs font-semibold text-slate-400 w-fit">
                                 <span>Role:</span>
-                                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                                    roleOfUser === "ADMIN" 
-                                        ? "bg-violet-600/10 text-violet-400 border-violet-500/20" 
-                                        : roleOfUser === "PROJECT_MANAGER"
+                                <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${roleOfUser === "ADMIN"
+                                    ? "bg-violet-600/10 text-violet-400 border-violet-500/20"
+                                    : roleOfUser === "PROJECT_MANAGER"
                                         ? "bg-blue-600/10 text-blue-400 border-blue-500/20"
                                         : "bg-emerald-600/10 text-emerald-400 border-emerald-500/20"
-                                }`}>
+                                    }`}>
                                     {roleOfUser?.replace("_", " ")}
                                 </span>
                             </div>
                         </div>
                         <div className={`${roleOfUser !== "ADMIN" ? "hidden" : ""}`}>
-                            <button 
+                            <button
                                 onClick={() => setIsAdminEditDialogBox(true)}
                                 className="flex items-center justify-center p-2.5 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-300 hover:text-white hover:bg-slate-900 hover:border-slate-700 transition-all duration-200 shadow-md active:scale-[0.98] cursor-pointer mt-1"
                                 title="Edit Project Details"
@@ -58,7 +59,9 @@ const ProjectDashBoard = () => {
                         <button className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Tasks
                         </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
+                        <button
+                            onClick={() => setIsMemberBoxOpen(true)}
+                            className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Members
                         </button>
                         <button className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
@@ -67,6 +70,9 @@ const ProjectDashBoard = () => {
                     </div>
 
                     <UpdateProjectDialogBox open={isAdminEditDialogOpen} onClose={() => setIsAdminEditDialogBox(false)} mutation={mutation} data={theProject.data?.data} />
+                    {isMemberBoxOpen && (
+                        <MemberDialogBox open={isMemberBoxOpen} onClose={() => setIsMemberBoxOpen(false)} dataOfProject={theProject.data?.data} />
+                    )}
                 </div>
         }
 

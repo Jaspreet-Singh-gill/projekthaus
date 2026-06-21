@@ -362,12 +362,24 @@ const getTheMembers = asyncHandler(async (req, res, next) => {
   }
 
   const project = await Project.findById(projectId)
-    .populate("admins", "name email _id") //takes the user id from the array and then overides the user id with the content
-    .populate("projectManagers", "name email _id")
-    .populate("members", "name email _id");
+    .populate("admins", "name email _id avatar") //takes the user id from the array and then overides the user id with the content
+    .populate("projectManagers", "name email _id avatar")
+    .populate("members", "name email _id avatar");
+
+  const peopleArray = [];
+  project["admins"]?.map((member) => {
+    peopleArray.push({ ...member.toObject(), role: "ADMIN" });
+  });
+  project["projectManagers"]?.map((member) => {
+    peopleArray.push({ ...member.toObject(), role: "PROJECT_MANAGER" });
+  });
+  project["members"]?.map((member) => {
+    peopleArray.push({ ...member.toObject(), role: "MEMBER" });
+  });
+
   res
     .status(200)
-    .json(new ApiResponse(200, project, "Data fetched successfuly"));
+    .json(new ApiResponse(200, peopleArray, "Data fetched successfuly"));
 });
 
 const removeTheMember = asyncHandler(async (req, res, next) => {
@@ -437,6 +449,13 @@ const changeRoles = asyncHandler(async (req, res, next) => {
   }
 
   try {
+    await Project.findByIdAndUpdate(projectId, {
+      $pull: {
+        admins: userId,
+        projectManagers: userId,
+        members: userId,
+      },
+    });
     if (role == "ADMIN") {
       await Project.findByIdAndUpdate(projectId, {
         $addToSet: {
