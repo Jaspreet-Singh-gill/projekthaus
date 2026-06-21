@@ -26,7 +26,7 @@ const ProjectDashBoard = () => {
                             <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
                                 {theProject.data.data.projectName}
                             </h1>
-                            <p className="text-sm text-slate-400 leading-relaxed max-w-2xl truncate" title={theProject.data.data.projectDescription}>
+                            <p className="text-sm text-slate-400 leading-relaxed max-w-2xl" title={theProject.data.data.projectDescription}>
                                 {theProject.data.data.projectDescription}
                             </p>
 
