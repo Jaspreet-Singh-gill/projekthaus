@@ -11,6 +11,7 @@ import { ProtectedRoute } from "./components/protectedRoutes/protectedRoute.jsx"
 import { Dashboard } from "./pages/dashboard/dashboard.jsx"
 import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ListOfTasks from "./pages/taskDashBoard/aLLTheTaskpage.jsx"
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
@@ -29,6 +30,7 @@ const route = createBrowserRouter(
       <Route element={<ProtectedRoute />} >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/project/:projectId" element={<ProjectDashBoard />} />
+        <Route path="/project/:projectId/get-all-tasks" element={< ListOfTasks />} />
       </Route>
     </Route>
   )

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetTheProject, useUpdateTheProject } from "../../hooks/project/useProject.js";
 import UpdateProjectDialogBox from "../../components/projects/createProjectDialogBox.jsx";
 import MemberDialogBox from "../../components/member/memberOfProject.jsx";
@@ -15,6 +15,7 @@ const ProjectDashBoard = () => {
     const [isAdminEditDialogOpen, setIsAdminEditDialogBox] = useState(false);
     const mutation = useUpdateTheProject(projectId);
     const [isMemberBoxOpen, setIsMemberBoxOpen] = useState(false);
+    const navigate = useNavigate();
 
     return <>
         {
@@ -53,10 +54,12 @@ const ProjectDashBoard = () => {
                             </button>
                         </div>
                     </div>
-
+                                    
                     {/* Quick Navigation Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-900/30">
-                        <button className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
+                        <button
+                            onClick={() => navigate(`/project/${projectId}/get-all-tasks`)}
+                            className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Tasks
                         </button>
                         <button
