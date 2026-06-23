@@ -10,4 +10,14 @@ const useGetAllTheTasks = (id) => {
     })
 };
 
-export { useGetAllTheTasks };
+const useCreateTask = (id)=>{
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (taskData) => taskService.createTask(id, taskData),
+        onSuccess: () => {
+            queryClient.invalidateQueries([id, "tasks"])
+        }
+    });
+}; 
+
+export { useGetAllTheTasks,useCreateTask };

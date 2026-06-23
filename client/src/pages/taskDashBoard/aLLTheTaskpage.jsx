@@ -1,28 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import {useGetAllTheTasks} from "../../hooks/task/useTask.js";
+import { useGetAllTheTasks, useCreateTask } from "../../hooks/task/useTask.js";
 import TaskListTable from "../../components/tasks/taskListComponent.jsx";
-import {Loader} from "../../components/skeleton/loader.jsx";
+import { Loader } from "../../components/skeleton/loader.jsx";
+import TaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
+import { PlusIcon } from "lucide-react";
 
 
-const ListOfTasks = ()=>{
-    const {projectId} = useParams();
-    const {data, isLoading} = useGetAllTheTasks(projectId);
+const ListOfTasks = () => {
+    const { projectId } = useParams();
+    const { data, isLoading } = useGetAllTheTasks(projectId);
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const mutation = useCreateTask(projectId);
 
-    if(isLoading){
-        return <Loader/>;
+
+    if (isLoading) {
+        return <Loader />;
     }
 
     return (
-        <div className="w-full h-full flex flex-col">
-            <div className="text-3xl font-bold">
-                Tasks
+        <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-100">
+            {/* Header section */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-900/60">
+                <div>
+                    <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                        Tasks
+                    </h1>
+                    <p className="text-sm text-slate-400 mt-1">
+                        Manage and collaborate on your project tasks.
+                    </p>
+                </div>
+                <button 
+                    onClick={() => setIsCreateOpen(true)}
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-violet-600/10 hover:shadow-violet-600/25 active:scale-[0.98] cursor-pointer self-start sm:self-auto"
+                >
+                    <PlusIcon className="w-4.5 h-4.5 stroke-[2.5]" />
+                    <span>Create Task</span>
+                </button>
             </div>
-            <TaskListTable taskData={data.data}/>
+
+            {/* Table Area */}
+            <div className="bg-slate-950/40 border border-slate-900 rounded-2xl overflow-hidden shadow-xl p-1">
+                <TaskListTable taskData={data.data} />
+            </div>
+
+            <TaskDialogBox open={isCreateOpen} onClose={() => setIsCreateOpen(false)} mutation={mutation} taskData={null} />
         </div>
     )
 
-    
+
 }
 
 export default ListOfTasks;
