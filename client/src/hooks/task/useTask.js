@@ -10,7 +10,7 @@ const useGetAllTheTasks = (id) => {
     })
 };
 
-const useCreateTask = (id)=>{
+const useCreateTask = (id) => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (taskData) => taskService.createTask(id, taskData),
@@ -18,6 +18,47 @@ const useCreateTask = (id)=>{
             queryClient.invalidateQueries([id, "tasks"])
         }
     });
-}; 
+};
 
-export { useGetAllTheTasks,useCreateTask };
+
+const useGetTheTask = (projectId, taskId) => {
+    return useQuery({
+        queryKey: [projectId, taskId, "task"],
+        queryFn: () => taskService.getTask(projectId, taskId),
+        staleTime: 60 * 1000
+    });
+}
+
+const useUpdateTask = (projectId, taskId) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (taskData) => taskService.updateTask(projectId, taskId, taskData),
+        onSuccess: () => {
+            queryClient.invalidateQueries([projectId, taskId, 'task'])
+        }
+    })
+}
+
+const useDeleteTask = (projectId, taskId) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: () => taskService.deleteTask(projectId, taskId),
+        onSuccess: () => {
+            queryClient.invalidateQueries([projectId, taskId, 'task'])
+        }
+    })
+}
+
+
+
+const assignMember = (projectId, taskId) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload) => taskService.assignTask(projectId, taskId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries([projectId, taskId, 'task'])
+        }
+    })
+}
+
+export { useGetAllTheTasks, useCreateTask, useGetTheTask, useUpdateTask, useDeleteTask,assignMember};
