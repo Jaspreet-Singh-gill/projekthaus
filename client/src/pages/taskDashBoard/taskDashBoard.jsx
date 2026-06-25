@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetTheTask, useUpdateTask, useDeleteTask, assignMember, deleteMember } from "../../hooks/task/useTask.js";
+import {
+    useGetTheTask,
+    useUpdateTask,
+    useDeleteTask,
+    assignMember,
+    deleteMember,
+    useAssignedMemberTaskUpdation
+} from "../../hooks/task/useTask.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import { toast } from "sonner";
 import AssignedDialogBox from "../../components/tasks/assignTaskDialogBox.jsx";
-
+import { useGetTheProject } from "../../hooks/project/useProject.js";
 const TaskDashBoard = () => {
     const { projectId, taskId } = useParams();
     const navigate = useNavigate();
@@ -15,10 +22,18 @@ const TaskDashBoard = () => {
     const [openAssigned, setOpenAssigned] = useState(false);
     const mutationOfAssigned = assignMember(projectId, taskId);
     const mutationDeleteTheMember = deleteMember(projectId, taskId);
+    const projectInfo = useGetTheProject(projectId);
+    const assignedUpdationTask = useAssignedMemberTaskUpdation(projectId, taskId);
+    let isEditable = true;
+
 
     if (taskData.isLoading) {
         return <Loader />;
     }
+
+    const role = projectInfo.data?.data?.role;
+    if (role === "MEMBER")
+        isEditable = false;
 
     const task = taskData.data?.data;
 
@@ -50,15 +65,22 @@ const TaskDashBoard = () => {
         }
 
         try {
-            await updateMutation.mutateAsync({
-                name,
-                description,
-                startDate,
-                endDate,
-                priority,
-                status,
-                progress
-            });
+            if (isEditable) {
+                await updateMutation.mutateAsync({
+                    name,
+                    description,
+                    startDate,
+                    endDate,
+                    priority,
+                    status,
+                    progress
+                });
+            } else {
+                await assignedUpdationTask.mutateAsync({
+                    progress,
+                    status
+                })
+            }
             toast.success("Task updated successfully");
         } catch (error) {
             toast.error(error.message || "Failed to update task");
@@ -105,7 +127,7 @@ const TaskDashBoard = () => {
                 <button
                     type="button"
                     onClick={handleDelete}
-                    disabled={deleteMutation.isPending}
+                    disabled={deleteMutation.isPending || !isEditable}
                     className="px-3 py-1 text-xs font-bold bg-rose-600/10 text-rose-400 border border-rose-900/30 hover:bg-rose-600 hover:text-white rounded transition cursor-pointer"
                 >
                     Delete Task
@@ -123,6 +145,7 @@ const TaskDashBoard = () => {
                             name="name"
                             defaultValue={task.name}
                             disabled={updateMutation.isPending}
+                            readOnly={!isEditable}
                             className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm placeholder-slate-650 transition-colors"
                             required
                         />
@@ -136,6 +159,7 @@ const TaskDashBoard = () => {
                             defaultValue={task.description}
                             disabled={updateMutation.isPending}
                             rows={8}
+                            readOnly={!isEditable}
                             className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm placeholder-slate-650 resize-none transition-colors"
                             placeholder="Task description..."
                         />
@@ -165,7 +189,8 @@ const TaskDashBoard = () => {
                             id="priority"
                             name="priority"
                             defaultValue={task.priority}
-                            disabled={updateMutation.isPending}
+                            disabled={updateMutation.isPending || !isEditable}
+
                             className="w-full px-2 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         >
                             <option value="LOW">Low</option>
@@ -197,6 +222,7 @@ const TaskDashBoard = () => {
                             name="startDate"
                             defaultValue={task.startDate ? task.startDate.split("T")[0] : ""}
                             disabled={updateMutation.isPending}
+                            readOnly={!isEditable}
                             className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         />
                     </div>
@@ -209,6 +235,7 @@ const TaskDashBoard = () => {
                             name="endDate"
                             defaultValue={task.endDate ? task.endDate.split("T")[0] : ""}
                             disabled={updateMutation.isPending}
+                            readOnly={!isEditable}
                             className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         />
                     </div>
@@ -220,7 +247,7 @@ const TaskDashBoard = () => {
                                 {task.assigned.map((assignee, idx) => (
                                     <span key={idx} className="bg-slate-900 px-2 py-0.5 flex gap-2 rounded border border-slate-800 text-xs text-slate-350 select-none">
                                         <div>{assignee.email}</div>
-                                        <button type="button" onClick={() => removeTheMemver(assignee)}>x</button>
+                                        <button type="button" className={`${!isEditable ? "hidden" : ""}`} onClick={() => removeTheMemver(assignee)}>x</button>
                                     </span>
                                 ))}
                             </div>
@@ -231,6 +258,7 @@ const TaskDashBoard = () => {
                         <button
                             type="button"
                             onClick={() => setOpenAssigned(true)}
+                            disabled={!isEditable}
                             className="mt-2 w-full px-3 py-2 text-xs font-semibold text-slate-300 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 hover:text-white rounded-md transition-colors cursor-pointer text-center block"
                         >
                             Assign Task

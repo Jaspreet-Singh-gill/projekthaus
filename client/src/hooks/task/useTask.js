@@ -49,6 +49,16 @@ const useDeleteTask = (projectId, taskId) => {
     })
 }
 
+const useAssignedMemberTaskUpdation = (projectId, taskId) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload) => taskService.updateAssignedTask(projectId, taskId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries([projectId, taskId, 'task'])
+        }
+    })
+}
+
 
 
 const assignMember = (projectId, taskId) => {
@@ -71,4 +81,13 @@ const deleteMember = (projectId, taskId) => {
     })
 }
 
-export { useGetAllTheTasks, useCreateTask, useGetTheTask, useUpdateTask, useDeleteTask,assignMember,deleteMember};
+export {
+    useGetAllTheTasks,
+    useCreateTask,
+    useGetTheTask,
+    useUpdateTask,
+    useDeleteTask,
+    assignMember,
+    deleteMember,
+    useAssignedMemberTaskUpdation
+};
