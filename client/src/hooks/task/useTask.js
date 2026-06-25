@@ -61,4 +61,14 @@ const assignMember = (projectId, taskId) => {
     })
 }
 
-export { useGetAllTheTasks, useCreateTask, useGetTheTask, useUpdateTask, useDeleteTask,assignMember};
+const deleteMember = (projectId, taskId) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload) => taskService.deleteAssignedMember(projectId, taskId, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries([projectId, taskId, 'task'])
+        }
+    })
+}
+
+export { useGetAllTheTasks, useCreateTask, useGetTheTask, useUpdateTask, useDeleteTask,assignMember,deleteMember};
