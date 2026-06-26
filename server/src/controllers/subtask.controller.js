@@ -102,10 +102,23 @@ const deleteSubTask = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const deleted = await SubTask.findOneAndDelete({
-      _id: subTaskId,
-      taskId,
+    const task = await SubTask.findById(subTaskId);
+
+    if (!task) {
+      throw new ApiError(404, "", "Task not found");
+    }
+
+    const files = await subTaskFile.find({
+      subTaskId,
     });
+
+    if (files.length > 0) {
+      await Promise.all(
+        files.map((file) => deleteFromCloudinary(file.publicId, file.fileKind)),
+      );
+    }
+    await subTaskFile.deleteMany({ subTaskId });
+    await SubTask.findByIdAndDelete(subTaskId);
 
     res
       .status(200)
@@ -175,7 +188,7 @@ const assignSubTask = asyncHandler(async (req, res, next) => {
             project.projectName,
             "subTask",
             subTask.name,
-            `${process.env.SITE_MAIN_URL}/${project._id}/${subTask.taskId}/${taskId}`,
+            `${process.env.SITE_MAIN_URL}/${project._id}/${subTask.taskId}/`,
           ),
         };
         return sendMail(emailObject);
@@ -235,7 +248,7 @@ const assignedSubTaskUpdation = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "", "subTaskId is required to update the task");
   }
   const { progress, status } = req.body;
-  if (!progress || !status) {
+  if (!progress && !status) {
     throw new ApiError(400, "", "progress and status both of them required");
   }
   const user = req.user;

@@ -47,6 +47,7 @@ const TaskDashBoard = () => {
     const [isSubtaskCreateOpen, setIsSubtaskCreateOpen] = useState(false);
     const useSubTaskCreateMutation = useCreateSubtask(projectId, taskId);
 
+
     let isEditable = true;
 
 
@@ -190,17 +191,24 @@ const TaskDashBoard = () => {
 
                     <div className="flex items-center gap-2">
                         <button
-                            onClick={() => setDisplayFiles((prev) => !prev)}
+                            onClick={() => {
+                                setDisplayFiles((prev) => !prev);
+                                setDisplaySubTask(false);
+                            }
+                            }
                             type="button"
-                            className="px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700"
+                            className={`px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700 ${displayFiles ? "border-blue-700" : ""}`}
                         >
                             Files
                         </button>
 
                         <button
                             type="button"
-                            onClick={() => setDisplaySubTask((prev) => !prev)}
-                            className="px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700"
+                            onClick={() => {
+                                setDisplaySubTask((prev) => !prev);
+                                setDisplayFiles(false);
+                            }}
+                            className={`px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700  ${displaySubTask ? "border-blue-700" : ""}`}
                         >
                             SubTask
                         </button>
@@ -208,18 +216,19 @@ const TaskDashBoard = () => {
 
                     <div>
                         {
-                            displayFiles ? <FileComponent getAllFiles={getAllTheFiles} deleteFile={deleteFileFromTask} attachFile={attachFileToTask} isEditable={isEditable} /> : ""
+                            displayFiles && !displaySubTask ? <FileComponent getAllFiles={getAllTheFiles} deleteFile={deleteFileFromTask} attachFile={attachFileToTask} isEditable={isEditable} /> : ""
                         }
                     </div>
 
-                    {displaySubTask ? <div className="flex flex-col">
+                    {displaySubTask && !displayFiles ? <div className="flex flex-col">
                         <div className="flex justify-between">
                             <div>
                                 List of all the subtasks
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setIsSubtaskCreateOpen(true)}>
+                                onClick={() => setIsSubtaskCreateOpen(true)}
+                                className={`${isEditable ? "" : "hidden"}`}>
                                 create subTask
                             </button>
 

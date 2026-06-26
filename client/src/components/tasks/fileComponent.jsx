@@ -16,7 +16,7 @@ const FileComponent = ({ getAllFiles, deleteFile, attachFile, isEditable }) => {
     const [downloadingFileId, setDownloadingFileId] = useState(null);
 
 
-    const files = getAllFiles?.data?.data;
+    const files = getAllFiles?.data?.data || [];
 
     const handleFileChange = async (e) => {
         const filesSelected = Array.from(e.target.files);
@@ -116,7 +116,7 @@ const FileComponent = ({ getAllFiles, deleteFile, attachFile, isEditable }) => {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Paperclip className="w-3.5 h-3.5" />
                     Task Files
-                    {files.length > 0 && (
+                    {files?.length > 0 && (
                         <span className="ml-1 text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded-full font-medium">
                             {files.length}
                         </span>

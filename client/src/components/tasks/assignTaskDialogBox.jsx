@@ -3,13 +3,20 @@ import { useGetTheMemberQuerry } from "../../hooks/member/useMember.js";
 import { Dialog } from "../ui/Dialog.jsx";
 import { toast } from "sonner";
 
-const AssignedDialogBox = ({ listOfAssinged, assignedListMutation, open, onClose, projectId }) => {
+const AssignedDialogBox = ({ listOfAssinged, assignedListMutation, open, onClose, projectId, taskAssignedOnes }) => {
 
     const memberData = useGetTheMemberQuerry(projectId);
     const members = memberData.data?.data?.filter((person) => {
         for (let val of listOfAssinged) {
             if (val.id === person._id)
                 return false;
+        }
+        if (taskAssignedOnes) {
+            for (let val of taskAssignedOnes) {
+                if (val.id === person._id)
+                    return true;
+            }
+            return false;
         }
         return true;
     });

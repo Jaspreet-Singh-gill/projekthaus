@@ -81,6 +81,7 @@ const TaskListTable = ({ taskData, columns }) => {
                             setAssignedToMe(nextValue);
                             table.getColumn("assigned")?.setFilterValue(nextValue);
                         }}
+                        type="button"
                     >
                         <User className={`w-4 h-4 ${assignedToMe ? "text-indigo-400" : "text-slate-400"}`} />
                         <span>Assigned to me</span>
