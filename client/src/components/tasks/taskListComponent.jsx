@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useReactTable, getCoreRowModel, flexRender, getSortedRowModel, getFilteredRowModel } from "@tanstack/react-table";
-import { columns } from "../../hooks/table/useTable.jsx";
-import  useAuthStore  from "../../store/authStore.js";
+
+import useAuthStore from "../../store/authStore.js";
 import { Search, ChevronDown, User } from "lucide-react";
 
 
-const TaskListTable = ({ taskData }) => {
+const TaskListTable = ({ taskData, columns }) => {
 
     const [sorting, setSorting] = useState([]);
     const [globalFilter, setGlobalFilter] = useState([]);
@@ -72,11 +72,10 @@ const TaskListTable = ({ taskData }) => {
                     </div>
 
                     <button
-                        className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 border cursor-pointer ${
-                            assignedToMe
+                        className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 border cursor-pointer ${assignedToMe
                                 ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/30 shadow-[0_0_12px_rgba(99,102,241,0.15)]"
                                 : "bg-slate-900/30 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700 hover:bg-slate-900/50"
-                        }`}
+                            }`}
                         onClick={() => {
                             const nextValue = assignedToMe === null ? user.email : null;
                             setAssignedToMe(nextValue);
@@ -88,7 +87,7 @@ const TaskListTable = ({ taskData }) => {
                     </button>
                 </div>
             </div>
-            <table className="w-full border-collapse text-left text-sm">
+            <table className="w-full border-collapse text-left text-sm overflow-x-scroll">
                 <thead className="bg-slate-900/60 border-b border-slate-900">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>

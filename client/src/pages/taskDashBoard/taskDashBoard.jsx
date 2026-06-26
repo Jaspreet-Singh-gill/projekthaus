@@ -19,7 +19,10 @@ import { toast } from "sonner";
 import AssignedDialogBox from "../../components/tasks/assignTaskDialogBox.jsx";
 import { useGetTheProject } from "../../hooks/project/useProject.js";
 import FileComponent from "../../components/tasks/fileComponent.jsx";
-
+import { columns } from "../../hooks/table/useTableForSubtask.jsx";
+import TaskListTable from "../../components/tasks/taskListComponent.jsx";
+import { useGetAllSubtasks, useCreateSubtask } from "../../hooks/subtask/useSubtask.js";
+import SubtaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
 
 
 const TaskDashBoard = () => {
@@ -39,6 +42,11 @@ const TaskDashBoard = () => {
     const deleteFileFromTask = useDeleteFile(projectId, taskId);
     const getAllTheFiles = useGetAllFiles(projectId, taskId);
     const [displayFiles, setDisplayFiles] = useState(false);
+    const [displaySubTask, setDisplaySubTask] = useState(false);
+    const subTaskData = useGetAllSubtasks(projectId, taskId);
+    const [isSubtaskCreateOpen, setIsSubtaskCreateOpen] = useState(false);
+    const useSubTaskCreateMutation = useCreateSubtask(projectId, taskId);
+
     let isEditable = true;
 
 
@@ -191,6 +199,7 @@ const TaskDashBoard = () => {
 
                         <button
                             type="button"
+                            onClick={() => setDisplaySubTask((prev) => !prev)}
                             className="px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700"
                         >
                             SubTask
@@ -202,6 +211,26 @@ const TaskDashBoard = () => {
                             displayFiles ? <FileComponent getAllFiles={getAllTheFiles} deleteFile={deleteFileFromTask} attachFile={attachFileToTask} isEditable={isEditable} /> : ""
                         }
                     </div>
+
+                    {displaySubTask ? <div className="flex flex-col">
+                        <div className="flex justify-between">
+                            <div>
+                                List of all the subtasks
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setIsSubtaskCreateOpen(true)}>
+                                create subTask
+                            </button>
+
+                        </div>
+
+                        {
+                            !subTaskData.isLoading ? <TaskListTable taskData={subTaskData.data?.data} columns={columns} /> : ""
+                        }
+
+                    </div> : ""
+                    }
 
 
                 </div>
@@ -317,7 +346,7 @@ const TaskDashBoard = () => {
                 </div>
 
             </form>
-
+            <SubtaskDialogBox open={isSubtaskCreateOpen} onClose={() => { setIsSubtaskCreateOpen(false) }} mutation={useSubTaskCreateMutation} isTask={false} />
             <AssignedDialogBox listOfAssinged={taskData.data?.data?.assigned} assignedListMutation={mutationOfAssigned} open={openAssigned} onClose={() => setOpenAssigned(false)} projectId={projectId} />
         </div>
     );

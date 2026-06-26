@@ -40,7 +40,7 @@ const task = z.object({
         .max(100, "Progress cannot exceed 100"),
 });
 
-const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
+const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -62,7 +62,7 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
     }
 
     return (
-        <Dialog open={open} onClose={onClose} title={taskData ? "Edit Task" : "Create New Task"}>
+        <Dialog open={open} onClose={onClose} title={!isTask ? "Create New SubTask" : "Create New Task"}>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 {/* Task Name Field */}
                 <div className="flex flex-col gap-1.5">
@@ -77,7 +77,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                         type="text"
                         name="name"
                         placeholder="e.g., Design user dashboard"
-                        defaultValue={taskData?.name}
                         disabled={mutation.isPending}
                         className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
@@ -96,7 +95,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                         id="description"
                         name="description"
                         placeholder="Provide a detailed description of the task..."
-                        defaultValue={taskData?.description}
                         disabled={mutation.isPending}
                         rows={3}
                         className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm"
@@ -117,7 +115,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                             id="startDate"
                             type="date"
                             name="startDate"
-                            defaultValue={taskData?.startDate?.split("T")[0]}
                             disabled={mutation.isPending}
                             className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                             required
@@ -135,7 +132,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                             id="endDate"
                             type="date"
                             name="endDate"
-                            defaultValue={taskData?.endDate?.split("T")[0]}
                             disabled={mutation.isPending}
                             className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                             required
@@ -155,7 +151,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                         <select
                             id="priority"
                             name="priority"
-                            defaultValue={taskData?.priority || ""}
                             disabled={mutation.isPending}
                             className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
                             required
@@ -177,7 +172,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                         <select
                             id="status"
                             name="status"
-                            defaultValue={taskData?.status || "TODO"}
                             disabled={mutation.isPending}
                             className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
                             required
@@ -204,7 +198,6 @@ const TaskDialogBox = ({ open, onClose, mutation, taskData }) => {
                         name="progress"
                         min="0"
                         max="100"
-                        defaultValue={taskData?.progress ?? 0}
                         disabled={mutation.isPending}
                         className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required

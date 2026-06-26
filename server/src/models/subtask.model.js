@@ -31,7 +31,7 @@ const schema = new Schema(
     },
     priority: {
       type: String,
-      enum: ["High", "Medium", "Low"],
+      enum: ["HIGH", "MEDIUM", "LOW"],
       default: "Low",
     },
     status: {

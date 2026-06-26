@@ -5,6 +5,7 @@ import TaskListTable from "../../components/tasks/taskListComponent.jsx";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import TaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
 import { PlusIcon } from "lucide-react";
+import { columns } from "../../hooks/table/useTable.jsx";
 
 
 const ListOfTasks = () => {
@@ -30,7 +31,7 @@ const ListOfTasks = () => {
                         Manage and collaborate on your project tasks.
                     </p>
                 </div>
-                <button 
+                <button
                     onClick={() => setIsCreateOpen(true)}
                     className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg shadow-violet-600/10 hover:shadow-violet-600/25 active:scale-[0.98] cursor-pointer self-start sm:self-auto"
                 >
@@ -41,7 +42,7 @@ const ListOfTasks = () => {
 
             {/* Table Area */}
             <div className="bg-slate-950/40 border border-slate-900 rounded-2xl overflow-hidden shadow-xl p-1">
-                <TaskListTable taskData={data.data} />
+                <TaskListTable taskData={data.data} columns={columns} />
             </div>
 
             <TaskDialogBox open={isCreateOpen} onClose={() => setIsCreateOpen(false)} mutation={mutation} taskData={null} />
