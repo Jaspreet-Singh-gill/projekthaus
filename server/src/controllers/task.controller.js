@@ -88,7 +88,23 @@ const deleteTask = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const deleted = await Task.findByIdAndDelete(taskId);
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      throw new ApiError(404, "", "Task not found");
+    }
+
+    const files = await taskFile.find({
+      taskId,
+    });
+
+    if (files.length > 0) {
+      await Promise.all(
+        files.map((file) => deleteFromCloudinary(file.publicId, file.fileKind)),
+      );
+    }
+    await taskFile.deleteMany({ taskId });
+    await Task.findByIdAndDelete(taskId);
 
     res
       .status(200)
@@ -326,7 +342,11 @@ const deleteTheFile = asyncHandler(async (req, res, next) => {
       throw error;
     }
     console.log(error);
-    throw new ApiError(500, error, "Something went wrong when deleting the file");
+    throw new ApiError(
+      500,
+      error,
+      "Something went wrong when deleting the file",
+    );
   }
 });
 

@@ -8,10 +8,20 @@ import {
     deleteMember,
     useAssignedMemberTaskUpdation
 } from "../../hooks/task/useTask.js";
+
+import {
+    useAttachFiles,
+    useGetAllFiles,
+    useDeleteFile
+} from "../../hooks/task/useFileTask.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import { toast } from "sonner";
 import AssignedDialogBox from "../../components/tasks/assignTaskDialogBox.jsx";
 import { useGetTheProject } from "../../hooks/project/useProject.js";
+import FileComponent from "../../components/tasks/fileComponent.jsx";
+
+
+
 const TaskDashBoard = () => {
     const { projectId, taskId } = useParams();
     const navigate = useNavigate();
@@ -24,6 +34,11 @@ const TaskDashBoard = () => {
     const mutationDeleteTheMember = deleteMember(projectId, taskId);
     const projectInfo = useGetTheProject(projectId);
     const assignedUpdationTask = useAssignedMemberTaskUpdation(projectId, taskId);
+
+    const attachFileToTask = useAttachFiles(projectId, taskId);
+    const deleteFileFromTask = useDeleteFile(projectId, taskId);
+    const getAllTheFiles = useGetAllFiles(projectId, taskId);
+    const [displayFiles, setDisplayFiles] = useState(false);
     let isEditable = true;
 
 
@@ -164,6 +179,31 @@ const TaskDashBoard = () => {
                             placeholder="Task description..."
                         />
                     </div>
+
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setDisplayFiles((prev) => !prev)}
+                            type="button"
+                            className="px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700"
+                        >
+                            Files
+                        </button>
+
+                        <button
+                            type="button"
+                            className="px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700"
+                        >
+                            SubTask
+                        </button>
+                    </div>
+
+                    <div>
+                        {
+                            displayFiles ? <FileComponent getAllFiles={getAllTheFiles} deleteFile={deleteFileFromTask} attachFile={attachFileToTask} isEditable={isEditable} /> : ""
+                        }
+                    </div>
+
+
                 </div>
 
                 {/* Right Side: Status and other info (Spans 1/3, right-most column) */}
