@@ -173,7 +173,7 @@ const FileComponent = ({ getAllFiles, deleteFile, attachFile, isEditable }) => {
                     <p className="text-[10px] text-slate-600 mt-0.5">Attach reference documents, mockups, or project requirements</p>
                 </div>
             ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 overflow-y-auto">
                     {files.map((file) => {
                         const fileId = file._id || file.id;
                         const isDeleting = deleteFile?.isPending && deleteFile?.variables === fileId;
