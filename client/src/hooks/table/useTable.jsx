@@ -26,16 +26,26 @@ export const columns = [
         header: "Progress",
         cell: (info) => info.getValue()
     }),
-    columnHelper.accessor(
-        row => row.assigned.map(user => user.email).join(", "),
-        {
-            id: "assigned",
-            header: "Assigned To",
+    columnHelper.accessor("assigned", {
+        header: "Assigned To",
 
-            filterFn: "includesString",
+        filterFn: "includesString",
 
-            cell: (info) => info.getValue(),
-        }
+        cell: ({ getValue  }) => {
+            const assigned = getValue();
+            return (
+                <div className='flex flex-col justify-center items-center'>
+                    {
+                        assigned.map((user) => {
+                            return <div className ={"text-sm"} key={user.id}>
+                                {user.email}
+                            </div>
+                        })
+                    }
+                </div>
+            );
+        },
+    }
     ),
     columnHelper.accessor("startDate", {
         header: "Start Date",
