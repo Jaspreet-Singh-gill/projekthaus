@@ -80,7 +80,7 @@ const updateNotes = asyncHandler(async (req, res, next) => {
     .json(
       new ApiResponse(
         200,
-        updatedContent,
+        updatedNote,
         "the content of notes is updated successfully",
       ),
     );

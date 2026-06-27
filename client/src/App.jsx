@@ -14,7 +14,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ListOfTasks from "./pages/taskDashBoard/aLLTheTaskpage.jsx";
 import TaskDashBoard from "./pages/taskDashBoard/taskDashBoard.jsx";
 import SubTaskDasboard from "./pages/subTaskDashBoard/subTaskDashBoardPage.jsx";
-import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx"
+import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx";
+import NoteMainDashBoard from "./pages/notesDashboard/notesContent.jsx";
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
@@ -35,6 +36,7 @@ const route = createBrowserRouter(
         <Route path="/project/:projectId/task/:taskId" element={<TaskDashBoard />} />
         <Route path="/project/:projectId/task/:taskId/subtask/:subTaskId" element={<SubTaskDasboard />} />
         <Route path="/project/:projectId/notes" element={<ListOfNotes />} />
+        <Route path="/project/:projectId/:noteId/note" element={<NoteMainDashBoard />} />
       </Route>
     </Route>
   )
