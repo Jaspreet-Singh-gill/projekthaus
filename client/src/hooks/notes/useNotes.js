@@ -12,7 +12,7 @@ const useGetAllNotes = (projectId) => {
 const useCreateNote = (projectId) => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (payload) => notesService.createNote(projectId, payload),
+        mutationFn: (payload, files) => notesService.createNote(projectId, payload, files),
         onSuccess: () => {
             queryClient.invalidateQueries([projectId, "notes"]);
         }

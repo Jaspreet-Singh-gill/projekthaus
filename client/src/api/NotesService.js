@@ -4,10 +4,12 @@ import { buildFormData, multipartHeaders } from "./helpers.js";
 class NotesService {
   #basePath = "/notes";
 
-  async createNote(projectId, payload) {
+  async createNote(projectId, payload, files) {
+    const formData = buildFormData(payload, { filesToSend: files });
     const response = await api.post(
       `${this.#basePath}/${projectId}/create-note`,
-      payload,
+      formData,
+      multipartHeaders(),
     );
     return response.data;
   }

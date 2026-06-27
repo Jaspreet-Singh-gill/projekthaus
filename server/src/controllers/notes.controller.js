@@ -13,7 +13,7 @@ const createNotes = asyncHandler(async (req, res, next) => {
   const projectId = req.project._id;
   const { content, title, category, isPinned } = req.body;
   const files = req.files;
-  if (!content || !title || !category) {
+  if (!content && !title && !category) {
     throw new ApiError(400, "", "There must be something in the notes");
   }
 
@@ -55,7 +55,7 @@ const updateNotes = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "", "id of the note is required to update it");
   }
   const { content, title, category, isPinned } = req.body;
-  if (!content || !title || !category || isPinned == null) {
+  if (!content && !title && !category && isPinned == null) {
     throw new ApiError(400, "", "some content is required to being updated");
   }
   const updatedNote = await Notes.findOneAndUpdate(
