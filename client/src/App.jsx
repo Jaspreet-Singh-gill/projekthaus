@@ -13,20 +13,19 @@ import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ListOfTasks from "./pages/taskDashBoard/aLLTheTaskpage.jsx";
 import TaskDashBoard from "./pages/taskDashBoard/taskDashBoard.jsx";
-import SubTaskDasboard from "./pages/subTaskDashBoard/subTaskDashBoardPage.jsx"
+import SubTaskDasboard from "./pages/subTaskDashBoard/subTaskDashBoardPage.jsx";
+import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx"
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route path="" element={<Home />} />
-
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="forget-password" element={<ForgetPasswordPage />} />
       <Route path="reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="waitingPage/:token" element={<WaitingPage />} />
-
 
       {/* protected routes */}
       <Route element={<ProtectedRoute />} >
@@ -35,11 +34,11 @@ const route = createBrowserRouter(
         <Route path="/project/:projectId/get-all-tasks" element={< ListOfTasks />} />
         <Route path="/project/:projectId/task/:taskId" element={<TaskDashBoard />} />
         <Route path="/project/:projectId/task/:taskId/subtask/:subTaskId" element={<SubTaskDasboard />} />
+        <Route path="/project/:projectId/notes" element={<ListOfNotes />} />
       </Route>
     </Route>
   )
 )
-
 function App() {
   return (
     <>

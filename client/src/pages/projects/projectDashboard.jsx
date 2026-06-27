@@ -67,7 +67,9 @@ const ProjectDashBoard = () => {
                             className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Members
                         </button>
-                        <button className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
+                        <button
+                        onClick={()=>navigate(`/project/${projectId}/notes`)}
+                        className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-950/40 border border-slate-900 hover:border-slate-800/80 hover:bg-slate-900/30 text-slate-300 hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Notes
                         </button>
                     </div>
