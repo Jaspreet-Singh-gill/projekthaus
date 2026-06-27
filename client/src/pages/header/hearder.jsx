@@ -97,19 +97,7 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
               <div className="flex items-center">
                 <a href="#" className="flex items-center gap-2.5 group">
                   <div className="w-9 h-9 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/10 group-hover:scale-105 transition-transform duration-200">
-                    <svg
-                      className="w-5 h-5 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                    <img className="w-4.5 h-4.5 text-white" src="logo.svg" />
                   </div>
                   <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent tracking-tight">
                     projekt<span className="text-violet-400">Haus</span>
