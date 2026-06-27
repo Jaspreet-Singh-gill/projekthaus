@@ -4,12 +4,38 @@ const schema = new Schema(
   {
     projectId: {
       type: Schema.Types.ObjectId,
+      ref: "Project",
       required: true,
-      trim: true,
       index: true,
     },
+
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 100,
+    },
+
     content: {
       type: String,
+      required: true,
+      default: "",
+    },
+
+    category: {
+      type: String,
+      enum: ["General", "Meeting", "Documentation", "Idea", "Research","Instructions"],
+      default: "General",
+    },
+
+    isPinned: {
+      type: Boolean,
+      default: false,
+    },
+
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
@@ -20,4 +46,4 @@ const schema = new Schema(
 
 const Notes = mongoose.model("Notes", schema);
 
-export {Notes};
+export { Notes };

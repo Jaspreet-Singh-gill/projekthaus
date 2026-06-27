@@ -1,4 +1,5 @@
 import api from "../lib/axios.js";
+import { buildFormData, multipartHeaders } from "./helpers.js";
 
 class NotesService {
   #basePath = "/notes";
@@ -37,7 +38,32 @@ class NotesService {
     );
     return response.data;
   }
+
+  async attachFiles(projectId, noteId, files) {
+    const formData = buildFormData({}, { filesToSend: files });
+    const response = await api.post(
+      `${this.#basePath}/${projectId}/${noteId}/attach-files`,
+      formData,
+      multipartHeaders(),
+    );
+    return response.data;
+  }
+
+  async getAllFiles(projectId, noteId) {
+    const response = await api.get(
+      `${this.#basePath}/${projectId}/${noteId}/files`,
+    );
+    return response.data;
+  }
+
+  async deleteFile(projectId, noteId, fileId) {
+    const response = await api.delete(
+      `${this.#basePath}/${projectId}/${noteId}/files/${fileId}`,
+    );
+    return response.data;
+  }
 }
+
 
 const notesService = new NotesService();
 
