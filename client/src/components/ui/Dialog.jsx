@@ -40,14 +40,14 @@ export function Dialog({ open, onClose, title, children }) {
     >
       {/* Centered Panel Container */}
       <div
-        className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 z-50 relative"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl max-w-md w-full p-6 z-50 relative transition-colors duration-200"
         // Crucial: Stop click events from bubbling up to the overlay backdrop which would trigger onClose.
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header section with optional title and explicit close button */}
-        <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-2">
+        <div className="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
           {title ? (
-            <h3 className="text-lg font-semibold text-gray-950">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               {title}
             </h3>
           ) : (
@@ -57,7 +57,7 @@ export function Dialog({ open, onClose, title, children }) {
           
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-md p-1 transition-colors"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-1 transition-colors cursor-pointer"
             aria-label="Close dialog"
           >
             {/* Lucide X icon */}
@@ -66,7 +66,7 @@ export function Dialog({ open, onClose, title, children }) {
         </div>
 
         {/* Content body containing child nodes */}
-        <div className="text-sm text-gray-700">
+        <div className="text-sm text-slate-700 dark:text-slate-300">
           {children}
         </div>
       </div>

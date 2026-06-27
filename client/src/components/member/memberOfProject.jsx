@@ -69,7 +69,7 @@ const MembersOfTheProject = ({ dataOfProject, open, onClose }) => {
                             name="email"
                             placeholder="Enter email address"
                             required
-                            className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 placeholder-slate-400 transition-all"
+                            className="flex-1 px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 placeholder-slate-400 dark:placeholder-slate-500 transition-all"
                         />
                         <button
                             type="submit"
@@ -86,20 +86,20 @@ const MembersOfTheProject = ({ dataOfProject, open, onClose }) => {
                         {members.map((member) => (
                             <div
                                 key={member._id || member.email}
-                                className="flex items-center justify-between p-2.5 hover:bg-slate-50/80 border border-transparent hover:border-slate-100 rounded-xl transition-all duration-200"
+                                className="flex items-center justify-between p-2.5 bg-slate-50/50 dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl transition-all duration-200"
                             >
                                 {/* Left side: Avatar, Name & Email */}
                                 <div className="flex items-center gap-3">
                                     <img
                                         src={member.avatar?.url || "/placeholder-avatar.png"}
                                         alt={`${member.name}'s avatar`}
-                                        className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm"
+                                        className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-sm"
                                     />
                                     <div className="flex flex-col">
-                                        <span className="text-sm font-semibold text-slate-800 leading-tight">
+                                        <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-tight">
                                             {member.name}
                                         </span>
-                                        <span className="text-xs text-slate-400 mt-0.5">
+                                        <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                             {member.email}
                                         </span>
                                     </div>
@@ -111,17 +111,17 @@ const MembersOfTheProject = ({ dataOfProject, open, onClose }) => {
                                         defaultValue={member?.role}
                                         onChange={(e) => onUserChange(e, member)}
                                         disabled={!isAdmin}
-                                        className="text-[11px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200 rounded-full px-2.5 py-1 focus:outline-none cursor-pointer disabled:bg-slate-50 disabled:text-slate-400 disabled:border-slate-100 disabled:cursor-not-allowed transition-all"
+                                        className="text-[11px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-full px-2.5 py-1 focus:outline-none cursor-pointer disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-400 dark:disabled:text-slate-600 disabled:border-slate-100 dark:disabled:border-slate-800 disabled:cursor-not-allowed transition-all"
                                     >
-                                        <option value="ADMIN">ADMIN</option>
-                                        <option value="PROJECT_MANAGER">PROJECT MANAGER</option>
-                                        <option value="MEMBER">MEMBER</option>
+                                        <option value="ADMIN" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">ADMIN</option>
+                                        <option value="PROJECT_MANAGER" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">PROJECT MANAGER</option>
+                                        <option value="MEMBER" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">MEMBER</option>
                                     </select>
 
                                     {isAdmin && (
                                         <button
                                             onClick={() => removeTheMember(member?._id)}
-                                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                                            className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors cursor-pointer"
                                             title="Remove member"
                                         >
                                             <DeleteIcon className="w-4 h-4" />

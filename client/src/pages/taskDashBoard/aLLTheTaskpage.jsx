@@ -20,14 +20,14 @@ const ListOfTasks = () => {
     }
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-100">
+        <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-900 dark:text-slate-100 transition-colors duration-200">
             {/* Header section */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-900/60">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-900/60">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white md:text-3xl">
                         Tasks
                     </h1>
-                    <p className="text-sm text-slate-400 mt-1">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
                         Manage and collaborate on your project tasks.
                     </p>
                 </div>
@@ -41,7 +41,7 @@ const ListOfTasks = () => {
             </div>
 
             {/* Table Area */}
-            <div className="bg-slate-950/40 border border-slate-900 rounded-2xl overflow-hidden shadow-xl p-1">
+            <div className="bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900 rounded-2xl overflow-hidden shadow-xl p-1">
                 <TaskListTable taskData={data.data} columns={columns} />
             </div>
 

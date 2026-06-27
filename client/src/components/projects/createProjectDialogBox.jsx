@@ -63,7 +63,7 @@ export const ProjectDialogBox = ({ open, onClose, mutation, data }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="projectName"
-                        className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Project Name
                     </label>
@@ -74,7 +74,7 @@ export const ProjectDialogBox = ({ open, onClose, mutation, data }) => {
                         value={projectName}
                         onChange={(e) => setProjectName(e.target.value)}
                         disabled={mutation.isPending}
-                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
@@ -83,7 +83,7 @@ export const ProjectDialogBox = ({ open, onClose, mutation, data }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="projectDescription"
-                        className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Project Description
                     </label>
@@ -94,18 +94,18 @@ export const ProjectDialogBox = ({ open, onClose, mutation, data }) => {
                         onChange={(e) => setProjectDescription(e.target.value)}
                         disabled={mutation.isPending}
                         rows={4}
-                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <button
                         type="button"
                         onClick={onClose}
                         disabled={mutation.isPending}
-                        className="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 border border-slate-200 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="px-4 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                     >
                         Cancel
                     </button>

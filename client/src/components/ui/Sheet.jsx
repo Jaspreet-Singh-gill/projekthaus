@@ -40,14 +40,14 @@ export function Sheet({ open, onClose, children }) {
 
       {/* Sliding Panel: fixed on the left, slides via transition-transform */}
       <div
-        className={`fixed left-0 top-0 h-full w-[280px] bg-slate-950 border-r border-slate-900/60 z-50 shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"
+        className={`fixed left-0 top-0 h-full w-[280px] bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-900/60 z-50 shadow-2xl transition-transform duration-200 ${open ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         {/* Floating Close Button */}
         <div className="absolute top-4 right-4 z-[60]">
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 rounded-lg p-1.5 transition-colors focus:outline-none cursor-pointer"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 rounded-lg p-1.5 transition-colors focus:outline-none cursor-pointer"
             aria-label="Close sheet"
             
           >

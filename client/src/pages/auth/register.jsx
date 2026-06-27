@@ -93,12 +93,12 @@ const Register = () => {
     };
 
     return isSubmitting ? <Loader /> : (
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 relative overflow-y-auto py-12 px-4 font-sans">
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 relative overflow-y-auto py-12 px-4 font-sans transition-colors duration-200">
             {/* Ambient background glow */}
-            <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[140px] pointer-events-none" />
+            <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/10 dark:bg-violet-600/10 blur-[140px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-600/10 dark:bg-blue-600/10 blur-[140px] pointer-events-none" />
 
-            <div className="w-full max-w-2xl p-8 bg-slate-900/40 backdrop-blur-md border border-slate-800/80 rounded-2xl shadow-2xl relative z-10 m-4">
+            <div className="w-full max-w-2xl p-8 bg-white dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-2xl relative z-10 m-4">
                 <div className="flex flex-col items-center mb-8">
                     {/* Logo/Icon */}
                     <div className="w-12 h-12 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/20 mb-4">
@@ -106,10 +106,10 @@ const Register = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent tracking-tight">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent tracking-tight">
                         Create Account
                     </h1>
-                    <p className="text-sm text-slate-400 mt-2">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
                         Get started with projektHaus
                     </p>
                 </div>
@@ -117,14 +117,14 @@ const Register = () => {
                 <form onSubmit={handleRegister} className="space-y-6">
                     {/* Dropzone Avatar Upload */}
                     <div>
-                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                        <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
                             Profile Picture
                         </label>
                         <div
                             {...getRootProps()}
                             className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 ${isDragActive
                                 ? "border-violet-500 bg-violet-500/10"
-                                : "border-slate-800 hover:border-slate-700 bg-slate-950/30"
+                                : "border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-950/30"
                                 }`}
                         >
                             <input {...getInputProps()} />
@@ -135,15 +135,15 @@ const Register = () => {
                                         alt="Avatar Preview"
                                         className="w-16 h-16 rounded-full object-cover border-2 border-violet-500"
                                     />
-                                    <span className="text-xs text-slate-400">{files[0].name}</span>
+                                    <span className="text-xs text-slate-600 dark:text-slate-400">{files[0].name}</span>
                                 </div>
                             ) : (
                                 <div className="text-center">
-                                    <svg className="w-8 h-8 text-slate-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <svg className="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
-                                    <p className="text-xs text-slate-400">Drag & drop profile image, or click to select</p>
-                                    <span className="text-[10px] text-slate-500">JPG or PNG, up to 5MB</span>
+                                    <p className="text-xs text-slate-600 dark:text-slate-400">Drag & drop profile image, or click to select</p>
+                                    <span className="text-[10px] text-slate-400 dark:text-slate-500">JPG or PNG, up to 5MB</span>
                                 </div>
                             )}
                         </div>
@@ -152,7 +152,7 @@ const Register = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Username */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="username">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="username">
                                 Username
                             </label>
                             <input
@@ -161,14 +161,14 @@ const Register = () => {
                                 placeholder="johndoe"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
                         </div>
 
                         {/* Full Name */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="name">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="name">
                                 Full Name
                             </label>
                             <input
@@ -177,13 +177,13 @@ const Register = () => {
                                 placeholder="John Doe"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                             />
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="email">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="email">
                                 Email Address
                             </label>
                             <input
@@ -192,14 +192,14 @@ const Register = () => {
                                 placeholder="name@company.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
                         </div>
 
                         {/* Password */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="password">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="password">
                                 Password
                             </label>
                             <input
@@ -208,14 +208,14 @@ const Register = () => {
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
                         </div>
 
                         {/* Age */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="age">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="age">
                                 Age
                             </label>
                             <input
@@ -224,32 +224,32 @@ const Register = () => {
                                 placeholder="18"
                                 value={age}
                                 onChange={(e) => setAge(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
                         </div>
 
                         {/* Gender */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="gender">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="gender">
                                 Gender
                             </label>
                             <select
                                 id="gender"
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200 cursor-pointer"
                                 required
                             >
-                                <option value="male" className="bg-slate-900 text-white">Male</option>
-                                <option value="female" className="bg-slate-900 text-white">Female</option>
-                                <option value="other" className="bg-slate-900 text-white">Other</option>
+                                <option value="male" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Male</option>
+                                <option value="female" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Female</option>
+                                <option value="other" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Other</option>
                             </select>
                         </div>
 
                         {/* Organization */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="organization">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="organization">
                                 Organization
                             </label>
                             <input
@@ -258,14 +258,14 @@ const Register = () => {
                                 placeholder="Company / Org Name"
                                 value={organization}
                                 onChange={(e) => setOrganization(e.target.value)}
-                                className="w-full px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                 required
                             />
                         </div>
 
                         {/* Phone Number */}
                         <div>
-                            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2" htmlFor="phoneNumber">
+                            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2" htmlFor="phoneNumber">
                                 Phone Number
                             </label>
                             <div className="flex space-x-2">
@@ -274,7 +274,7 @@ const Register = () => {
                                     placeholder="+91"
                                     value={countryCode}
                                     onChange={(e) => setCountryCode(e.target.value)}
-                                    className="w-20 px-3 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 text-center focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                    className="w-20 px-3 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-center focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                     required
                                 />
                                 <input
@@ -283,7 +283,7 @@ const Register = () => {
                                     placeholder="10 digit number"
                                     value={phoneNumber}
                                     onChange={(e) => setPhoneNumber(e.target.value)}
-                                    className="flex-1 px-4 py-3 bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+                                    className="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
                                     required
                                 />
                             </div>
@@ -292,17 +292,17 @@ const Register = () => {
 
                     <button
                         type="submit"
-                        className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/20 active:scale-[0.98] transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        className="w-full mt-4 py-3 px-4 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/20 active:scale-[0.98] transition-all duration-150 cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-100 dark:focus:ring-offset-slate-900"
                     >
                         Sign Up
                     </button>
                 </form>
 
-                <div className="mt-8 text-center text-sm text-slate-400">
+                <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
                     Already have an account?{" "}
                     <span
                         onClick={() => navigate("/login")}
-                        className="text-violet-400 hover:text-violet-300 font-medium hover:underline transition duration-150 cursor-pointer"
+                        className="text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 font-medium hover:underline transition duration-150 cursor-pointer"
                     >
                         Sign In
                     </span>

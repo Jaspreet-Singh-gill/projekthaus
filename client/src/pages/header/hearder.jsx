@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import useAuthStore from "../../store/authStore";
 import { authService } from "../../api/index";
+import { Sun, Moon } from "lucide-react";
+import useThemeStore from "../../store/themeStore";
 
 const Header = ({ onMenuClick, onMenuOpen }) => {
   const { user, clearTheUser } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -69,7 +72,7 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${scrolled
-        ? "bg-slate-950/80 backdrop-blur-md border-slate-900/80 shadow-lg shadow-black/10"
+        ? "bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-200/80 dark:border-slate-900/80 shadow-lg shadow-slate-200/50 dark:shadow-black/20"
         : "bg-transparent border-transparent"
         }`}
     >
@@ -99,8 +102,8 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
                   <div className="w-9 h-9 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/10 group-hover:scale-105 transition-transform duration-200">
                     <img className="w-4.5 h-4.5 text-white" src="logo.svg" />
                   </div>
-                  <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent tracking-tight">
-                    projekt<span className="text-violet-400">Haus</span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text text-transparent tracking-tight">
+                    projekt<span className="text-violet-600 dark:text-violet-400">Haus</span>
                   </span>
                 </a>
 
@@ -110,7 +113,7 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
                     <a
                       key={link.label}
                       href={link.href}
-                      className="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-900/60 transition-all duration-200"
+                      className="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60 transition-all duration-200"
                     >
                       {link.label}
                     </a>
@@ -121,30 +124,44 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
           </div>
 
           {/* Right-side utilities */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-colors duration-200 focus:outline-none cursor-pointer"
+              aria-label="Toggle Theme"
+              title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5.5 h-5.5 text-amber-400 hover:rotate-45 transition-transform duration-300" />
+              ) : (
+                <Moon className="w-5.5 h-5.5 text-indigo-600 hover:-rotate-12 transition-transform duration-300" />
+              )}
+            </button>
+
             {user ? (
               <>
                 {/* Notifications Button */}
                 <div className="relative" ref={notificationRef}>
                   <button
                     onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-900 rounded-lg transition-colors duration-200 relative focus:outline-none"
+                    className="p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-colors duration-200 relative focus:outline-none cursor-pointer"
                     aria-label="View notifications"
                   >
                     <svg className="w-5.5 h-5.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
                     {dummyNotifications.some(n => n.unread) && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-slate-950 animate-pulse" />
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-white dark:ring-slate-950 animate-pulse" />
                     )}
                   </button>
 
                   {/* Notifications Dropdown Panel */}
                   {isNotificationsOpen && (
-                    <div className="absolute right-0 mt-2.5 w-80 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
-                      <div className="px-4 py-3 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-                        <span className="text-xs font-semibold text-slate-200">Notifications</span>
-                        <span className="text-[10px] bg-violet-500/20 text-violet-300 px-2 py-0.5 rounded-full font-medium">
+                    <div className="absolute right-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50">
+                      <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
+                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Notifications</span>
+                        <span className="text-[10px] bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-300 px-2 py-0.5 rounded-full font-medium">
                           {dummyNotifications.filter(n => n.unread).length} New
                         </span>
                       </div>
@@ -200,30 +217,30 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
 
                   {/* Profile Dropdown Options */}
                   {isProfileDropdownOpen && (
-                    <div className="absolute right-0 mt-2.5 w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-slate-800">
-                      <div className="px-4 py-3 bg-slate-900/50">
-                        <p className="text-xs text-slate-400 font-medium">Logged in as</p>
-                        <p className="text-sm font-semibold text-white truncate mt-0.5">{user.name || user.username}</p>
+                    <div className="absolute right-0 mt-2.5 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-slate-100 dark:divide-slate-800">
+                      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900/50">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Logged in as</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white truncate mt-0.5">{user.name || user.username}</p>
                         <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
                       </div>
-                      <div className="py-1 bg-slate-900">
+                      <div className="py-1 bg-white dark:bg-slate-900">
                         <a
                           href="#"
-                          className="flex items-center px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/55 transition-colors duration-150"
+                          className="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/55 transition-colors duration-150"
                         >
                           My Profile
                         </a>
                         <a
                           href="#"
-                          className="flex items-center px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-800/55 transition-colors duration-150"
+                          className="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/55 transition-colors duration-150"
                         >
                           Project Settings
                         </a>
                       </div>
-                      <div className="py-1 bg-slate-900">
+                      <div className="py-1 bg-white dark:bg-slate-900">
                         <button
                           onClick={handleLogout}
-                          className="w-full flex items-center text-left px-4 py-2 text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors duration-150 focus:outline-none"
+                          className="w-full flex items-center text-left px-4 py-2 text-sm text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors duration-150 focus:outline-none cursor-pointer"
                         >
                           Sign Out
                         </button>
@@ -251,7 +268,18 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
           </div>
 
           {/* Mobile hamburger menu toggle */}
-          <div className="md:hidden flex items-center gap-3">
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-colors focus:outline-none cursor-pointer"
+              aria-label="Toggle Theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 text-amber-400" />
+              ) : (
+                <Moon className="w-5 h-5 text-indigo-600" />
+              )}
+            </button>
             {user && (
               <div className="w-8.5 h-8.5 rounded-lg bg-gradient-to-tr from-violet-600 to-blue-500 p-0.5 flex items-center justify-center">
                 {user.avatar?.url ? (

@@ -79,7 +79,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-900 font-sans mt-auto">
+    <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-900 font-sans mt-auto transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 xl:gap-12">
           {/* Brand Info & Newsletter */}
@@ -88,11 +88,11 @@ const Footer = () => {
               <div className="w-8 h-8 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/10">
                 <img className="w-4.5 h-4.5 text-white" src="logo.svg" />
               </div>
-              <span className="text-lg font-bold bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent tracking-tight">
-                projekt<span className="text-violet-400">Haus</span>
+              <span className="text-lg font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text text-transparent tracking-tight">
+                projekt<span className="text-violet-600 dark:text-violet-400">Haus</span>
               </span>
             </div>
-            <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed">
               Beautifully coordinate projects, orchestrate sprint backlogs, and write seamless notes in a high-fidelity workspace designed for peak developer productivity.
             </p>
             {/* Social handles */}
@@ -101,7 +101,7 @@ const Footer = () => {
                 <a
                   key={social.name}
                   href={social.href}
-                  className="p-2 text-slate-500 hover:text-white hover:bg-slate-900 rounded-lg transition-all duration-200"
+                  className="p-2 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-all duration-200"
                   aria-label={`Follow us on ${social.name}`}
                 >
                   {social.icon}
@@ -112,11 +112,11 @@ const Footer = () => {
 
           {/* Links: Product */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-350 uppercase tracking-wider mb-4">Product</h3>
+            <h3 className="text-xs font-semibold text-slate-800 dark:text-slate-350 uppercase tracking-wider mb-4">Product</h3>
             <ul className="space-y-3">
               {productLinks.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-slate-400 hover:text-white transition-colors duration-150">
+                  <a href={link.href} className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
                     {link.label}
                   </a>
                 </li>
@@ -126,11 +126,11 @@ const Footer = () => {
 
           {/* Links: Resources */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-350 uppercase tracking-wider mb-4">Resources</h3>
+            <h3 className="text-xs font-semibold text-slate-800 dark:text-slate-350 uppercase tracking-wider mb-4">Resources</h3>
             <ul className="space-y-3">
               {resourceLinks.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-sm text-slate-400 hover:text-white transition-colors duration-150">
+                  <a href={link.href} className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
                     {link.label}
                   </a>
                 </li>
@@ -140,15 +140,15 @@ const Footer = () => {
 
           {/* Links: Company */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-350 uppercase tracking-wider mb-4">Company</h3>
+            <h3 className="text-xs font-semibold text-slate-800 dark:text-slate-350 uppercase tracking-wider mb-4">Company</h3>
             <ul className="space-y-3">
               {companyLinks.map((link) => (
                 <li key={link.label} className="flex items-center gap-2">
-                  <a href={link.href} className="text-sm text-slate-400 hover:text-white transition-colors duration-150">
+                  <a href={link.href} className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-150">
                     {link.label}
                   </a>
                   {link.badge && (
-                    <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-[10px] bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-semibold">
                       {link.badge}
                     </span>
                   )}
@@ -159,10 +159,10 @@ const Footer = () => {
         </div>
 
         {/* Newsletter Signup Banner */}
-        <div className="mt-12 pt-8 border-t border-slate-900/60 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-900/60 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div>
-            <h4 className="text-sm font-semibold text-slate-200">Subscribe to our newsletter</h4>
-            <p className="text-xs text-slate-400 mt-1">Get the latest features, releases, and guides sent directly to your inbox.</p>
+            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Subscribe to our newsletter</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Get the latest features, releases, and guides sent directly to your inbox.</p>
           </div>
           <form onSubmit={handleSubscribe} className="w-full lg:max-w-md flex gap-2.5">
             <input
@@ -170,7 +170,7 @@ const Footer = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-grow px-4 py-2.5 text-sm bg-slate-950/50 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
+              className="flex-grow px-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition duration-200"
               required
             />
             <button
@@ -184,12 +184,12 @@ const Footer = () => {
         </div>
 
         {/* Bottom copy details */}
-        <div className="mt-12 pt-8 border-t border-slate-900/80 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+        <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-900/80 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 dark:text-slate-500">
           <p>&copy; {new Date().getFullYear()} projektHaus. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-slate-350 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-350 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-slate-350 transition-colors">Cookies Settings</a>
+            <a href="#" className="hover:text-slate-700 dark:hover:text-slate-350 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-slate-700 dark:hover:text-slate-350 transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-slate-700 dark:hover:text-slate-350 transition-colors">Cookies Settings</a>
           </div>
         </div>
       </div>

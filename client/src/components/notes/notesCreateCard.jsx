@@ -78,7 +78,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="title"
-                        className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Title
                     </label>
@@ -89,7 +89,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         disabled={mutation.isPending}
-                        className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
@@ -100,7 +100,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="category"
-                            className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                            className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                         >
                             Category
                         </label>
@@ -109,10 +109,10 @@ const NotesCreateCard = ({ open, onClose }) => {
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             disabled={mutation.isPending}
-                            className="w-full px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
+                            className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
                         >
                             {CATEGORIES.map((cat) => (
-                                <option key={cat} value={cat} className="bg-slate-950 text-slate-200">
+                                <option key={cat} value={cat} className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-200">
                                     {cat}
                                 </option>
                             ))}
@@ -121,7 +121,7 @@ const NotesCreateCard = ({ open, onClose }) => {
 
                     {/* Pinned Toggle Field */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             Pin Note
                         </label>
                         <button
@@ -129,11 +129,11 @@ const NotesCreateCard = ({ open, onClose }) => {
                             onClick={() => setIsPinned(!isPinned)}
                             disabled={mutation.isPending}
                             className={`flex items-center justify-center gap-2 px-3.5 py-2 h-[38px] rounded-xl text-sm font-medium transition-all duration-200 border cursor-pointer ${isPinned
-                                ? "bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
-                                : "bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700"
+                                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
+                                : "bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700"
                                 }`}
                         >
-                            <Pin className={`w-4 h-4 ${isPinned ? "fill-amber-400/20 text-amber-400" : "text-slate-400"}`} />
+                            <Pin className={`w-4 h-4 ${isPinned ? "fill-amber-400/20 text-amber-500 dark:text-amber-400" : "text-slate-400"}`} />
                             <span>{isPinned ? "Pinned" : "Pin to top"}</span>
                         </button>
                     </div>
@@ -143,7 +143,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="content"
-                        className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Content
                     </label>
@@ -154,7 +154,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                         onChange={(e) => setContent(e.target.value)}
                         disabled={mutation.isPending}
                         rows={4}
-                        className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm leading-relaxed"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm leading-relaxed"
                     />
                 </div>
 
@@ -162,7 +162,7 @@ const NotesCreateCard = ({ open, onClose }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="files"
-                        className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Attach Files
                     </label>
@@ -172,17 +172,17 @@ const NotesCreateCard = ({ open, onClose }) => {
                         multiple
                         onChange={(e) => setFiles(e.target.files)}
                         disabled={mutation.isPending}
-                        className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 text-sm file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer transition-all duration-200"
+                        className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-600 dark:text-slate-400 text-sm file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer transition-all duration-200"
                     />
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800/80 mt-5">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800/80 mt-5">
                     <button
                         type="button"
                         onClick={handleClose}
                         disabled={mutation.isPending}
-                        className="px-4 py-2 text-sm font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 border border-slate-800 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50 border border-slate-200 dark:border-slate-800 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                     >
                         Cancel
                     </button>

@@ -139,12 +139,12 @@ const TaskDashBoard = () => {
     }
 
     return (
-        <div className="max-w-5xl mx-auto p-4 space-y-4 text-slate-100 font-sans">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-900">
+        <div className="max-w-5xl mx-auto p-4 space-y-4 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+            <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-900">
                 <button
                     type="button"
                     onClick={() => navigate(`/project/${projectId}/get-all-tasks`)}
-                    className="text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                 >
                     &larr; Back to Tasks
                 </button>
@@ -152,7 +152,7 @@ const TaskDashBoard = () => {
                     type="button"
                     onClick={handleDelete}
                     disabled={deleteMutation.isPending || !isEditable}
-                    className="px-3 py-1 text-xs font-bold bg-rose-600/10 text-rose-400 border border-rose-900/30 hover:bg-rose-600 hover:text-white rounded transition cursor-pointer"
+                    className="px-3 py-1 text-xs font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 dark:border-rose-900/30 hover:bg-rose-600 hover:text-white rounded transition cursor-pointer"
                 >
                     Delete Task
                 </button>
@@ -162,7 +162,7 @@ const TaskDashBoard = () => {
                 {/* Left Side: Title and Description (Spans 2/3 of grid) */}
                 <div className="md:col-span-2 space-y-4">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="name" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Task Name</label>
+                        <label htmlFor="name" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Task Name</label>
                         <input
                             id="name"
                             type="text"
@@ -170,13 +170,13 @@ const TaskDashBoard = () => {
                             defaultValue={task.name}
                             disabled={updateMutation.isPending}
                             readOnly={!isEditable}
-                            className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm placeholder-slate-650 transition-colors"
+                            className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
                             required
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="description" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Description</label>
+                        <label htmlFor="description" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Description</label>
                         <textarea
                             id="description"
                             name="description"
@@ -184,7 +184,7 @@ const TaskDashBoard = () => {
                             disabled={updateMutation.isPending}
                             rows={8}
                             readOnly={!isEditable}
-                            className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm placeholder-slate-650 resize-none transition-colors"
+                            className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 resize-none transition-colors"
                             placeholder="Task description..."
                         />
                     </div>
@@ -197,7 +197,7 @@ const TaskDashBoard = () => {
                             }
                             }
                             type="button"
-                            className={`px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700 ${displayFiles ? "border-blue-700" : ""}`}
+                            className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700 ${displayFiles ? "border-2 border-blue-600" : ""}`}
                         >
                             Files
                         </button>
@@ -208,7 +208,7 @@ const TaskDashBoard = () => {
                                 setDisplaySubTask((prev) => !prev);
                                 setDisplayFiles(false);
                             }}
-                            className={`px-3 py-1.5 bg-slate-800 text-white rounded hover:bg-slate-700  ${displaySubTask ? "border-blue-700" : ""}`}
+                            className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700  ${displaySubTask ? "border-2 border-blue-600" : ""}`}
                         >
                             SubTask
                         </button>
@@ -221,15 +221,15 @@ const TaskDashBoard = () => {
                     </div>
 
                     {displaySubTask && !displayFiles ? <div className="flex flex-col">
-                        <div className="flex justify-between">
-                            <div>
+                        <div className="flex justify-between items-center mb-2">
+                            <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                                 List of all the subtasks
                             </div>
                             <button
                                 type="button"
                                 onClick={() => setIsSubtaskCreateOpen(true)}
-                                className={`${isEditable ? "" : "hidden"}`}>
-                                create subTask
+                                className={`text-xs px-3 py-1 bg-violet-600 text-white rounded font-semibold hover:bg-violet-700 transition ${isEditable ? "" : "hidden"}`}>
+                                Create Subtask
                             </button>
 
                         </div>
@@ -245,15 +245,15 @@ const TaskDashBoard = () => {
                 </div>
 
                 {/* Right Side: Status and other info (Spans 1/3, right-most column) */}
-                <div className="md:col-span-1 space-y-4 bg-slate-950/20 border border-slate-900/50 p-4 rounded-lg">
+                <div className="md:col-span-1 space-y-4 bg-white dark:bg-slate-950/20 border border-slate-200 dark:border-slate-900/50 p-4 rounded-xl shadow-sm">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="status" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</label>
+                        <label htmlFor="status" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</label>
                         <select
                             id="status"
                             name="status"
                             defaultValue={task.status}
                             disabled={updateMutation.isPending}
-                            className="w-full px-2 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
+                            className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         >
                             <option value="TODO">Todo</option>
                             <option value="IN_PROGRESS">In Progress</option>
@@ -262,14 +262,14 @@ const TaskDashBoard = () => {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="priority" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Priority</label>
+                        <label htmlFor="priority" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Priority</label>
                         <select
                             id="priority"
                             name="priority"
                             defaultValue={task.priority}
                             disabled={updateMutation.isPending || !isEditable}
 
-                            className="w-full px-2 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
+                            className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         >
                             <option value="LOW">Low</option>
                             <option value="MEDIUM">Medium</option>
@@ -278,7 +278,7 @@ const TaskDashBoard = () => {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="progress" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Progress (%)</label>
+                        <label htmlFor="progress" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Progress (%)</label>
                         <input
                             id="progress"
                             type="number"
@@ -287,13 +287,13 @@ const TaskDashBoard = () => {
                             max="100"
                             defaultValue={task.progress ?? 0}
                             disabled={updateMutation.isPending}
-                            className="w-full px-2 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm transition-colors"
+                            className="w-full px-2 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm transition-colors"
                             required
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="startDate" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Start Date</label>
+                        <label htmlFor="startDate" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Start Date</label>
                         <input
                             id="startDate"
                             type="date"
@@ -301,12 +301,12 @@ const TaskDashBoard = () => {
                             defaultValue={task.startDate ? task.startDate.split("T")[0] : ""}
                             disabled={updateMutation.isPending}
                             readOnly={!isEditable}
-                            className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
+                            className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="endDate" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">End Date</label>
+                        <label htmlFor="endDate" className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">End Date</label>
                         <input
                             id="endDate"
                             type="date"
@@ -314,30 +314,30 @@ const TaskDashBoard = () => {
                             defaultValue={task.endDate ? task.endDate.split("T")[0] : ""}
                             disabled={updateMutation.isPending}
                             readOnly={!isEditable}
-                            className="w-full px-3 py-1.5 bg-slate-950/60 border border-slate-900 focus:border-indigo-500 rounded text-slate-200 outline-none text-sm cursor-pointer transition-colors"
+                            className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-900 focus:border-indigo-500 rounded text-slate-900 dark:text-slate-200 outline-none text-sm cursor-pointer transition-colors"
                         />
                     </div>
 
-                    <div className="pt-2 border-t border-slate-900/60">
-                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Assigned To</label>
+                    <div className="pt-2 border-t border-slate-200 dark:border-slate-900/60">
+                        <label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">Assigned To</label>
                         {task.assigned && task.assigned.length > 0 ? (
                             <div className="flex flex-wrap gap-1.5">
                                 {task.assigned.map((assignee, idx) => (
-                                    <span key={idx} className="bg-slate-900 px-2 py-0.5 flex gap-2 rounded border border-slate-800 text-xs text-slate-350 select-none">
+                                    <span key={idx} className="bg-slate-100 dark:bg-slate-900 px-2 py-0.5 flex gap-2 rounded border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 select-none">
                                         <div>{assignee.email}</div>
                                         <button type="button" className={`${!isEditable ? "hidden" : ""}`} onClick={() => removeTheMemver(assignee)}>x</button>
                                     </span>
                                 ))}
                             </div>
                         ) : (
-                            <p className="text-xs text-slate-550 italic">No members assigned.</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 italic">No members assigned.</p>
                         )}
 
                         <button
                             type="button"
                             onClick={() => setOpenAssigned(true)}
                             disabled={!isEditable}
-                            className="mt-2 w-full px-3 py-2 text-xs font-semibold text-slate-300 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 hover:text-white rounded-md transition-colors cursor-pointer text-center block"
+                            className="mt-2 w-full px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white rounded-md transition-colors cursor-pointer text-center block"
                         >
                             Assign Task
                         </button>

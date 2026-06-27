@@ -68,7 +68,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="name"
-                        className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Task Name
                     </label>
@@ -78,7 +78,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                         name="name"
                         placeholder="e.g., Design user dashboard"
                         disabled={mutation.isPending}
-                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
@@ -87,7 +87,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="description"
-                        className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Description
                     </label>
@@ -97,7 +97,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                         placeholder="Provide a detailed description of the task..."
                         disabled={mutation.isPending}
                         rows={3}
-                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 resize-none disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
@@ -107,7 +107,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="startDate"
-                            className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                         >
                             Start Date
                         </label>
@@ -116,7 +116,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                             type="date"
                             name="startDate"
                             disabled={mutation.isPending}
-                            className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                            className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                             required
                         />
                     </div>
@@ -124,7 +124,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="endDate"
-                            className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                         >
                             End Date
                         </label>
@@ -133,7 +133,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                             type="date"
                             name="endDate"
                             disabled={mutation.isPending}
-                            className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                            className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                             required
                         />
                     </div>
@@ -144,7 +144,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="priority"
-                            className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                         >
                             Priority
                         </label>
@@ -152,20 +152,20 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                             id="priority"
                             name="priority"
                             disabled={mutation.isPending}
-                            className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
+                            className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
                             required
                         >
-                            <option value="" disabled>Select Priority</option>
-                            <option value="LOW">Low</option>
-                            <option value="MEDIUM">Medium</option>
-                            <option value="HIGH">High</option>
+                            <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Select Priority</option>
+                            <option value="LOW" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Low</option>
+                            <option value="MEDIUM" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Medium</option>
+                            <option value="HIGH" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">High</option>
                         </select>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
                         <label
                             htmlFor="status"
-                            className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                            className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                         >
                             Status
                         </label>
@@ -173,13 +173,13 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                             id="status"
                             name="status"
                             disabled={mutation.isPending}
-                            className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
+                            className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm cursor-pointer"
                             required
                         >
-                            <option value="" disabled>Select Status</option>
-                            <option value="TODO">Todo</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="COMPLETED">Completed</option>
+                            <option value="" disabled className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Select Status</option>
+                            <option value="TODO" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Todo</option>
+                            <option value="IN_PROGRESS" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">In Progress</option>
+                            <option value="COMPLETED" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">Completed</option>
                         </select>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                 <div className="flex flex-col gap-1.5">
                     <label
                         htmlFor="progress"
-                        className="text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                        className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                     >
                         Progress (%)
                     </label>
@@ -199,18 +199,18 @@ const TaskDialogBox = ({ open, onClose, mutation, isTask }) => {
                         min="0"
                         max="100"
                         disabled={mutation.isPending}
-                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                        className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/25 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                         required
                     />
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 mt-5">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800 mt-5">
                     <button
                         type="button"
                         onClick={onClose}
                         disabled={mutation.isPending}
-                        className="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 border border-slate-200 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                        className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl transition-all duration-200 active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
                     >
                         Cancel
                     </button>
