@@ -86,7 +86,7 @@ const Footer = () => {
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 bg-gradient-to-tr from-violet-600 to-blue-500 rounded-lg flex items-center justify-center shadow-lg shadow-violet-500/10">
-                <img className="w-4.5 h-4.5 text-white" src="logo.svg" />
+                <img className="w-5 h-5 brightness-0 invert" src="/logo.svg" alt="projektHaus logo" />
               </div>
               <span className="text-lg font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text text-transparent tracking-tight">
                 projekt<span className="text-violet-600 dark:text-violet-400">Haus</span>

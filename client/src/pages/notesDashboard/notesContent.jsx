@@ -106,7 +106,7 @@ const NoteContent = () => {
 
     const createdByDisplay = memberRoles.data?.data?.find(userObj => userObj._id === note.createdBy);
 
-    return (
+
     return (
         <div className="max-w-5xl mx-auto p-4 space-y-4 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
             {/* Header */}
