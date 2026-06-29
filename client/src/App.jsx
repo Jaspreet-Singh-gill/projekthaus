@@ -7,7 +7,7 @@ import Register from "./pages/auth/register.jsx"
 import WaitingPage from "./pages/auth/emailVerificationPage.jsx"
 import ForgetPasswordPage from "./pages/auth/forgetPassword.jsx"
 import ResetPasswordPage from "./pages/auth/resetPassword.jsx"
-import { ProtectedRoute } from "./components/protectedRoutes/protectedRoute.jsx";
+import { ProtectedRoute, NonProtectedRoutes } from "./components/protectedRoutes/protectedRoute.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx"
 import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -16,17 +16,20 @@ import TaskDashBoard from "./pages/taskDashBoard/taskDashBoard.jsx";
 import SubTaskDasboard from "./pages/subTaskDashBoard/subTaskDashBoardPage.jsx";
 import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx";
 import NoteMainDashBoard from "./pages/notesDashboard/notesContent.jsx";
+import { useEffect } from "react"
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route path="" element={<Home />} />
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-      <Route path="forget-password" element={<ForgetPasswordPage />} />
-      <Route path="reset-password/:token" element={<ResetPasswordPage />} />
-      <Route path="waitingPage/:token" element={<WaitingPage />} />
+      <Route element={<NonProtectedRoutes />}>
+        <Route path="" element={<Home />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forget-password" element={<ForgetPasswordPage />} />
+        <Route path="reset-password/:token" element={<ResetPasswordPage />} />
+        <Route path="waitingPage/:token" element={<WaitingPage />} />
+      </Route>
 
       {/* protected routes */}
       <Route element={<ProtectedRoute />} >
@@ -42,6 +45,7 @@ const route = createBrowserRouter(
   )
 )
 function App() {
+
   return (
     <>
       <QueryClientProvider client={queryClient}>

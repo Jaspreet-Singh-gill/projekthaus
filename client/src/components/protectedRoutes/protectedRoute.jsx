@@ -25,3 +25,22 @@ export const ProtectedRoute = () => {
     return <Outlet />;
 
 }
+
+export const NonProtectedRoutes = () => {
+
+    const navigate = useNavigate();
+    const user = useAuthStore((state) => state.user);
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user]);
+
+    if (user) {
+        navigate("/dashboard");
+        return null;
+    }
+    return <Outlet />;
+
+}
