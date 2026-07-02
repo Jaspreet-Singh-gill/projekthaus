@@ -22,8 +22,8 @@ const Layout = () => {
       <div className="flex flex-1 w-full">
         {/* Desktop Sidebar (visible on md and up) */}
         {user && (
-          <aside className="hidden md:block w-64 shrink-0">
-            <SideBar className="min-h-screen w-full" />
+          <aside className="hidden md:block w-64 shrink-0 h-screen sticky top-0">
+            <SideBar className="h-full w-full" />
           </aside>
         )}
 

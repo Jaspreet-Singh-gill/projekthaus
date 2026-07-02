@@ -33,7 +33,7 @@ export function Dialog({ open, onClose, title, children }) {
   return (
     // Backdrop overlay: Uses flex and items-center justify-center to center the content
     <div
-      className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

@@ -17,6 +17,7 @@ import SubTaskDasboard from "./pages/subTaskDashBoard/subTaskDashBoardPage.jsx";
 import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx";
 import NoteMainDashBoard from "./pages/notesDashboard/notesContent.jsx";
 import { useEffect } from "react"
+import ProfilePage from "./pages/profile/profile.jsx";
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
@@ -33,6 +34,7 @@ const route = createBrowserRouter(
 
       {/* protected routes */}
       <Route element={<ProtectedRoute />} >
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/project/:projectId" element={<ProjectDashBoard />} />
         <Route path="/project/:projectId/get-all-tasks" element={< ListOfTasks />} />
