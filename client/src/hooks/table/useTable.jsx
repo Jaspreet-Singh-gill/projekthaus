@@ -49,10 +49,10 @@ export const columns = [
     ),
     columnHelper.accessor("startDate", {
         header: "Start Date",
-        cell: (info) => info.getValue()
+        cell: (info) => info.getValue()?.split('T')[0]
     }),
     columnHelper.accessor("endDate", {
         header: "End Date",
-        cell: (info) => info.getValue()
+        cell: (info) => info.getValue()?.split('T')[0]
     }),
 ]

@@ -24,6 +24,13 @@ class ProjectService {
     return response.data;
   }
 
+  async deleteProject(projectId) {
+    const response = await api.delete(
+      `${this.#basePath}/${projectId}/delete-project`
+    );
+    return response.data;
+  }
+
   async listAll() {
     const response = await api.get(`${this.#basePath}/listAll`);
     return response.data;

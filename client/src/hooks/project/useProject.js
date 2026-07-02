@@ -42,4 +42,16 @@ const useUpdateTheProject = (id) => {
     })
 }
 
-export { useProjectQuery, useCreateProjectMutation, useGetTheProject, useUpdateTheProject };
+const useDeleteProjectMutation = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (projectId) => projectService.deleteProject(projectId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["project"]
+            });
+        }
+    })
+}
+
+export { useProjectQuery, useCreateProjectMutation, useGetTheProject, useUpdateTheProject, useDeleteProjectMutation };

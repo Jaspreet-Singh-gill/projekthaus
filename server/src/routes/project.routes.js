@@ -11,6 +11,7 @@ import {
   getTheMembers,
   removeTheMember,
   changeRoles,
+  deleteProject,
 } from "../controllers/project.controller.js";
 import { registerUser } from "../controllers/auth.controller.js";
 import verfiyJWT from "../middlewares/auth.middleware.js";
@@ -34,6 +35,9 @@ router
   .route("/:projectId/get-the-project")
   .get(verfiyJWT, memberOfProject, getTheProject);
 router.route("/listAll").get(verfiyJWT, listAllTheProject);
+router
+  .route("/:projectId/delete-project")
+  .delete(verfiyJWT, verifyAdmin, deleteProject);
 
 //member routes
 router.route("/:projectId/:email/htmlForm").get(htmlForm);

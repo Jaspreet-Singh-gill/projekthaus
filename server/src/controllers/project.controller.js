@@ -7,7 +7,11 @@ import { addMemberEmail, sendMail } from "../utils/mail.js";
 import { User } from "../models/user.model.js";
 import crypto from "crypto";
 import fs from "fs/promises";
-import { uploadToCloudnary } from "../utils/cloudinary.js";
+import { uploadToCloudnary, deleteFromCloudinary } from "../utils/cloudinary.js";
+import { Task } from "../models/task.model.js";
+import { SubTask } from "../models/subtask.model.js";
+import { taskFile } from "../models/taskfile.model.js";
+import { subTaskFile } from "../models/subtaskFile.model.js";
 
 const creatProject = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
@@ -503,6 +507,53 @@ const changeRoles = asyncHandler(async (req, res, next) => {
   }
 });
 
+const deleteProject = asyncHandler(async (req, res, next) => {
+  const { projectId } = req.params;
+
+  if (!projectId) {
+    throw new ApiError(400, "", "Project ID is required to delete the project");
+  }
+
+  const project = await Project.findById(projectId);
+  if (!project) {
+    throw new ApiError(404, "", "Project not found");
+  }
+
+  try {
+    const tasks = await Task.find({ projectId });
+    const taskIds = tasks.map((task) => task._id);
+
+    const taskFiles = await taskFile.find({ taskId: { $in: taskIds } });
+    for (const file of taskFiles) {
+      if (file.publicId) {
+        await deleteFromCloudinary(file.publicId);
+      }
+    }
+    await taskFile.deleteMany({ taskId: { $in: taskIds } });
+
+    const subTasks = await SubTask.find({ projectId });
+    const subTaskIds = subTasks.map((subTask) => subTask._id);
+
+    const subTaskFiles = await subTaskFile.find({ subTaskId: { $in: subTaskIds } });
+    for (const file of subTaskFiles) {
+      if (file.publicId) {
+        await deleteFromCloudinary(file.publicId);
+      }
+    }
+    await subTaskFile.deleteMany({ subTaskId: { $in: subTaskIds } });
+
+    await SubTask.deleteMany({ projectId });
+    await Task.deleteMany({ projectId });
+    await Project.findByIdAndDelete(projectId);
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Project and its associated tasks, subtasks, and files have been successfully deleted"));
+  } catch (error) {
+    throw new ApiError(500, error, "Something went wrong while deleting the project");
+  }
+});
+
 export {
   creatProject,
   updateProject,
@@ -515,4 +566,5 @@ export {
   getTheMembers,
   removeTheMember,
   changeRoles,
+  deleteProject,
 };

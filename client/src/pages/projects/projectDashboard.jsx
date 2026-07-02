@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetTheProject, useUpdateTheProject } from "../../hooks/project/useProject.js";
+import { useGetTheProject, useUpdateTheProject, useDeleteProjectMutation } from "../../hooks/project/useProject.js";
 import UpdateProjectDialogBox from "../../components/projects/createProjectDialogBox.jsx";
 import MemberDialogBox from "../../components/member/memberOfProject.jsx";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Trash2 } from "lucide-react";
 import { Loader } from "../../components/skeleton/loader.jsx";
 
 
@@ -14,8 +14,19 @@ const ProjectDashBoard = () => {
     const roleOfUser = theProject.data?.data?.role;
     const [isAdminEditDialogOpen, setIsAdminEditDialogBox] = useState(false);
     const mutation = useUpdateTheProject(projectId);
+    const deleteMutation = useDeleteProjectMutation();
     const [isMemberBoxOpen, setIsMemberBoxOpen] = useState(false);
     const navigate = useNavigate();
+
+    const handleDelete = () => {
+        if (window.confirm("do you want to delete the project")) {
+            deleteMutation.mutate(projectId, {
+                onSuccess: () => {
+                    navigate("/dashboard");
+                }
+            });
+        }
+    };
 
     return <>
         {
@@ -44,13 +55,21 @@ const ProjectDashBoard = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className={`${roleOfUser !== "ADMIN" ? "hidden" : ""}`}>
+                        <div className={`flex gap-2 ${roleOfUser !== "ADMIN" ? "hidden" : ""}`}>
                             <button
                                 onClick={() => setIsAdminEditDialogBox(true)}
                                 className="flex items-center justify-center p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200 shadow-md active:scale-[0.98] cursor-pointer mt-1"
                                 title="Edit Project Details"
                             >
                                 <EditIcon className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                disabled={deleteMutation.isLoading || deleteMutation.isPending}
+                                className="flex items-center justify-center p-2.5 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-all duration-200 shadow-md active:scale-[0.98] cursor-pointer mt-1 disabled:opacity-50"
+                                title="Delete Project"
+                            >
+                                <Trash2 className="w-5 h-5" />
                             </button>
                         </div>
                     </div>
