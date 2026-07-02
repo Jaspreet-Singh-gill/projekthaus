@@ -9,6 +9,7 @@ import ForgetPasswordPage from "./pages/auth/forgetPassword.jsx"
 import ResetPasswordPage from "./pages/auth/resetPassword.jsx"
 import { ProtectedRoute, NonProtectedRoutes } from "./components/protectedRoutes/protectedRoute.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx"
+import { AllProjects } from "./pages/projects/allProjects.jsx";
 import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ListOfTasks from "./pages/taskDashBoard/aLLTheTaskpage.jsx";
@@ -36,6 +37,7 @@ const route = createBrowserRouter(
       <Route element={<ProtectedRoute />} >
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/allprojects" element={<AllProjects />} />
         <Route path="/project/:projectId" element={<ProjectDashBoard />} />
         <Route path="/project/:projectId/get-all-tasks" element={< ListOfTasks />} />
         <Route path="/project/:projectId/task/:taskId" element={<TaskDashBoard />} />

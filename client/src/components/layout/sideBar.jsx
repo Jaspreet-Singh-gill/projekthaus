@@ -51,6 +51,13 @@ const SideBar = ({ className }) => {
                         <LayoutDashboard className="w-4.5 h-4.5" />
                         <span>Dashboard</span>
                     </NavLink>
+                    <NavLink
+                        to="/allprojects"
+                        className={({ isActive }) => getLinkClass(isActive)}
+                    >
+                        <Folder className="w-4.5 h-4.5" />
+                        <span>Projects</span>
+                    </NavLink>
                 </div>
 
                 <Separator className="bg-slate-200 dark:bg-slate-900/60" />
