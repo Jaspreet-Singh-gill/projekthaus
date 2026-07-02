@@ -3,12 +3,12 @@ import ListOfNotesComponent from "../../components/notes/notesList";
 import NotesCreateCard from "../../components/notes/notesCreateCard";
 import { Plus } from "lucide-react";
 import { useParams } from "react-router-dom";
-import { useProjectQuery } from "../../hooks/project/useProject.js";
+import { useGetTheProject } from "../../hooks/project/useProject.js";
 
 const ListOfNotes = () => {
     const [open, setOpen] = useState(false);
-    const { projeccId } = useParams();
-    const projectDetails = useProjectQuery(projeccId);
+    const { projectId } = useParams();
+    const projectDetails = useGetTheProject(projectId);
     const isEditable = projectDetails.data?.data?.role === "ADMIN" ? true : false;
 
     return (
