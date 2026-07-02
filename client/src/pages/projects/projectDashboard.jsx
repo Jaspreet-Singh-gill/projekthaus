@@ -87,9 +87,14 @@ const ProjectDashBoard = () => {
                             Members
                         </button>
                         <button
-                        onClick={()=>navigate(`/project/${projectId}/notes`)}
-                        className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900 hover:border-slate-300 dark:hover:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-900/30 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
+                            onClick={() => navigate(`/project/${projectId}/notes`)}
+                            className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900 hover:border-slate-300 dark:hover:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-900/30 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
                             Notes
+                        </button>
+                        <button
+                            onClick={() => navigate(`/project/${projectId}/analytics`)}
+                            className="flex-1 flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-900 hover:border-slate-300 dark:hover:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-900/30 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-sm font-semibold transition-all duration-200 active:scale-[0.99] cursor-pointer shadow-md">
+                            Analytics
                         </button>
                     </div>
 

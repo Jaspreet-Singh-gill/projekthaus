@@ -2,17 +2,26 @@ import React, { useState } from "react";
 import ListOfNotesComponent from "../../components/notes/notesList";
 import NotesCreateCard from "../../components/notes/notesCreateCard";
 import { Plus } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGetTheProject } from "../../hooks/project/useProject.js";
 
 const ListOfNotes = () => {
     const [open, setOpen] = useState(false);
     const { projectId } = useParams();
+    const navigate = useNavigate();
     const projectDetails = useGetTheProject(projectId);
     const isEditable = projectDetails.data?.data?.role === "ADMIN" ? true : false;
 
     return (
-        <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-900 dark:text-slate-100 transition-colors duration-200">
+        <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-6 flex flex-col text-slate-900 dark:text-slate-100 transition-colors duration-200 font-sans">
+            <button
+                type="button"
+                onClick={() => navigate(`/project/${projectId}`)}
+                className="text-xs font-semibold text-slate-650 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer self-start"
+            >
+                &larr; Back to Project Dashboard
+            </button>
+
             {/* Header section */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-900/60">
                 <div>

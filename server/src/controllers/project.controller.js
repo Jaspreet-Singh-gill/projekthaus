@@ -185,15 +185,16 @@ const addMember = asyncHandler(async (req, res, next) => {
 
   try {
     let url;
+    const frontendUrl = (process.env.FRONTEND_URL || "http://localhost:5173").trim();
     if (!user) {
-      url = `${process.env.projectDomain}/${project._id}/${memberEmail}/htmlForm/`;
+      url = `${frontendUrl}/project/${project._id}/register-and-join?email=${encodeURIComponent(memberEmail)}`;
     } else {
       const { unHashedToken, hashedToken, tokenExpiry } =
         user.generateTempararyTokens();
       user.addMemberToken = hashedToken;
       user.addMemberTokenExpiry = tokenExpiry;
       await user.save({ validateBeforeSave: false });
-      url = `${process.env.projectDomain}/${project._id}/join-the-project/${unHashedToken}`;
+      url = `${frontendUrl}/project/${project._id}/join-the-project/${unHashedToken}`;
     }
 
     //send mail

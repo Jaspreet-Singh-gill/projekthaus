@@ -5,6 +5,7 @@ import projectRoute from "../routes/project.routes.js";
 import notesRoute from "../routes/notes.routes.js";
 import taskRoute from "../routes/task.route.js";
 import subTaskRoute from "../routes/subtask.route.js";
+import analyticsRoute from "../routes/analytics.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { errorHandler } from "../middlewares/error.middleware.js";
@@ -41,6 +42,7 @@ app.use("/api/v1/project", projectRoute);
 app.use("/api/v1/notes", notesRoute);
 app.use("/api/v1/task", taskRoute);
 app.use("/api/v1/subtask", subTaskRoute);
+app.use("/api/v1/analytics", analyticsRoute);
 app.use(errorHandler);
 
 
