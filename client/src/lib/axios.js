@@ -44,7 +44,8 @@ api.interceptors.response.use(
       toast.error("Service is temporarily unavailable");
     }
 
-    return Promise.reject(error.response.data);
+    return Promise.reject(error.response?.data || error);
+
   },
 );
 
