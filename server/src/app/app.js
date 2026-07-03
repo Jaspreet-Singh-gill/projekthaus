@@ -13,6 +13,8 @@ import { globalLimiter, authLimiter } from "../utils/rateLimiter.js";
 
 const app = express({ mergeParams: true });
 
+app.set("trust proxy", 1);
+
 //add the cors for browsers
 
 app.use(

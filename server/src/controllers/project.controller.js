@@ -277,7 +277,7 @@ const userInaddMember = asyncHandler(async (req, res, next) => {
       .json(
         new ApiResponse(
           200,
-          "",
+          "congratulation you successFully joined the project",
           "congratulation you successFully joined the project",
         ),
       );
