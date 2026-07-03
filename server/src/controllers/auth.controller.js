@@ -184,9 +184,11 @@ const loginUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  let options = {
+  const options = {
     httpOnly: true,
-    secure: true,
+    secure: true,      // Required because Render uses HTTPS
+    sameSite: "None",  // Required for cross-origin cookies
+    path: "/",
   };
 
   res
@@ -222,9 +224,11 @@ const refreshTokens = asyncHandler(async (req, res, next) => {
       user._id,
     );
 
-    let options = {
+    const options = {
       httpOnly: true,
-      secure: true,
+      secure: true,      // Required because Render uses HTTPS
+      sameSite: "None",  // Required for cross-origin cookies
+      path: "/",
     };
 
     res
@@ -305,7 +309,9 @@ const logOut = asyncHandler(async (req, res, next) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: true,      // Required because Render uses HTTPS
+    sameSite: "None",  // Required for cross-origin cookies
+    path: "/",
   };
 
   res
