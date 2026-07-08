@@ -2,22 +2,43 @@ import Mailgen from "mailgen"; //modules makes simple for writting the html and 
 import nodemailer from "nodemailer";
 import { ApiError } from "./apiErrorResponse.js";
 
+const smtpHost = process.env.SMTP_HOST || process.env.MAILTRAP_HOST;
+const smtpPort = Number(process.env.SMTP_PORT || process.env.MAILTRAP_PORT || 587);
+const smtpUser = process.env.SMTP_USER || process.env.MAILTRAP_USER;
+const smtpPass = process.env.SMTP_PASS || process.env.MAILTRAP_PASS;
+const smtpSecure =
+  process.env.SMTP_SECURE?.toLowerCase() === "true" || smtpPort === 465;
+const smtpRequireTls = process.env.SMTP_REQUIRE_TLS?.toLowerCase() === "true";
+
 const transporter = nodemailer.createTransport({
-  host: process.env.MAILTRAP_HOST,
-  port: process.env.MAILTRAP_PORT,
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpSecure,
+  requireTLS: smtpRequireTls,
   auth: {
-    user: process.env.MAILTRAP_USER,
-    pass: process.env.MAILTRAP_PASS,
+    user: smtpUser,
+    pass: smtpPass,
   },
+  connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT || 10000),
+  greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT || 10000),
+  socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT || 15000),
 });
 
 const sendMail = async (options) => {
+  if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
+    throw new ApiError(
+      500,
+      [],
+      "SMTP is not configured correctly. Set SMTP_HOST, SMTP_PORT, SMTP_USER and SMTP_PASS on Render.",
+    );
+  }
+
   const emailContent = mailGenerator.generate(options.mailContent);
 
-  const textContent = mailGenerator.generate(options.mailContent);
+  const textContent = mailGenerator.generatePlaintext(options.mailContent);
   try {
     const info = await transporter.sendMail({
-      from: '"projekthaus" <projekthaus2@gmail.com>',
+      from: process.env.MAIL_FROM || '"projekthaus" <projekthaus2@gmail.com>',
       to: options.email,
       subject: options.subject,
       text: textContent,
