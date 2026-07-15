@@ -2,6 +2,8 @@
 
 ProjektHaus is a modern, collaborative project management web application designed for students, teams, professionals, and organizations. It provides a robust suite of tools to manage workflows, assign tasks, collaborate on notes, analyze progress, and coordinate efforts in a structured, role-based environment.
 
+**Live Demo:** [https://projekthausfrontend.vercel.app/](https://projekthausfrontend.vercel.app/)
+
 ---
 
 ## 🚀 Features
