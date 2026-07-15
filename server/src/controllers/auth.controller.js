@@ -184,9 +184,11 @@ const loginUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  let options = {
+  const options = {
     httpOnly: true,
-    secure: true,
+    secure: true,      // Required because Render uses HTTPS
+    sameSite: "None",  // Required for cross-origin cookies
+    path: "/",
   };
 
   res
@@ -222,9 +224,11 @@ const refreshTokens = asyncHandler(async (req, res, next) => {
       user._id,
     );
 
-    let options = {
+    const options = {
       httpOnly: true,
-      secure: true,
+      secure: true,      // Required because Render uses HTTPS
+      sameSite: "None",  // Required for cross-origin cookies
+      path: "/",
     };
 
     res
@@ -305,7 +309,9 @@ const logOut = asyncHandler(async (req, res, next) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: true,      // Required because Render uses HTTPS
+    sameSite: "None",  // Required for cross-origin cookies
+    path: "/",
   };
 
   res
@@ -318,13 +324,25 @@ const logOut = asyncHandler(async (req, res, next) => {
 const changeAvatar = asyncHandler(async (req, res, next) => {
   //get the image path on server
   const filePath = req.file?.path;
+  if (!filePath) {
+    throw new ApiError(400, [], "No avatar file provided");
+  }
+
+  // delete the previous avatar if available before uploading the current one
+  if (req.user?.avatar && req.user.avatar.publicId) {
+    try {
+      await deleteFromCloudinary(req.user.avatar.publicId);
+    } catch (error) {
+      console.error("Error deleting old avatar from Cloudinary:", error);
+    }
+  }
+
   const response = await uploadToCloudnary(filePath);
   if (!response) {
     throw new ApiError(502, [], "Upload of avatar to cloud failed");
   }
 
   try {
-    if (req.user.avatar) await deleteFromCloudinary(req.user.avatar.publicId);
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
@@ -338,11 +356,13 @@ const changeAvatar = asyncHandler(async (req, res, next) => {
       {
         new: true,
       },
+    ).select(
+      "-password -refreshToken -emailVerificationToken -emailVerificationTokenExpiry",
     );
 
     res
       .status(200)
-      .json(new ApiResponse(200, "", "The avatar is change successFulyy"));
+      .json(new ApiResponse(200, user, "The avatar is change successFulyy"));
   } catch (error) {
     deleteFromCloudinary(response.public_id);
     throw error;

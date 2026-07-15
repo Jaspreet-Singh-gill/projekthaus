@@ -53,7 +53,7 @@ class ProjectService {
   }
 
   async joinTheProject(projectId, token) {
-    const response = await api.post(
+    const response = await api.get(
       `${this.#basePath}/${projectId}/join-the-project/${token}/`,
     );
     return response.data;

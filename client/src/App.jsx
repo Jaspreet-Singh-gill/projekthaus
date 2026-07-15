@@ -11,6 +11,9 @@ import { ProtectedRoute, NonProtectedRoutes } from "./components/protectedRoutes
 import { Dashboard } from "./pages/dashboard/dashboard.jsx"
 import { AllProjects } from "./pages/projects/allProjects.jsx";
 import ProjectDashBoard from "./pages/projects/projectDashboard.jsx";
+import ProjectAnalytics from "./pages/projects/projectAnalytics.jsx";
+import JoinProject from "./pages/projects/joinProject.jsx";
+import RegisterAndJoin from "./pages/projects/registerAndJoin.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ListOfTasks from "./pages/taskDashBoard/aLLTheTaskpage.jsx";
 import TaskDashBoard from "./pages/taskDashBoard/taskDashBoard.jsx";
@@ -31,6 +34,8 @@ const route = createBrowserRouter(
         <Route path="forget-password" element={<ForgetPasswordPage />} />
         <Route path="reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="waitingPage/:token" element={<WaitingPage />} />
+        <Route path="/project/:projectId/register-and-join" element={<RegisterAndJoin />} />
+        <Route path="/project/:projectId/join-the-project/:token" element={<JoinProject />} />
       </Route>
 
       {/* protected routes */}
@@ -39,6 +44,8 @@ const route = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/allprojects" element={<AllProjects />} />
         <Route path="/project/:projectId" element={<ProjectDashBoard />} />
+        <Route path="/project/:projectId/analytics" element={<ProjectAnalytics />} />
+
         <Route path="/project/:projectId/get-all-tasks" element={< ListOfTasks />} />
         <Route path="/project/:projectId/task/:taskId" element={<TaskDashBoard />} />
         <Route path="/project/:projectId/task/:taskId/subtask/:subTaskId" element={<SubTaskDasboard />} />
@@ -52,9 +59,7 @@ function App() {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={route} />
-      </QueryClientProvider>
+
     </>
   )
 }

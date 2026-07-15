@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000,
+  timeout: 240000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -44,7 +44,8 @@ api.interceptors.response.use(
       toast.error("Service is temporarily unavailable");
     }
 
-    return Promise.reject(error.response.data);
+    return Promise.reject(error.response?.data || error);
+
   },
 );
 

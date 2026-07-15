@@ -2,6 +2,8 @@
 
 ProjektHaus is a modern, collaborative project management web application designed for students, teams, professionals, and organizations. It provides a robust suite of tools to manage workflows, assign tasks, collaborate on notes, analyze progress, and coordinate efforts in a structured, role-based environment.
 
+**Live Demo:** [https://projekthausfrontend.vercel.app/](https://projekthausfrontend.vercel.app/)
+
 ---
 
 ## 🚀 Features
@@ -223,4 +225,8 @@ Members are the execution core of the project:
   * **Priority Breakdowns:** Metrics on task priorities (*Low*, *Medium*, *High*) to prevent team burnout and identify bottlenecks.
 * **Shared Documentation Hub (Notes):** Live collaborative notes inside each project allow teams to write, update, and review project documentation, requirements, meeting logs, and guides in one central location.
 
+---
 
+## 🛡️ License
+
+This project is licensed under the ISC License. Created by [Jaspreet Singh](https://github.com/Jaspreet-Singh-gill).

@@ -34,7 +34,11 @@ const Login = () => {
             const data = await authService.login(result.data);
             setTheUser(data.data);
             toast.success(data.message || "Logged in successfully!");
-            navigate("/dashboard");
+            setTimeout(() => {
+                navigate("/dashboard")
+
+            }, 5000);
+
         } catch (error) {
             toast.error(error.message);
         }

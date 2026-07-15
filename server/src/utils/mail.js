@@ -1,29 +1,52 @@
 import Mailgen from "mailgen"; //modules makes simple for writting the html and text format for emails
-import nodemailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
+// import nodemailer from "nodemailer";
 import { ApiError } from "./apiErrorResponse.js";
 
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
+
+/*
 const transporter = nodemailer.createTransport({
   host: process.env.MAILTRAP_HOST,
   port: process.env.MAILTRAP_PORT,
-  secure: true,
-  requireTLS: true,
+  secure: false,
   auth: {
     user: process.env.MAILTRAP_USER,
     pass: process.env.MAILTRAP_PASS,
   },
 });
+*/
 
 const sendMail = async (options) => {
   const emailContent = mailGenerator.generate(options.mailContent);
+  const textContent = mailGenerator.generatePlaintext(options.mailContent);
 
-  const textContent = mailGenerator.generate(options.mailContent);
   try {
+    /*
     const info = await transporter.sendMail({
       from: '"projekthaus" <projekthaus2@gmail.com>',
       to: options.email,
       subject: options.subject,
       text: textContent,
       html: emailContent,
+    });
+    */
+
+    await brevo.transactionalEmails.sendTransacEmail({
+      sender: {
+        name: "projekthaus",
+        email: "projekthaus2@gmail.com",
+      },
+      to: [
+        {
+          email: options.email,
+        },
+      ],
+      subject: options.subject,
+      htmlContent: emailContent,
+      textContent: textContent,
     });
   } catch (error) {
     throw new ApiError(

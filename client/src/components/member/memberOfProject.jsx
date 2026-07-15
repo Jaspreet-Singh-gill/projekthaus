@@ -43,12 +43,14 @@ const MembersOfTheProject = ({ dataOfProject, open, onClose }) => {
         const formData = new FormData(e.target);
 
         try {
-            await memberMutationAdd.mutateAsync({ "memberEmail": formData.get("email") });
+            const result = await memberMutationAdd.mutateAsync({ "memberEmail": formData.get("email") });
+            console.log(result);
             toast.success("The join the project is send to the member");
             e.target.reset();
 
         } catch (error) {
             toast.error(error.message || "Something went wrong while add the member");
+            console.log(error);
 
         }
     }
