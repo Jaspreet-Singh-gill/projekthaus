@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { SubTask } from "../models/subtask.model.js";
 import { Notification } from "../models/notification.model.js";
+import { Comment } from "../models/comment.model.js";
 import { io } from "../index.js";
 import { sendMail, assignedEmail } from "../utils/mail.js";
 import {
@@ -161,6 +162,8 @@ const deleteSubTask = asyncHandler(async (req, res, next) => {
       );
     }
     await subTaskFile.deleteMany({ subTaskId });
+    await Comment.deleteMany({ subtaskId: subTaskId });
+    await Notification.deleteMany({ subtaskId: subTaskId });
     await SubTask.findByIdAndDelete(subTaskId);
     
     io.to(`project_${req.project._id.toString()}`).emit("subtask_deleted", { subTaskId, taskId });

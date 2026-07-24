@@ -12,6 +12,8 @@ import { Task } from "../models/task.model.js";
 import { SubTask } from "../models/subtask.model.js";
 import { taskFile } from "../models/taskfile.model.js";
 import { subTaskFile } from "../models/subtaskFile.model.js";
+import { Comment } from "../models/comment.model.js";
+import { Notification } from "../models/notification.model.js";
 
 const creatProject = asyncHandler(async (req, res, next) => {
   const { name, description } = req.body;
@@ -545,6 +547,8 @@ const deleteProject = asyncHandler(async (req, res, next) => {
 
     await SubTask.deleteMany({ projectId });
     await Task.deleteMany({ projectId });
+    await Comment.deleteMany({ projectId });
+    await Notification.deleteMany({ projectId });
     await Project.findByIdAndDelete(projectId);
 
     res
