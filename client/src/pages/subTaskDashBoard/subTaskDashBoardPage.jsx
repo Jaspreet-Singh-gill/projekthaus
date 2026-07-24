@@ -18,6 +18,7 @@ import { useGetTheTask } from "../../hooks/task/useTask.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import FileComponent from "../../components/tasks/fileComponent.jsx";
 import { toast } from "sonner";
+import CommentSection from "../../components/comments/CommentSection.jsx";
 
 
 const SubTaskDasboard = () => {
@@ -37,6 +38,7 @@ const SubTaskDasboard = () => {
     const getAllTheFiles = useGetAllSubtaskFiles(projectId, taskId, subTaskId);
     const getTheTaskMembers = useGetTheTask(projectId, taskId);
     const [displayFiles, setDisplayFiles] = useState(false);
+    const [displayComments, setDisplayComments] = useState(false);
 
 
     let isEditable = true;
@@ -183,11 +185,25 @@ const SubTaskDasboard = () => {
 
                     <div className="flex items-center gap-2">
                         <button
-                            onClick={() => setDisplayFiles((prev) => !prev)}
+                            onClick={() => {
+                                setDisplayFiles((prev) => !prev);
+                                setDisplayComments(false);
+                            }}
                             type="button"
                             className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700 ${displayFiles ? "border-2 border-blue-600" : ""}`}
                         >
                             Files
+                        </button>
+                        
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setDisplayComments((prev) => !prev);
+                                setDisplayFiles(false);
+                            }}
+                            className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700  ${displayComments ? "border-2 border-blue-600" : ""}`}
+                        >
+                            Comments
                         </button>
                     </div>
 
@@ -196,6 +212,12 @@ const SubTaskDasboard = () => {
                             displayFiles ? <FileComponent getAllFiles={getAllTheFiles} deleteFile={deleteFileFromTask} attachFile={attachFileToTask} isEditable={isEditable} /> : ""
                         }
                     </div>
+
+                    {displayComments ? (
+                        <div className="mt-4 h-[500px]">
+                            <CommentSection projectId={projectId} taskId={taskId} subtaskId={subTaskId} isEditable={isEditable} />
+                        </div>
+                    ) : ""}
                 </div>
 
                 {/* Right Side: Status and other info (Spans 1/3, right-most column) */}

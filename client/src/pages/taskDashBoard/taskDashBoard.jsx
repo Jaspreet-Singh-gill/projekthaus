@@ -23,7 +23,7 @@ import { columns } from "../../hooks/table/useTableForSubtask.jsx";
 import TaskListTable from "../../components/tasks/taskListComponent.jsx";
 import { useGetAllSubtasks, useCreateSubtask } from "../../hooks/subtask/useSubtask.js";
 import SubtaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
-
+import CommentSection from "../../components/comments/CommentSection.jsx";
 
 const TaskDashBoard = () => {
     const { projectId, taskId } = useParams();
@@ -43,6 +43,7 @@ const TaskDashBoard = () => {
     const getAllTheFiles = useGetAllFiles(projectId, taskId);
     const [displayFiles, setDisplayFiles] = useState(false);
     const [displaySubTask, setDisplaySubTask] = useState(false);
+    const [displayComments, setDisplayComments] = useState(false);
     const subTaskData = useGetAllSubtasks(projectId, taskId);
     const [isSubtaskCreateOpen, setIsSubtaskCreateOpen] = useState(false);
     const useSubTaskCreateMutation = useCreateSubtask(projectId, taskId);
@@ -194,6 +195,7 @@ const TaskDashBoard = () => {
                             onClick={() => {
                                 setDisplayFiles((prev) => !prev);
                                 setDisplaySubTask(false);
+                                setDisplayComments(false);
                             }
                             }
                             type="button"
@@ -207,10 +209,23 @@ const TaskDashBoard = () => {
                             onClick={() => {
                                 setDisplaySubTask((prev) => !prev);
                                 setDisplayFiles(false);
+                                setDisplayComments(false);
                             }}
                             className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700  ${displaySubTask ? "border-2 border-blue-600" : ""}`}
                         >
                             SubTask
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setDisplayComments((prev) => !prev);
+                                setDisplayFiles(false);
+                                setDisplaySubTask(false);
+                            }}
+                            className={`px-3 py-1.5 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white rounded hover:bg-slate-300 dark:hover:bg-slate-700  ${displayComments ? "border-2 border-blue-600" : ""}`}
+                        >
+                            Comments
                         </button>
                     </div>
 
@@ -240,6 +255,12 @@ const TaskDashBoard = () => {
 
                     </div> : ""
                     }
+
+                    {displayComments ? (
+                        <div className="mt-4 h-[500px]">
+                            <CommentSection projectId={projectId} taskId={taskId} isEditable={isEditable} />
+                        </div>
+                    ) : ""}
 
 
                 </div>
