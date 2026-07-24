@@ -24,7 +24,7 @@ const addComment = asyncHandler(async (req, res) => {
     taskId: taskId || undefined,
     subtaskId: subtaskId || undefined,
   });  
-  await comment.populate("author", "name username email");
+  await comment.populate("author", "name username email avatar");
   io.to(projectId.toString()).emit("new_comment", comment);
   return res
     .status(201)
@@ -43,7 +43,7 @@ const getComments = asyncHandler(async (req, res) => {
   if (subtaskId) query.subtaskId = subtaskId;
 
   const comments = await Comment.find(query)
-    .populate("author", "name username email")
+    .populate("author", "name username email avatar")
     .sort({ createdAt: 1 });
 
   return res
