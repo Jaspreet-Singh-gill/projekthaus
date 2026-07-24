@@ -17,9 +17,11 @@ const notificationSchema = new Schema(
       enum: [
         "ASSIGNMENT",
         "TASK_CREATED",
+        "TASK_UPDATED",
         "NOTE_CREATED",
         "COMMENT",
         "SUBTASK_CREATED",
+        "SUBTASK_UPDATED",
         "SUBTASK_ASSIGNMENT",
       ],
       required: true,

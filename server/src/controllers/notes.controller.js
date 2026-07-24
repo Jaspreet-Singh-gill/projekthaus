@@ -1,6 +1,8 @@
 import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { Notes } from "../models/notes.model.js";
+import { Notification } from "../models/notification.model.js";
+import { io } from "../index.js";
 import { asyncHandler } from "../utils/aysncHandler.js";
 import mongoose from "mongoose";
 import {
@@ -27,6 +29,24 @@ const createNotes = asyncHandler(async (req, res, next) => {
   });
 
   if (!createOne) throw new ApiError(500, "", "the creation of note failed");
+
+  const recipients = [...new Set([
+    ...(req.project.admins || []),
+    ...(req.project.projectManagers || []),
+    ...(req.project.members || [])
+  ])].filter(id => id.toString() !== req.user._id.toString());
+  
+  for (const recipientId of recipients) {
+    const notification = await Notification.create({
+      recipient: recipientId,
+      sender: req.user._id,
+      type: "NOTE_CREATED",
+      message: `A new note "${title || category}" was created.`,
+      link: `/project/${projectId}/${createOne._id}/note`,
+      projectId: projectId,
+    });
+    io.to(recipientId.toString()).emit("new_notification", notification);
+  }
 
   if (files && files.length > 0) {
     await Promise.all(

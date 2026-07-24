@@ -2,6 +2,8 @@ import { asyncHandler } from "../utils/aysncHandler.js";
 import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { SubTask } from "../models/subtask.model.js";
+import { Notification } from "../models/notification.model.js";
+import { io } from "../index.js";
 import { sendMail, assignedEmail } from "../utils/mail.js";
 import {
   deleteFromCloudinary,
@@ -30,6 +32,26 @@ const createAnSubTask = asyncHandler(async (req, res, next) => {
       status,
       progress,
     });
+
+    const recipients = [...new Set([
+      ...(project.admins || []),
+      ...(project.projectManagers || []),
+      ...(project.members || [])
+    ])].filter(id => id.toString() !== req.user._id.toString());
+    
+    for (const recipientId of recipients) {
+      const notification = await Notification.create({
+        recipient: recipientId,
+        sender: req.user._id,
+        type: "SUBTASK_CREATED",
+        message: `New subtask "${name}" was created.`,
+        link: `/project/${project._id}/task/${taskId}/subtask/${createdsubTask._id}`,
+        projectId: project._id,
+        taskId: taskId,
+        subtaskId: createdsubTask._id,
+      });
+      io.to(recipientId.toString()).emit("new_notification", notification);
+    }
 
     res
       .status(201)
@@ -82,6 +104,25 @@ const updateSubTask = asyncHandler(async (req, res, next) => {
         new: true,
       },
     );
+
+    let targets = req.project.projectManagers || [];
+    if (targets.length === 0) {
+      targets = req.project.admins || [];
+    }
+    targets = targets.filter(id => id.toString() !== req.user._id.toString());
+    for (const targetId of targets) {
+      const notification = await Notification.create({
+        recipient: targetId,
+        sender: req.user._id,
+        type: "SUBTASK_UPDATED",
+        message: `Subtask "${name}" was updated.`,
+        link: `/project/${req.project._id}/task/${taskId}/subtask/${subTaskId}`,
+        projectId: req.project._id,
+        taskId: taskId,
+        subtaskId: subTaskId,
+      });
+      io.to(targetId.toString()).emit("new_notification", notification);
+    }
 
     res
       .status(200)
@@ -180,18 +221,30 @@ const assignSubTask = asyncHandler(async (req, res, next) => {
   let arr = assignedList;
   try {
     await Promise.all(
-      assignedList.map((obj) => {
+      assignedList.map(async (obj) => {
         const emailObject = {
           email: obj.email,
-          subject: " new assignement ", // increases efficiency by running all the sendMails parallely and saves time
+          subject: " new assignement ", 
           mailContent: assignedEmail(
             project.projectName,
             "subTask",
             subTask.name,
-            `${process.env.SITE_MAIN_URL}/${project._id}/${subTask.taskId}/`,
+            `${process.env.SITE_MAIN_URL}/project/${project._id}/task/${subTask.taskId}/subtask/${subTaskId}`,
           ),
         };
-        return sendMail(emailObject);
+        await sendMail(emailObject);
+
+        const notification = await Notification.create({
+          recipient: obj.id,
+          sender: req.user._id,
+          type: "SUBTASK_ASSIGNMENT",
+          message: `You have been assigned to subtask "${subTask.name}".`,
+          link: `/project/${project._id}/task/${subTask.taskId}/subtask/${subTaskId}`,
+          projectId: project._id,
+          taskId: subTask.taskId,
+          subtaskId: subTaskId,
+        });
+        io.to(obj.id.toString()).emit("new_notification", notification);
       }),
     );
 
@@ -275,6 +328,26 @@ const assignedSubTaskUpdation = asyncHandler(async (req, res, next) => {
   task.progress = progress;
 
   await task.save({ validateBeforeSave: false });
+
+  let targets = req.project.projectManagers || [];
+  if (targets.length === 0) {
+    targets = req.project.admins || [];
+  }
+  targets = targets.filter(id => id.toString() !== user._id.toString());
+  for (const targetId of targets) {
+    const notification = await Notification.create({
+      recipient: targetId,
+      sender: user._id,
+      type: "SUBTASK_UPDATED",
+      message: `Subtask "${task.name}" progress/status was updated.`,
+      link: `/project/${req.project._id}/task/${task.taskId}/subtask/${subTaskId}`,
+      projectId: req.project._id,
+      taskId: task.taskId,
+      subtaskId: subTaskId,
+    });
+    io.to(targetId.toString()).emit("new_notification", notification);
+  }
+
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });
 

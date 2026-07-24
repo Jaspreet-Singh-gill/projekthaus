@@ -2,6 +2,8 @@ import { asyncHandler } from "../utils/aysncHandler.js";
 import { ApiError } from "../utils/apiErrorResponse.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { Task } from "../models/task.model.js";
+import { Notification } from "../models/notification.model.js";
+import { io } from "../index.js";
 import { sendMail, assignedEmail } from "../utils/mail.js";
 import { taskFile } from "../models/taskfile.model.js";
 import {
@@ -27,6 +29,25 @@ const createAnTask = asyncHandler(async (req, res, next) => {
       status,
       progress,
     });
+
+    const recipients = [...new Set([
+      ...(project.admins || []),
+      ...(project.projectManagers || []),
+      ...(project.members || [])
+    ])].filter(id => id.toString() !== req.user._id.toString());
+    
+    for (const recipientId of recipients) {
+      const notification = await Notification.create({
+        recipient: recipientId,
+        sender: req.user._id,
+        type: "TASK_CREATED",
+        message: `New task "${name}" was created in project "${project.projectName}".`,
+        link: `/project/${project._id}/task/${createdTask._id}`,
+        projectId: project._id,
+        taskId: createdTask._id,
+      });
+      io.to(recipientId.toString()).emit("new_notification", notification);
+    }
 
     res
       .status(201)
@@ -72,6 +93,24 @@ const updateTask = asyncHandler(async (req, res, next) => {
         new: true,
       },
     );
+
+    let targets = req.project.projectManagers || [];
+    if (targets.length === 0) {
+      targets = req.project.admins || [];
+    }
+    targets = targets.filter(id => id.toString() !== req.user._id.toString());
+    for (const targetId of targets) {
+      const notification = await Notification.create({
+        recipient: targetId,
+        sender: req.user._id,
+        type: "TASK_UPDATED",
+        message: `Task "${name}" was updated.`,
+        link: `/project/${req.project._id}/task/${taskId}`,
+        projectId: req.project._id,
+        taskId: taskId,
+      });
+      io.to(targetId.toString()).emit("new_notification", notification);
+    }
 
     res
       .status(200)
@@ -162,18 +201,29 @@ const assignTask = asyncHandler(async (req, res, next) => {
   let arr = assignedList;
   try {
     await Promise.all(
-      assignedList.map((obj) => {
+      assignedList.map(async (obj) => {
         const emailObject = {
           email: obj.email,
-          subject: " new assignement ", // increases efficiency by running all the sendMails parallely and saves time
+          subject: " new assignement ", 
           mailContent: assignedEmail(
             project.projectName,
             "task",
             task.name,
-            `${process.env.SITE_MAIN_URL}/${project._id}/${taskId}`,
+            `${process.env.SITE_MAIN_URL}/project/${project._id}/task/${taskId}`,
           ),
         };
-        return sendMail(emailObject);
+        await sendMail(emailObject);
+
+        const notification = await Notification.create({
+          recipient: obj.id,
+          sender: req.user._id,
+          type: "ASSIGNMENT",
+          message: `You have been assigned to task "${task.name}".`,
+          link: `/project/${project._id}/task/${taskId}`,
+          projectId: project._id,
+          taskId: taskId,
+        });
+        io.to(obj.id.toString()).emit("new_notification", notification);
       }),
     );
 
@@ -256,6 +306,25 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
   task.progress = progress;
 
   await task.save({ validateBeforeSave: false });
+
+  let targets = req.project.projectManagers || [];
+  if (targets.length === 0) {
+    targets = req.project.admins || [];
+  }
+  targets = targets.filter(id => id.toString() !== user._id.toString());
+  for (const targetId of targets) {
+    const notification = await Notification.create({
+      recipient: targetId,
+      sender: user._id,
+      type: "TASK_UPDATED",
+      message: `Task "${task.name}" progress/status was updated.`,
+      link: `/project/${req.project._id}/task/${taskId}`,
+      projectId: req.project._id,
+      taskId: taskId,
+    });
+    io.to(targetId.toString()).emit("new_notification", notification);
+  }
+
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });
 

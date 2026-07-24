@@ -7,6 +7,7 @@ import taskRoute from "../routes/task.route.js";
 import subTaskRoute from "../routes/subtask.route.js";
 import analyticsRoute from "../routes/analytics.route.js";
 import commentRoute from "../routes/comment.routes.js";
+import notificationRoute from "../routes/notification.routes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { errorHandler } from "../middlewares/error.middleware.js";
@@ -47,6 +48,7 @@ app.use("/api/v1/task", taskRoute);
 app.use("/api/v1/subtask", subTaskRoute);
 app.use("/api/v1/analytics", analyticsRoute);
 app.use("/api/v1/comment", commentRoute);
+app.use("/api/v1/notifications", notificationRoute);
 app.use(errorHandler);
 
 
