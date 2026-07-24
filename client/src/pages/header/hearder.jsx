@@ -5,25 +5,21 @@ import { authService } from "../../api/index";
 import { Sun, Moon } from "lucide-react";
 import useThemeStore from "../../store/themeStore";
 import { Link } from "react-router-dom";
+import NotificationDropdown from "../../components/layout/NotificationDropdown";
 
 const Header = ({ onMenuClick, onMenuOpen }) => {
   const { user, clearTheUser } = useAuthStore();
   const { theme, toggleTheme } = useThemeStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const dropdownRef = useRef(null);
-  const notificationRef = useRef(null);
 
   // Handle click outside to close dropdowns like a professional, polished app should
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsProfileDropdownOpen(false);
-      }
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
-        setIsNotificationsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -126,38 +122,7 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
             {user ? (
               <>
                 {/* Notifications Button */}
-                <div className="relative" ref={notificationRef}>
-                  <button
-                    onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                    className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 rounded-lg transition-colors duration-200 relative focus:outline-none cursor-pointer"
-                    aria-label="View notifications"
-                  >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                  </button>
-
-                  {/* Notifications Dropdown Panel */}
-                  {isNotificationsOpen && (
-                    <div className="absolute right-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden z-50 divide-y divide-slate-100 dark:divide-slate-800/80 animate-fade-in">
-                      <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/80 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
-                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Notifications</span>
-                        <span className="text-[10px] bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-300 px-2 py-0.5 rounded-full font-semibold">
-                          0 New
-                        </span>
-                      </div>
-                      <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
-                        This feature will be available soon
-                      </div>
-                      <a
-                        href="#"
-                        className="block py-2.5 text-center text-xs text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 font-semibold bg-slate-50 dark:bg-slate-900/50 transition-colors duration-150 border-t border-slate-100 dark:border-slate-800/80"
-                      >
-                        View all notifications
-                      </a>
-                    </div>
-                  )}
-                </div>
+                <NotificationDropdown />
 
                 {/* Profile Dropdown */}
                 <div className="relative" ref={dropdownRef}>
