@@ -20,7 +20,7 @@ const useSocket = () => {
         setIsConnected(true);
         const userId = user._id;
         if (userId) {
-          socket.emit("join_room", userId);
+          socket.emit("join_user_room", userId);
         }
       });
 

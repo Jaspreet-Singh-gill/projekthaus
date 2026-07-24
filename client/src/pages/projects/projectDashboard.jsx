@@ -5,6 +5,7 @@ import UpdateProjectDialogBox from "../../components/projects/createProjectDialo
 import MemberDialogBox from "../../components/member/memberOfProject.jsx";
 import { EditIcon, Trash2 } from "lucide-react";
 import { Loader } from "../../components/skeleton/loader.jsx";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 
 
 const ProjectDashBoard = () => {
@@ -17,6 +18,8 @@ const ProjectDashBoard = () => {
     const deleteMutation = useDeleteProjectMutation();
     const [isMemberBoxOpen, setIsMemberBoxOpen] = useState(false);
     const navigate = useNavigate();
+    
+    useProjectSocket(projectId);
 
     const handleDelete = () => {
         if (window.confirm("do you want to delete the project")) {

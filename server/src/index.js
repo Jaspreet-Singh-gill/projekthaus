@@ -22,9 +22,19 @@ export const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
-  socket.on("join_room", (userId) => {
-    socket.join(userId);
-    console.log(`User ${userId} joined room ${userId}`);
+  socket.on("join_user_room", (userId) => {
+    socket.join(`user_${userId}`);
+    console.log(`User ${userId} joined room user_${userId}`);
+  });
+
+  socket.on("join_project_room", (projectId) => {
+    socket.join(`project_${projectId}`);
+    console.log(`Socket ${socket.id} joined project room project_${projectId}`);
+  });
+
+  socket.on("leave_project_room", (projectId) => {
+    socket.leave(`project_${projectId}`);
+    console.log(`Socket ${socket.id} left project room project_${projectId}`);
   });
   
   socket.on("disconnect", () => {

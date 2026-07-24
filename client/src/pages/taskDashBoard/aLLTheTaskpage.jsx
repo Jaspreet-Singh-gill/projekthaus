@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetAllTheTasks, useCreateTask } from "../../hooks/task/useTask.js";
 import TaskListTable from "../../components/tasks/taskListComponent.jsx";
 import { Loader } from "../../components/skeleton/loader.jsx";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import TaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
 import { PlusIcon } from "lucide-react";
 import { columns } from "../../hooks/table/useTable.jsx";
@@ -10,6 +11,7 @@ import { columns } from "../../hooks/table/useTable.jsx";
 
 const ListOfTasks = () => {
     const { projectId } = useParams();
+    useProjectSocket(projectId);
     const navigate = useNavigate();
     const { data, isLoading } = useGetAllTheTasks(projectId);
     const [isCreateOpen, setIsCreateOpen] = useState(false);

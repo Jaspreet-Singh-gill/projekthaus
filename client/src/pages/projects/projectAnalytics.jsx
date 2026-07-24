@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useProjectAnalyticsQuery } from "../../hooks/analytics/useAnalytics.js";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import { ArrowLeft, CheckSquare, Layers, Users, AlertCircle, BarChart2 } from "lucide-react";
 import {
@@ -26,6 +27,7 @@ const PRIORITY_COLORS = {
 
 const ProjectAnalytics = () => {
   const { projectId } = useParams();
+  useProjectSocket(projectId);
   const navigate = useNavigate();
   const { data, isLoading, error } = useProjectAnalyticsQuery(projectId);
   const [viewMode, setViewMode] = useState("personal"); // 'team' or 'personal'

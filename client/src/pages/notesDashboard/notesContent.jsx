@@ -12,6 +12,7 @@ import { useGetTheProject } from "../../hooks/project/useProject.js";
 import { useGetTheMemberQuerry } from "../../hooks/member/useMember.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import FileComponent from "../../components/tasks/fileComponent.jsx";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import { toast } from "sonner";
 import { Pin, Paperclip, User } from "lucide-react";
 
@@ -19,6 +20,7 @@ const CATEGORIES = ["General", "Meeting", "Documentation", "Idea", "Research", "
 
 const NoteContent = () => {
     const { projectId, noteId } = useParams();
+    useProjectSocket(projectId);
     const navigate = useNavigate();
 
     const noteData = useGetNote(projectId, noteId);

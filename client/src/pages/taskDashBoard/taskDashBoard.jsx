@@ -14,6 +14,7 @@ import {
     useGetAllFiles,
     useDeleteFile
 } from "../../hooks/task/useFileTask.js";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import { toast } from "sonner";
 import AssignedDialogBox from "../../components/tasks/assignTaskDialogBox.jsx";
@@ -27,6 +28,7 @@ import CommentSection from "../../components/comments/CommentSection.jsx";
 
 const TaskDashBoard = () => {
     const { projectId, taskId } = useParams();
+    useProjectSocket(projectId);
     const navigate = useNavigate();
 
     const taskData = useGetTheTask(projectId, taskId);

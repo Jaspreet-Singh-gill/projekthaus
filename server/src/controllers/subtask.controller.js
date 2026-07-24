@@ -50,8 +50,9 @@ const createAnSubTask = asyncHandler(async (req, res, next) => {
         taskId: taskId,
         subtaskId: createdsubTask._id,
       });
-      io.to(recipientId.toString()).emit("new_notification", notification);
+      io.to(`user_${recipientId.toString()}`).emit("new_notification", notification);
     }
+    io.to(`project_${project._id.toString()}`).emit("subtask_created", createdsubTask);
 
     res
       .status(201)
@@ -121,8 +122,9 @@ const updateSubTask = asyncHandler(async (req, res, next) => {
         taskId: taskId,
         subtaskId: subTaskId,
       });
-      io.to(targetId.toString()).emit("new_notification", notification);
+      io.to(`user_${targetId.toString()}`).emit("new_notification", notification);
     }
+    io.to(`project_${req.project._id.toString()}`).emit("subtask_updated", updated);
 
     res
       .status(200)
@@ -160,6 +162,8 @@ const deleteSubTask = asyncHandler(async (req, res, next) => {
     }
     await subTaskFile.deleteMany({ subTaskId });
     await SubTask.findByIdAndDelete(subTaskId);
+    
+    io.to(`project_${req.project._id.toString()}`).emit("subtask_deleted", { subTaskId, taskId });
 
     res
       .status(200)
@@ -244,9 +248,11 @@ const assignSubTask = asyncHandler(async (req, res, next) => {
           taskId: subTask.taskId,
           subtaskId: subTaskId,
         });
-        io.to(obj.id.toString()).emit("new_notification", notification);
+        io.to(`user_${obj.id.toString()}`).emit("new_notification", notification);
       }),
     );
+    
+    io.to(`project_${project._id.toString()}`).emit("subtask_updated", subTask);
 
     arr = [...arr, ...subTask.assigned];
 
@@ -288,6 +294,8 @@ const deleteAssignSubTask = asyncHandler(async (req, res, next) => {
   task.assigned = arr;
 
   await task.save({ validateBeforeSave: true });
+  
+  io.to(`project_${req.project._id.toString()}`).emit("subtask_updated", task);
 
   res
     .status(200)
@@ -345,8 +353,10 @@ const assignedSubTaskUpdation = asyncHandler(async (req, res, next) => {
       taskId: task.taskId,
       subtaskId: subTaskId,
     });
-    io.to(targetId.toString()).emit("new_notification", notification);
+    io.to(`user_${targetId.toString()}`).emit("new_notification", notification);
   }
+  
+  io.to(`project_${req.project._id.toString()}`).emit("subtask_updated", task);
 
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });

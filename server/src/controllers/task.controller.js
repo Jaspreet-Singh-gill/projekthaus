@@ -46,8 +46,9 @@ const createAnTask = asyncHandler(async (req, res, next) => {
         projectId: project._id,
         taskId: createdTask._id,
       });
-      io.to(recipientId.toString()).emit("new_notification", notification);
+      io.to(`user_${recipientId.toString()}`).emit("new_notification", notification);
     }
+    io.to(`project_${project._id.toString()}`).emit("task_created", createdTask);
 
     res
       .status(201)
@@ -109,8 +110,9 @@ const updateTask = asyncHandler(async (req, res, next) => {
         projectId: req.project._id,
         taskId: taskId,
       });
-      io.to(targetId.toString()).emit("new_notification", notification);
+      io.to(`user_${targetId.toString()}`).emit("new_notification", notification);
     }
+    io.to(`project_${req.project._id.toString()}`).emit("task_updated", updated);
 
     res
       .status(200)
@@ -144,6 +146,8 @@ const deleteTask = asyncHandler(async (req, res, next) => {
     }
     await taskFile.deleteMany({ taskId });
     await Task.findByIdAndDelete(taskId);
+
+    io.to(`project_${req.project._id.toString()}`).emit("task_deleted", { taskId });
 
     res
       .status(200)
@@ -223,9 +227,11 @@ const assignTask = asyncHandler(async (req, res, next) => {
           projectId: project._id,
           taskId: taskId,
         });
-        io.to(obj.id.toString()).emit("new_notification", notification);
+        io.to(`user_${obj.id.toString()}`).emit("new_notification", notification);
       }),
     );
+    
+    io.to(`project_${req.project._id.toString()}`).emit("task_updated", task);
 
     arr = [...arr, ...task.assigned];
 
@@ -266,6 +272,8 @@ const deleteAssignTask = asyncHandler(async (req, res, next) => {
   task.assigned = arr;
 
   await task.save({ validateBeforeSave: true });
+  
+  io.to(`project_${req.project._id.toString()}`).emit("task_updated", task);
 
   res
     .status(200)
@@ -322,8 +330,10 @@ const assignedTaskUpdation = asyncHandler(async (req, res, next) => {
       projectId: req.project._id,
       taskId: taskId,
     });
-    io.to(targetId.toString()).emit("new_notification", notification);
+    io.to(`user_${targetId.toString()}`).emit("new_notification", notification);
   }
+  
+  io.to(`project_${req.project._id.toString()}`).emit("task_updated", task);
 
   res.status(200).json(new ApiResponse(200, "", "update is successfull"));
 });

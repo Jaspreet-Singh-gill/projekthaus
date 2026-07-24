@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ListOfNotesComponent from "../../components/notes/notesList";
 import NotesCreateCard from "../../components/notes/notesCreateCard";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import { Plus } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetTheProject } from "../../hooks/project/useProject.js";
@@ -8,6 +9,7 @@ import { useGetTheProject } from "../../hooks/project/useProject.js";
 const ListOfNotes = () => {
     const [open, setOpen] = useState(false);
     const { projectId } = useParams();
+    useProjectSocket(projectId);
     const navigate = useNavigate();
     const projectDetails = useGetTheProject(projectId);
     const isEditable = projectDetails.data?.data?.role === "ADMIN" ? true : false;

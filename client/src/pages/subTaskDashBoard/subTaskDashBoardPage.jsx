@@ -15,6 +15,7 @@ import {
 import { useGetTheProject } from "../../hooks/project/useProject.js";
 import AssignedDialogBox from "../../components/tasks/assignTaskDialogBox.jsx";
 import { useGetTheTask } from "../../hooks/task/useTask.js";
+import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import FileComponent from "../../components/tasks/fileComponent.jsx";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ import CommentSection from "../../components/comments/CommentSection.jsx";
 
 const SubTaskDasboard = () => {
     const { projectId, taskId, subTaskId } = useParams();
+    useProjectSocket(projectId);
     const navigate = useNavigate();
     const taskData = useGetSubtask(projectId, taskId, subTaskId);
     const updateMutation = useUpdateSubtask(projectId, taskId, subTaskId);

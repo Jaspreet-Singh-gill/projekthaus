@@ -25,7 +25,7 @@ const addComment = asyncHandler(async (req, res) => {
     subtaskId: subtaskId || undefined,
   });  
   await comment.populate("author", "name username email avatar");
-  io.to(projectId.toString()).emit("new_comment", comment);
+  io.to(`project_${projectId.toString()}`).emit("new_comment", comment);
   return res
     .status(201)
     .json(new ApiResponse(201, comment, "Comment added successfully"));
@@ -75,7 +75,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   await Comment.findByIdAndDelete(commentId);
 
-  io.to(comment.projectId.toString()).emit("comment_deleted", commentId);
+  io.to(`project_${comment.projectId.toString()}`).emit("comment_deleted", commentId);
 
   return res
     .status(200)

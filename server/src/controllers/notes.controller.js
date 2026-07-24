@@ -45,8 +45,10 @@ const createNotes = asyncHandler(async (req, res, next) => {
       link: `/project/${projectId}/${createOne._id}/note`,
       projectId: projectId,
     });
-    io.to(recipientId.toString()).emit("new_notification", notification);
+    io.to(`user_${recipientId.toString()}`).emit("new_notification", notification);
   }
+  
+  io.to(`project_${projectId.toString()}`).emit("note_created", createOne);
 
   if (files && files.length > 0) {
     await Promise.all(
@@ -95,6 +97,8 @@ const updateNotes = asyncHandler(async (req, res, next) => {
     throw new ApiError(404, "", "Note not found in this project");
   }
 
+  io.to(`project_${updatedNote.projectId.toString()}`).emit("note_updated", updatedNote);
+
   res
     .status(200)
     .json(
@@ -122,8 +126,12 @@ const deleteNotes = asyncHandler(async (req, res, next) => {
         files.map((file) => deleteFromCloudinary(file.publicId, file.fileKind)),
       );
     }
-    await noteFile.deleteMany({ taskId: noteId });
-    await Notes.findOneAndDelete({ _id: noteId });
+    const note = await Notes.findOne({ _id: noteId });
+    if(note) {
+      await noteFile.deleteMany({ taskId: noteId });
+      await Notes.findOneAndDelete({ _id: noteId });
+      io.to(`project_${note.projectId.toString()}`).emit("note_deleted", { noteId });
+    }
     res
       .status(200)
       .json(new ApiResponse(200, [], "The note is successfully deleted"));
