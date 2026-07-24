@@ -1,6 +1,6 @@
 # ProjektHaus
 
-ProjektHaus is a modern, collaborative project management web application designed for students, teams, professionals, and organizations. It provides a robust suite of tools to manage workflows, assign tasks, collaborate on notes, analyze progress, and coordinate efforts in a structured, role-based environment.
+ProjektHaus is a modern, collaborative project management web application designed for students, teams, professionals, and organizations. It provides a robust suite of tools to manage workflows, assign tasks, collaborate on notes, analyze progress, and coordinate efforts in a structured, role-based, and **real-time** environment.
 
 **Live Demo:** [https://projekthausfrontend.vercel.app/](https://projekthausfrontend.vercel.app/)
 
@@ -15,6 +15,16 @@ ProjektHaus is a modern, collaborative project management web application design
   - **Project Manager:** Create/update/delete tasks and subtasks, assign members, attach/delete files.
   - **Member:** View tasks, subtasks, and notes; update progress on assigned tasks/subtasks.
 - **Project Invitations:** Securely invite team members using token-based links expiring in 20 minutes.
+
+### ⚡ Real-Time Collaboration & Synchronization [NEW]
+- **Live Task & Board Updates:** Changes to tasks, subtasks, and board columns are reflected instantly across all connected clients via WebSockets, eliminating the need for page reloads.
+- **Real-Time Project Analytics:** Dashboard metrics and charts update live as tasks progress through the workflow.
+- **Live Collaborative Notes:** Shared project notes update in real-time, enabling seamless team documentation and brainstorming.
+- **Instant Comments & Feedback:** Live comment sections on tasks/subtasks ensure fluid communication.
+
+### 🔔 Real-Time Notification System [NEW]
+- **Instant Alerts:** Get notified instantly through the app when you are assigned a task/subtask, or when critical updates occur within your projects.
+- **Dedicated Notification Hub:** A responsive dropdown component keeps track of all your recent alerts in real-time.
 
 ### 📋 Task & Subtask Management
 - **Hierarchical Structuring:** Break down projects into main tasks and further into subtasks.
@@ -47,9 +57,11 @@ ProjektHaus is a modern, collaborative project management web application design
 | | **Zustand** | Light, fast state management |
 | | **TanStack Query (React Query)** | Client-side caching and data-fetching |
 | | **TanStack Table** | High-performance datatable rendering |
+| | **Socket.io Client** | Real-time bi-directional event-based communication |
 | | **Recharts** | Interactive charting and project analytics |
 | | **Sonner** | Clean and responsive toast notifications |
 | **Backend** | **Node.js & Express 5** | High-performance, async backend API framework |
+| | **Socket.io** | WebSocket server for real-time collaboration & notifications |
 | | **Mongoose 9 (MongoDB)** | ODM for object modeling and DB interactions |
 | | **Multer & Cloudinary** | Disk storage middleware and cloud asset management |
 | | **Nodemailer & Mailgen** | Transactional email generation and transport |
@@ -68,7 +80,7 @@ projekthaus/
 │   ├── src/
 │   │   ├── api/                # Axios API instance & request interceptors
 │   │   ├── components/         # Reusable UI components (Protected routes, tables, etc.)
-│   │   ├── hooks/              # Custom React hooks
+│   │   ├── hooks/              # Custom React hooks (including Socket.io hooks)
 │   │   ├── layout.jsx          # Root layout
 │   │   ├── pages/              # Application views (dashboard, taskboard, auth, etc.)
 │   │   ├── store/              # Zustand global store
@@ -87,7 +99,7 @@ projekthaus/
 │   │   ├── routes/             # Express API endpoints routing
 │   │   ├── validators/         # Request body validation schemas
 │   │   ├── utils/              # API response formatting, rate limiting, and helpers
-│   │   └── index.js            # Server entry point
+│   │   └── index.js            # Server entry point & Socket.io initialization
 │   ├── package.json
 │   └── documentation.md        # Detailed backend API reference
 ```
@@ -214,12 +226,10 @@ Members are the execution core of the project:
 
 ### 🛠️ Collaborative Features & Abilities
 
+* **Real-Time Synergy:** Whether you are modifying task cards, adding comments, or typing meeting notes, changes are pushed instantaneously to the entire team via a robust Socket.io integration.
 * **Granular Task Decomposition:** Tasks can be broken down into nested **Subtasks**. This permits tracking smaller deliverables independently with unique descriptions, due dates, and individual assignees.
 * **Cloud File Integration:** Team members can upload design mockups, documents, and ZIP files directly to tasks/subtasks (up to 10MB per file, max 5 files per request). Files are securely stored on Cloudinary.
-* **Transactional Email Alerts:** Powered by Nodemailer and Mailgen, the application automatically sends rich HTML emails to alert users when:
-  * They are assigned to a task or subtask.
-  * They are invited to join a project.
-  * Security events occur (email verification, password reset).
+* **Transactional Email & Real-Time Alerts:** Powered by Nodemailer and Mailgen, the application automatically sends rich HTML emails for invitations and security events. Within the app, the real-time notification engine alerts you exactly when someone interacts with tasks or assigns work to you.
 * **Interactive Project Analytics:** The project dashboard provides visual insights into workspace health using dynamic charts (powered by Recharts). Teams can view:
   * **Task Status Distribution:** A visual breakdown of tasks in *Todo*, *In Progress*, *Review*, and *Completed* states.
   * **Priority Breakdowns:** Metrics on task priorities (*Low*, *Medium*, *High*) to prevent team burnout and identify bottlenecks.
