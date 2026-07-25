@@ -26,6 +26,7 @@ import ListOfNotes from "./pages/notesDashboard/listOfNotes.jsx";
 import NoteMainDashBoard from "./pages/notesDashboard/notesContent.jsx";
 import { useEffect } from "react"
 import ProfilePage from "./pages/profile/profile.jsx";
+import NotFound from "./pages/notFound.jsx";
 const queryClient = new QueryClient();
 
 const route = createBrowserRouter(
@@ -56,6 +57,7 @@ const route = createBrowserRouter(
         <Route path="/project/:projectId/notes" element={<ListOfNotes />} />
         <Route path="/project/:projectId/:noteId/note" element={<NoteMainDashBoard />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 )
