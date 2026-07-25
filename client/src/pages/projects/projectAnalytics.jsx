@@ -18,11 +18,51 @@ import {
   CartesianGrid
 } from "recharts";
 
-const COLORS = ["#f59e0b", "#3b82f6", "#10b981"]; // TODO (amber), IN PROGRESS (blue), COMPLETED (emerald)
+const STATUS_COLORS = {
+  "TODO": "#f59e0b",
+  "IN PROGRESS": "#3b82f6",
+  "COMPLETED": "#10b981"
+};
+
 const PRIORITY_COLORS = {
-  HIGH: "#ef4444",
-  MEDIUM: "#f59e0b",
-  LOW: "#10b981"
+  "HIGH": "#ef4444",
+  "MEDIUM": "#f59e0b",
+  "LOW": "#10b981"
+};
+
+const CustomPieTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const name = payload[0].name;
+    const value = payload[0].value;
+    const color = STATUS_COLORS[name] || payload[0].payload.fill || payload[0].color || "#3b82f6";
+    return (
+      <div className="bg-slate-900/95 dark:bg-slate-800 text-white text-sm p-3 rounded-xl border border-slate-700 shadow-xl">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+          <span className="font-semibold capitalize">{name}:</span>
+          <span className="font-bold">{value}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+const CustomBarTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const color = payload[0].payload.fill || payload[0].color || "#6366f1";
+    return (
+      <div className="bg-slate-900/95 dark:bg-slate-800 text-white text-sm p-3 rounded-xl border border-slate-700 shadow-xl">
+        <p className="font-semibold mb-2 capitalize">{label} Priority</p>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+          <span className="text-slate-400">Tasks:</span>
+          <span className="font-bold">{payload[0].value}</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 const ProjectAnalytics = () => {
@@ -272,21 +312,15 @@ const ProjectAnalytics = () => {
                     cy="50%"
                     innerRadius={60}
                     outerRadius={90}
-                    paddingAngle={5}
+                    paddingAngle={0}
                     dataKey="value"
+                    stroke="none"
                   >
                     {activeStats.taskStatusDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name] || "#3b82f6"} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "rgba(15, 23, 42, 0.95)",
-                      borderRadius: "12px",
-                      border: "none",
-                      color: "#fff"
-                    }}
-                  />
+                  <Tooltip content={<CustomPieTooltip />} cursor={{ fill: "rgba(148, 163, 184, 0.05)" }} />
                   <Legend verticalAlign="bottom" height={36} iconType="circle" />
                 </PieChart>
               </ResponsiveContainer>
@@ -311,16 +345,8 @@ const ProjectAnalytics = () => {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.1)" />
                   <XAxis dataKey="name" tick={{ fill: "currentColor", fontSize: 12 }} />
                   <YAxis tick={{ fill: "currentColor", fontSize: 12 }} allowDecimals={false} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "rgba(15, 23, 42, 0.95)",
-                      borderRadius: "12px",
-                      border: "none",
-                      color: "#fff"
-                    }}
-                    cursor={{ fill: "rgba(148, 163, 184, 0.05)" }}
-                  />
-                  <Bar dataKey="count" radius={[8, 8, 0, 0]} barSize={40}>
+                  <Tooltip content={<CustomBarTooltip />} cursor={{ fill: "rgba(148, 163, 184, 0.05)" }} />
+                  <Bar dataKey="count" radius={[8, 8, 0, 0]} barSize={40} label={{ position: 'top', fill: '#64748b', fontSize: 12, fontWeight: 600 }}>
                     {priorityData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
@@ -369,7 +395,7 @@ const ProjectAnalytics = () => {
                       }}
                       cursor={{ fill: "rgba(148, 163, 184, 0.05)" }}
                     />
-                    <Bar dataKey="tasks" fill="#8b5cf6" radius={[0, 8, 8, 0]} barSize={20} />
+                    <Bar dataKey="tasks" fill="#8b5cf6" radius={[0, 8, 8, 0]} barSize={20} label={{ position: 'right', fill: '#64748b', fontSize: 11, fontWeight: 600 }} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

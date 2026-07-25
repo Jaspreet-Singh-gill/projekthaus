@@ -38,8 +38,10 @@ const Header = ({ onMenuClick, onMenuOpen }) => {
   };
 
   const navLinks = [
+    { label: "Home", href: "/" },
     { label: "Dashboard", href: "/dashboard" },
     { label: "Projects", href: "/allprojects" },
+
   ];
 
 
