@@ -6,6 +6,7 @@ import MemberDialogBox from "../../components/member/memberOfProject.jsx";
 import { EditIcon, Trash2 } from "lucide-react";
 import { Loader } from "../../components/skeleton/loader.jsx";
 import useProjectSocket from "../../hooks/sockets/useProjectSocket.js";
+import DataNotFound from "../../components/error/dataNotFound.jsx";
 
 
 const ProjectDashBoard = () => {
@@ -34,6 +35,9 @@ const ProjectDashBoard = () => {
     return <>
         {
             theProject.isLoading ? <Loader className="w-full h-full" /> :
+                (!theProject.data?.data || theProject.isError) ? (
+                    <DataNotFound entityName="Project" backUrl="/dashboard" backText="Back to Dashboard" />
+                ) :
                 <div className="w-full max-w-7xl mx-auto px-6 py-8 md:px-8 md:py-10 space-y-8 flex flex-col text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
                     {/* Project Header Banner */}
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 pb-6 border-b border-slate-200 dark:border-slate-900/60">

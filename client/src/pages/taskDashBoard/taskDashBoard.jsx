@@ -25,6 +25,7 @@ import TaskListTable from "../../components/tasks/taskListComponent.jsx";
 import { useGetAllSubtasks, useCreateSubtask } from "../../hooks/subtask/useSubtask.js";
 import SubtaskDialogBox from "../../components/tasks/taskDialogBox.jsx";
 import CommentSection from "../../components/comments/CommentSection.jsx";
+import DataNotFound from "../../components/error/dataNotFound.jsx";
 
 const TaskDashBoard = () => {
     const { projectId, taskId } = useParams();
@@ -64,14 +65,13 @@ const TaskDashBoard = () => {
 
     const task = taskData.data?.data;
 
-    if (!task) {
+    if (!task || taskData.isError) {
         return (
-            <div>
-                <p>Task not found</p>
-                <button onClick={() => navigate(`/project/${projectId}/get-all-tasks`)}>
-                    Back to Tasks
-                </button>
-            </div>
+            <DataNotFound 
+                entityName="Task" 
+                backUrl={`/project/${projectId}/get-all-tasks`} 
+                backText="Back to Tasks" 
+            />
         );
     }
 

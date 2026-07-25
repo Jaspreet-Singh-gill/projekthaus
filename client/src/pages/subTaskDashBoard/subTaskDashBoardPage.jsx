@@ -20,6 +20,7 @@ import { Loader } from "../../components/skeleton/loader.jsx";
 import FileComponent from "../../components/tasks/fileComponent.jsx";
 import { toast } from "sonner";
 import CommentSection from "../../components/comments/CommentSection.jsx";
+import DataNotFound from "../../components/error/dataNotFound.jsx";
 
 
 const SubTaskDasboard = () => {
@@ -56,14 +57,13 @@ const SubTaskDasboard = () => {
 
     const task = taskData.data?.data;
 
-    if (!task) {
+    if (!task || taskData.isError) {
         return (
-            <div>
-                <p>SubTask not found</p>
-                <button onClick={() => navigate(`/project/${projectId}/task/${taskId}`)}>
-                    Back to Tasks
-                </button>
-            </div>
+            <DataNotFound 
+                entityName="Subtask" 
+                backUrl={`/project/${projectId}/task/${taskId}`} 
+                backText="Back to Task" 
+            />
         );
     }
 
@@ -333,7 +333,7 @@ const SubTaskDasboard = () => {
                 </div>
 
             </form>
-            <AssignedDialogBox listOfAssinged={taskData.data?.data?.assigned} assignedListMutation={mutationOfAssigned} open={openAssigned} onClose={() => setOpenAssigned(false)} projectId={projectId} taskAssignedOnes={getTheTaskMembers.data?.data.assigned} />
+            <AssignedDialogBox listOfAssinged={taskData.data?.data?.assigned} assignedListMutation={mutationOfAssigned} open={openAssigned} onClose={() => setOpenAssigned(false)} projectId={projectId} taskAssignedOnes={getTheTaskMembers.data?.data?.assigned} />
         </div>
     );
 };
